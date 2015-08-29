@@ -40,7 +40,7 @@ v1_00/131224 hmIto
 	ƒŠƒŠ[ƒX
 */
 
-#include<hmLib_v3_06/type.h>
+#include<hmLib/type.h>
 #include"hmrVCom1.h"
 #ifdef __cplusplus
 extern "C"{

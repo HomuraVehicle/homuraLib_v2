@@ -13,7 +13,7 @@ v1_00/13123 hmIto
 #include<thread>
 #include<mutex>
 #include<chrono>
-#include<hmLib_v3_06/gate.hpp>
+#include<hmLib/gate.hpp>
 #include"hmrVIC1.h"
 namespace hmr {
 	class vic1_gate :public hmLib::gate {

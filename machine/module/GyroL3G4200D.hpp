@@ -1,8 +1,8 @@
 #ifndef HMR_MACHINE_MODULE_GYROL3G4200D_INC
 #define HMR_MACHINE_MODULE_GYROL3G4200D_INC 100
 #
-#include<hmLib_v3_06/coordinates.hpp>
-#include<hmLib_v3_06/type.h>
+#include<hmLib/coordinates.hpp>
+#include<hmLib/type.h>
 #include<XCBase/function.hpp>
 #include<XCBase/lock.hpp>
 #include<XC32Lib/i2c.hpp>

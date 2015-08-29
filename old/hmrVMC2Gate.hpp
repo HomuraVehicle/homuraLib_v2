@@ -12,7 +12,7 @@ v1_00/131230 hmIto
 
 */
 #include<memory>
-#include<hmLib_v3_06/gate.hpp>
+#include<hmLib/gate.hpp>
 #include"hmrVMC2.h"
 namespace hmr {
 	class vmc2_gate :public hmLib::gate {

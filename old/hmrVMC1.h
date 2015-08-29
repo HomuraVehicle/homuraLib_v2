@@ -55,7 +55,8 @@ hmrVMC1_v1_00/120921 hmIto
 	バージョン管理開始
 */
 #ifndef HMLIB_TYPE_INC
-#	include"hmLib_v3_05/bytebase_type.h"
+//#	include"hmLib_v3_05/bytebase_type.h"
+#	include<hmLib/type.h>
 #endif
 #ifdef __cplusplus
 extern "C"{

@@ -67,9 +67,9 @@ v1_00/120921 hmIto
 	バージョン管理開始
 */
 #ifndef HMLIB_TYPE_INC
-#	include<hmLib_v3_06/type.h>
+#	include<hmLib/type.h>
 #endif
-//#include"hmLib_v3_06/type.h"
+//#include"hmLib/type.h"
 #include"hmrVCom1.h"
 #ifdef __cplusplus
 extern "C"{

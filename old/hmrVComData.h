@@ -1,8 +1,8 @@
 #ifndef HMR_VCOMDATA_INC
 #define HMR_VCOMDATA_INC 101
 #
-#include<hmLib_v3_06/type.h>
-#include<hmLib_v3_06/cstring.h>
+#include<hmLib/type.h>
+#include<hmLib/cstring.h>
 /*---vcom---
 Volcanic Communication Data Interface.
 ・ほむら用のデータ送受信用共通プロトコル

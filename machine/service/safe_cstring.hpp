@@ -1,7 +1,7 @@
 #ifndef HMR_MACHINE_SERVICE_SAFECSTRING_INC
 #define HMR_MACHINE_SERVICE_SAFECSTRING_INC 100
 #
-#include <hmLib_v3_06/cstring.h>
+#include <hmLib/cstring.h>
 #include <XC32Lib/interrupt.hpp>
 namespace hmr {
 	namespace machine {

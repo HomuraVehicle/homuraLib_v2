@@ -1,7 +1,7 @@
 #ifndef HMR_GATEADAPTOR_INC
 #define HMR_GATEADAPTOR_INC 100
 #
-#include<hmLib_v3_06/gate.hpp>
+#include<hmLib/gate.hpp>
 #include<homuraLib_v2/gate.hpp>
 namespace hmr{
 	struct homuragate_adaptor :public hmLib::gate {

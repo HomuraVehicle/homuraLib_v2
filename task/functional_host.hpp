@@ -3,7 +3,7 @@
 #
 #include<algorithm>
 #include<vector>
-#include<hmLib_v3_06/type.h>
+#include<hmLib/type.h>
 #include<homuraLib_v2/allocator.hpp>
 #include"client_interface.hpp"
 #include"host_interface.hpp"

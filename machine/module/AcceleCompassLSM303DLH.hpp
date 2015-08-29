@@ -1,7 +1,7 @@
 #ifndef HMR_MACHINE_MODULE_ACCELECOMPASSLSM303DLH_INC
 #define HMR_MACHINE_MODULE_ACCELECOMPASSLSM303DLH_INC 100
 #
-#include<hmLib_v3_06/coordinates.hpp>
+#include<hmLib/coordinates.hpp>
 #include<XCBase/function.hpp>
 #include<XCBase/lock.hpp>
 #include<XC32Lib/i2c.hpp>
