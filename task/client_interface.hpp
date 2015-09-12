@@ -1,7 +1,7 @@
 #ifndef HMR_TASK_CLIENTINTERFACE_INC
 #define HMR_TASK_CLIENTINTERFACE_INC 100
 #
-#include<hmLib_v3_06/type.h>
+#include<hmLib/type.h>
 namespace hmr{
 	namespace task {
 		typedef hmLib::type::sint32 duration;

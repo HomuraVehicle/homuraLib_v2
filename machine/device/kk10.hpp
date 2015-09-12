@@ -24,12 +24,12 @@ namespace hmr {
 					
 					//AD変換設定
 					//ADCのキャリブレーション用のビット，PIC32MZのデータシートのADCの章に書いてあった
-					AD1CAL1 = 0xF8894530;
+/*					AD1CAL1 = 0xF8894530;
 					AD1CAL2 = 0x01E4AF69;
 					AD1CAL3 = 0x0FBBBBB8;
 					AD1CAL4 = 0x000004AC;
 					AD1CAL5 = 0x02000002;
-/**//*
+*//*
 AD1CAL1 = 0xB3341210;
 AD1CAL2 = 0x01FFA769;
 AD1CAL3 = 0x0BBBBBB8;

@@ -28,10 +28,10 @@ v1_00/131123 hmito
 */
 #include "homuraLib_config.hpp"
 #ifndef HMR_NOXC32LIB
-#include<hmLib_v3_06/type.h>
+#include<hmLib/type.h>
 #include<XCBase/lock.hpp>
-#include<XC32Lib/interrupt.hpp>
-#include<XC32Lib/timer.hpp>
+#include<XC32/interrupt.hpp>
+#include<XC32/timer.hpp>
 #include"time_point.hpp"
 #include"clock_interface.hpp"
 namespace hmr {
