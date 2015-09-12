@@ -4,8 +4,8 @@
 #include<XCBase/future.hpp>
 #include<XCBase/function.hpp>
 #include<XCBase/lock.hpp>
-#include<XC32Lib/uart.hpp>
-#include<XC32Lib/sfr/interrupt.hpp>
+#include<XC32/uart.hpp>
+#include<XC32/sfr/interrupt.hpp>
 #include"command.hpp"
 
 namespace hmr{

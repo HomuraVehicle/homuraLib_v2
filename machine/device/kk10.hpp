@@ -2,12 +2,12 @@
 #define HMR_MACHINE_DEVICE_KK10_INC 100
 #
 #include<device_include.h>
-#include<XC32Lib/sfr/port.hpp>
-#include<XC32Lib/pin.hpp>
-//#include<XC32Lib/analog_pin.hpp>
-//#include<XC32Lib/adc.hpp>
-#include<XC32Lib/clock.hpp>
-#include<XC32Lib/device.hpp>
+#include<XC32/sfr/port.hpp>
+#include<XC32/pin.hpp>
+//#include<XC32/analog_pin.hpp>
+//#include<XC32/adc.hpp>
+#include<XC32/clock.hpp>
+#include<XC32/device.hpp>
 #include<homuraLib_v2/type.hpp>
 namespace hmr {
 	namespace machine {

@@ -2,8 +2,8 @@
 #define HMR_MACHINE_MODULE_GPS52D_INC 101
 #
 #include<XCBase/function.hpp>
-#include<XC32Lib/uart.hpp>
-#include<XC32Lib/interrupt.hpp>
+#include<XC32/uart.hpp>
+#include<XC32/interrupt.hpp>
 #include<homuraLib_v2/gps.hpp>
 namespace hmr {
 	namespace machine {

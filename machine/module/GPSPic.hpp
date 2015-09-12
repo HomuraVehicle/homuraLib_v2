@@ -1,8 +1,8 @@
 #ifndef HMR_MACHINE_MODULE_GPSPIC_INC
 #define HMR_MACHINE_MODULE_GPSPIC_INC 100
 #
-#include<XC32Lib/spi.hpp>
-#include<XC32Lib/open.hpp>
+#include<XC32/spi.hpp>
+#include<XC32/open.hpp>
 #include<homuraLib_v2/machine/service/delay.hpp>
 
 /*=== module::cGPSPic ===

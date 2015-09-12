@@ -4,7 +4,7 @@
 #include<hmLib/coordinates.hpp>
 #include<XCBase/function.hpp>
 #include<XCBase/lock.hpp>
-#include<XC32Lib/i2c.hpp>
+#include<XC32/i2c.hpp>
 #include<homuraLib_v2/type.hpp>
 #include<homuraLib_v2/exceptions.hpp>
 #include<homuraLib_v2/machine/service/exclusive_delay.hpp>

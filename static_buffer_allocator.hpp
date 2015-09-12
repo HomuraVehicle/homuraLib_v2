@@ -1,7 +1,7 @@
 #ifndef HMR_STATICBUFFERALLOCATOR_INC
 #define HMR_STATICBUFFERALLOCATOR_INC 100
 #
-#include<XC32Lib/interrupt.hpp>
+#include<XC32/interrupt.hpp>
 #include<bitset>
 #include"type.hpp"
 namespace hmr{
