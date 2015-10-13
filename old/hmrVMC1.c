@@ -305,7 +305,7 @@ hmLib_boolian vmc1_can_send(VMC1* pVMC1){
 }
 //送信データを呼び出す
 unsigned char vmc1_send(VMC1* pVMC1){
-	unsigned char c;
+	unsigned char c=0x00;
 	//非送信モード(vmc1_SendPacStrt待ち)
 	if(pVMC1->SendMode==vmc1_SENDMODE_STRT){
 		//そもそもパケットを開けないときは、0を返す。

@@ -771,7 +771,7 @@ hmLib_boolian  vic1_can_getc(vic1* pVIC1){
 }
 //送信データを呼び出す
 unsigned char vic1_getc(vic1* pVIC1) {
-	unsigned char c;
+	unsigned char c=0x00;
 
 	//送信できない場合はエラー
 	if(!vic1_can_getc(pVIC1)) {

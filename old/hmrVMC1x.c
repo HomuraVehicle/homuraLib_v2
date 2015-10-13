@@ -14,8 +14,8 @@
 #define vmc1x_getmode_DATA	1
 #define vmc1x_getmode_TRMN	2
 
-static const unsigned char vmc1x_PacStrt[4]={'#', '[', 0x00, ']'};
-static const unsigned char vmc1x_PacStrtSize=4;
+//static const unsigned char vmc1x_PacStrt[4]={'#', '[', 0x00, ']'};
+//static const unsigned char vmc1x_PacStrtSize=4;
 static const unsigned char vmc1x_PacTrmn[4]={'#', '#', 0x0d, 0x0a};
 static const unsigned char vmc1x_PacTrmnSize=4;
 
@@ -183,7 +183,7 @@ hmLib_boolian vmc1x_can_getc(vmc1x* pVMC1x) {
 }
 //送信データを呼び出す
 unsigned char vmc1x_getc(vmc1x* pVMC1x) {
-	unsigned char c;
+	unsigned char c=0x00;
 	//非送信モード(vmc1x_SendPacStrt待ち)
 	if(pVMC1x->SendMode==vmc1x_getmode_STRT) {
 		//最初の文字の場合

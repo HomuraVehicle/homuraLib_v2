@@ -187,7 +187,7 @@ hmLib_boolian vmc2_can_getc(vmc2* pVMC2) {
 }
 //送信データを呼び出す
 unsigned char vmc2_getc(vmc2* pVMC2) {
-	unsigned char c;
+	unsigned char c=0x00;
 
 	//getcできないときには，エラー
 	if(!vmc2_can_getc(pVMC2)) {

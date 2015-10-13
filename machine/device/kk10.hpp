@@ -43,19 +43,19 @@ AD1CAL5 = 0x02028002;
     AD1CAL5 = DEVADC5;
 */					//=== 実は、ANSEL bits については、analog_pinのlock時に設定されるので、本来はzero fillでOK ===
 					//AD設定
-					ANSELA = 0x0200;			//0,1,5,9,10が設定可能,9:AD
+					ANSELA = 0x0200;			//0,1,5,9,10が設定可能,9:AD 
 					__asm("nop");
-					ANSELB = 0x8B0B;			//0～15まで設定可能,0,1,3,8,9,11,15:AD
+					ANSELB = 0x8B0B;			//0～15まで設定可能,0,1,3,8,9,11,15:AD 
 					__asm("nop");
-					ANSELC = 0x0002;			//1～4まで設定可能,1:AD
+					ANSELC = 0x0002;			//1～4まで設定可能,1:AD 
 					__asm("nop");
-					ANSELD = 0x0000;			//14,15が設定可能
+					ANSELD = 0x0000;			//14,15が設定可能|
 					__asm("nop");
-					ANSELE = 0x0050;			//4～9まで設定可能,4,6:AD
+					ANSELE = 0x0050;			//4～9まで設定可能,4,6:AD 
 					__asm("nop");
-					ANSELF = 0x0000;			//12,13が設定可能
+					ANSELF = 0x0000;			//12,13が設定可能|
 					__asm("nop");
-					ANSELG = 0x0000;			//6～9,15が設定可能
+					ANSELG = 0x0000;			//6～9,15が設定可能|
 					__asm("nop");
 
 					//ReMapable pinの設定

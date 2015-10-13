@@ -31,7 +31,7 @@
  * 
  *-------------------------------------------------------------------------*/
 #include"p32mx795f512h_forVC.h"
-#pragma once
+
 #ifndef __32MX795F512H_H
 #define __32MX795F512H_H
 #define __LANGUAGE_C__

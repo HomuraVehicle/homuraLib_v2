@@ -8713,7 +8713,7 @@ volatile OC1CON2BITS OC1CON2bits;
 	unsigned int ocxrs;
 	unsigned int ocxr;
 	unsigned int ocxcon;
-} OC, *POC;
+} OC, *POC;*/
 
 /* SFR blocks for Output Compare modules */
 volatile OC OC1;
