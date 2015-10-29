@@ -39,6 +39,9 @@ namespace hmr{
 				friend bool operator==(const client_holder& my1_, const client_holder& my2_) {
 					return my1_.pClient==my2_.pClient;
 				}
+				friend bool operator!=(const client_holder& my1_, const client_holder& my2_){
+					return my1_.pClient != my2_.pClient;
+				}
 			};
 			struct is_ref_stop {
 				bool operator()(client_holder& Client_) {return Client_.Interval<0;}
@@ -71,7 +74,7 @@ namespace hmr{
 				return false;
 			}
 			bool stop(client_interface& Client_) {
-				iterator itr=std::find(Tasks.begin(),Tasks.end(),client_holder(Client_));
+				iterator itr = std::find(Tasks.begin(), Tasks.end(), client_holder(Client_));
 				if(itr==Tasks.end())return true;
 
 				Tasks.erase(itr);
