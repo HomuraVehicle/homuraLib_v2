@@ -11,9 +11,9 @@ namespace hmr {
 					//===タスクバッファ用関数===
 					void buf_initialize(taskmaster* TaskMaster);
 					//タスクバッファのサイズを取得する
-					uint8 buf_size(taskmaster* TaskMaster);
+//					uint8 buf_size(taskmaster* TaskMaster);
 					//タスクバッファが空か確認する
-					bool buf_empty(taskmaster* TaskMaster);
+//					bool buf_empty(taskmaster* TaskMaster);
 					//タスクバッファが一杯か確認する
 					bool buf_full(taskmaster* TaskMaster);
 					//タスクバッファの先頭アドレスを取得する
@@ -40,15 +40,15 @@ namespace hmr {
 						}
 					}
 					//タスクバッファのサイズを取得する
-					uint8 buf_size(taskmaster* TaskMaster) {
-						if(TaskMaster==0)return 0;
-						return TaskMaster->Size;
-					}
+//					uint8 buf_size(taskmaster* TaskMaster) {
+//						if(TaskMaster==0)return 0;
+//						return TaskMaster->Size;
+//					}
 					//タスクバッファが空か確認する
-					bool buf_empty(taskmaster* TaskMaster) {
-						if(TaskMaster==0)return 0;
-						return TaskMaster->Size==0;
-					}
+//					bool buf_empty(taskmaster* TaskMaster) {
+//						if(TaskMaster==0)return 0;
+//						return TaskMaster->Size==0;
+//					}
 					//タスクバッファが一杯か確認する
 					bool buf_full(taskmaster* TaskMaster) {
 						if(TaskMaster==0)return 1;
