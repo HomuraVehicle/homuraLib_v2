@@ -66,6 +66,9 @@ namespace hmr{
 		static unsigned int find_buffer_pos(void* Ptr_){ return void_type::find_buffer_pos(Ptr_); }
 		static void deallocate_buffer(void* Ptr){ void_type::deallocate_buffer(Ptr); }
 		static vFp_v get_delete_fp(const void* Ptr){return void_type::get_delete_fp();}
+	public:
+		static size_type allocated_num(){ return void_type::allocated_num(); }
+		static bool allocated_full(){ return void_type::allocated_full(); }
 	};
 	template<unsigned int Size, unsigned int BufNum, typename Identifier>
 	struct static_buffer_allocator<void, Size, BufNum, Identifier>{
