@@ -2,7 +2,7 @@
 #define HMR_STATICBUFFERALLOCATOR_INC 100
 #
 #include<XC32/interrupt.hpp>
-#include<bitset>
+#include<XCBase/bitset.hpp>
 #include"type.hpp"
 namespace hmr{
 	template<typename T,unsigned int Size,unsigned int BufNum, typename Identifier>
@@ -81,7 +81,7 @@ namespace hmr{
 		};
 	private:
 		static buffer_holder Buffer[BufNum];
-		static std::bitset<BufNum> IsUse;
+		static xc::bitset<BufNum> IsUse;
 	public:
 		// Œ^’è‹`
 		typedef unsigned int size_type;
@@ -186,7 +186,7 @@ namespace hmr{
 	template<unsigned int Size,unsigned int BufNum,typename Identifier>
 	typename static_buffer_allocator<void, Size, BufNum, Identifier>::buffer_holder static_buffer_allocator<void, Size, BufNum, Identifier>::Buffer[BufNum];
 	template<unsigned int Size,unsigned int BufNum,typename Identifier>
-	std::bitset<BufNum> static_buffer_allocator<void, Size, BufNum, Identifier>::IsUse;
+	xc::bitset<BufNum> static_buffer_allocator<void, Size, BufNum, Identifier>::IsUse;
 }
 #
 #endif
