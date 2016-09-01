@@ -87,8 +87,8 @@
 #define PORT_G14
 #define PORT_G15
 
-#define PORT_ANALOG_B0 0
-#define PORT_ANALOG_B1 1
+#define PORT_ANALOG_B0	0
+#define PORT_ANALOG_B1	1
 #define PORT_ANALOG_B2 2
 #define PORT_ANALOG_B3 3
 #define PORT_ANALOG_B4 4
@@ -128,6 +128,48 @@
 #define PORT_ANALOG_B7 47
 #define PORT_ANALOG_B8 48
 #define PORT_ANALOG_B9 49
+
+#define ADC_ANALOG_0	0
+#define ADC_ANALOG_1	1
+#define ADC_ANALOG_2	2
+#define ADC_ANALOG_3	3
+#define ADC_ANALOG_4	4
+#define ADC_ANALOG_5	7
+#define ADC_ANALOG_6	7
+#define ADC_ANALOG_7	7
+#define ADC_ANALOG_8	7
+#define ADC_ANALOG_9	7
+#define ADC_ANALOG_10	7
+#define ADC_ANALOG_11	7
+#define ADC_ANALOG_12	7
+#define ADC_ANALOG_13	7
+#define ADC_ANALOG_14	7
+#define ADC_ANALOG_15	7
+#define ADC_ANALOG_16	7
+#define ADC_ANALOG_17	7
+#define ADC_ANALOG_18	7
+#define ADC_ANALOG_19	7
+#define ADC_ANALOG_20	7
+#define ADC_ANALOG_21	7
+#define ADC_ANALOG_22	7
+#define ADC_ANALOG_23	7
+#define ADC_ANALOG_24	7
+#define ADC_ANALOG_25	7
+#define ADC_ANALOG_26	7
+#define ADC_ANALOG_27	7
+#define ADC_ANALOG_28	7
+#define ADC_ANALOG_29	7
+#define ADC_ANALOG_30	7
+#define ADC_ANALOG_31	7
+#define ADC_ANALOG_32	7
+#define ADC_ANALOG_33	7
+#define ADC_ANALOG_34	7
+#define ADC_ANALOG_45	0
+#define ADC_ANALOG_46	1
+#define ADC_ANALOG_47	2
+#define ADC_ANALOG_48	3
+#define ADC_ANALOG_49	4
+
 
 #
 #endif
