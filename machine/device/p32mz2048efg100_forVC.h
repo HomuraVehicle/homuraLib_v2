@@ -38,6 +38,8 @@
 
 #define __LANGUAGE_C__ 0
 
+#define __asm(X)
+
 #ifndef __32MZ2048EFG100_H
 #define __32MZ2048EFG100_H
 
