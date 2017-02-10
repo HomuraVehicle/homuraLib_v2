@@ -6,7 +6,6 @@
 #include<XCBase/either.hpp>
 #include<XC32/uart.hpp>
 #include<homuraLib_v2/task.hpp>
-#include<homuraLib_v2/machine/service/task.hpp>
 #include"Sprite/command.hpp"
 #include"Sprite/command_uart.hpp"
 namespace hmr {
@@ -537,6 +536,8 @@ namespace hmr {
 				my_uart SpriteUart;
 				xc::unique_lock<cSpriteUart<uart_register_>> SpriteUartLock;
 
+				//Sprite用Task参照
+				hmr::task::host_interface* pTask;
 			public:
 				//Statusチェック関数
 				//	Powerリセット中は0xf0, それ以外なら、CommandIDを返す
@@ -1018,11 +1019,18 @@ namespace hmr {
 					, SpriteTask(*this){
 				}
 			public:
+				void config(hmr::task::host_interface& Task_){
+					pTask = &Task_;
+				}
+				bool lock(hmr::task::host_interface& Task_){
+					config(Task_);
+					return lock();
+				}
 				bool lock(){
 					if (is_lock())return false;
 
 					//タスクスタート
-					service::task::start(SpriteTask, 2, 0);
+					pTask->start(SpriteTask, 2, 0);
 
 					//パワーリセットを介して、パワー制御開始
 					Sequence_power_reset.power_on();
@@ -1035,7 +1043,7 @@ namespace hmr {
 					if(!is_lock())return;
 
 					//タスクストップ
-					service::task::stop(SpriteTask);
+					pTask->stop(SpriteTask);
 
 					//実行中シーケンスがあれば、キャンセル
 					Sequence_take_and_readPicture.cancel();

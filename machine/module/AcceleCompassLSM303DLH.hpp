@@ -7,7 +7,7 @@
 #include<XC32/i2c.hpp>
 #include<homuraLib_v2/type.hpp>
 #include<homuraLib_v2/exceptions.hpp>
-#include<homuraLib_v2/machine/service/exclusive_delay.hpp>
+#include<homuraLib_v2/delay.hpp>
 
 namespace hmr{
 	namespace machine{
@@ -395,20 +395,23 @@ namespace hmr{
 				my_i2c I2C;
 				observer AcceleObserver;
 				observer CompassObserver;
+				hmr::delay_interface* pDelay;
 				bool IsLock;
 			public:
 				cAcceleCompassLSM303DLH()
 					: I2C()
-					, IsLock(false){
+					, IsLock(false)
+					, pDelay(0){
 				}
 			public:
-				void config(const observer& AcceleObserver_, const observer& CompassObserver_){
+				void config(const observer& AcceleObserver_, const observer& CompassObserver_, hmr::delay_interface& Delay_){
 					if (is_lock())return;
 					AcceleObserver = AcceleObserver_;
 					CompassObserver = CompassObserver_;
+					pDelay = &Delay_;
 				}
-				bool lock(const observer& AcceleObserver_, const observer& CompassObserver_){
-					config(AcceleObserver_, CompassObserver_);
+				bool lock(const observer& AcceleObserver_, const observer& CompassObserver_, hmr::delay_interface& Delay_){
+					config(AcceleObserver_, CompassObserver_, Delay_);
 					return lock();
 				}
 				bool lock(){
@@ -420,7 +423,7 @@ namespace hmr{
 					//一旦パワーオフ
 					I2C.accele_config(false, acceleLSM303DLH::sampling_rate::_100Hz, acceleLSM303DLH::fullscale::_2g);
 
-					machine::service::exclusive_delay_ms(500);
+					pDelay->exclusive_delay_ms(500);
 
 					//power ON!
 					I2C.accele_config(true, acceleLSM303DLH::sampling_rate::_100Hz, acceleLSM303DLH::fullscale::_2g);

@@ -8,7 +8,7 @@
 #include<XC32/i2c.hpp>
 #include<homuraLib_v2/type.hpp>
 #include<homuraLib_v2/exceptions.hpp>
-#include<homuraLib_v2/machine/service/exclusive_delay.hpp>
+#include<homuraLib_v2/delay.hpp>
 
 namespace hmr {
 	namespace machine {
@@ -333,6 +333,7 @@ namespace hmr {
 			private:
 				my_i2c I2C;
 				observer Observer;
+				hmr::delay_interface* pDelay;
 				bool IsLock;
 			public:
 				cGyroL3G4200D()
@@ -340,13 +341,14 @@ namespace hmr {
 					,IsLock(false){
 				}
 			public:
-				void config(const observer& Observer_){
+				void config(const observer& Observer_, hmr::delay_interface& Delay_){
 					if (is_lock())return;
 
 					Observer = Observer_;
+					pDelay = &Delay_;
 				}
-				bool lock(const observer& Observer_){
-					config(Observer_);
+				bool lock(const observer& Observer_, hmr::delay_interface& Delay_){
+					config(Observer_, Delay_);
 					lock();
 				}
 				bool lock(){
@@ -357,7 +359,7 @@ namespace hmr {
 
 					I2C.module_config(false);
 
-					machine::service::exclusive_delay_ms(500);
+					pDelay->exclusive_delay_ms(500);
 
 					//power ON!
 					I2C.module_config(true, gyroL3G4200D::sampling_rate::_100Hz, gyroL3G4200D::fullscale::_250dps);
