@@ -53,13 +53,14 @@ namespace hmr{
 		private:
 			container Tasks;
 		public://host_interface
-			bool start(client_interface& Client_, duration Interval_, duration Count_) {
-				if(is_start(Client_))return true;
+			handler start(client_interface& Client_, duration Interval_, duration Count_) {
+				if(is_start(Client_))return handler();
 				Tasks.push_back(client_holder(Client_,Interval_,Count_));
-				return false;
+				return handler(*this, Client_);
 			}
-			void quick_start(client_interface& Client_, duration Interval_, duration Count_) {
+			handler quick_start(client_interface& Client_, duration Interval_, duration Count_) {
 				Tasks.push_back(client_holder(Client_,Interval_,Count_));
+				return handler(*this, Client_);
 			}
 			bool is_start(client_interface& Client_)const {
 				const_iterator itr=std::find(Tasks.begin(),Tasks.end(),client_holder(Client_));
