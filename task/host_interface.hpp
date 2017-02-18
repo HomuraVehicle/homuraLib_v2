@@ -33,7 +33,7 @@ namespace hmr{
 			};
 		public:
 			virtual handler start(client_interface& Client_, duration Interval_, duration Count_)=0;
-			virtual handler quick_start(client_interface& Client_, duration Interval_, duration Count_)=0;
+			virtual handler quick_start(client_interface& Client_, duration Interval_, duration Count_=0)=0;
 			virtual bool is_start(client_interface& Client_)const=0;
 			virtual bool restart(client_interface& Client_, duration Interval_, duration Count_=0)=0;
 			virtual bool stop(client_interface& Client_)=0;
