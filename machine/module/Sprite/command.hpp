@@ -86,12 +86,12 @@ namespace hmr{
 					}
 					//リセット
 					inline command resetCamera(){
-						static unsigned char Str[4] = { 0x56, 0x00, 0x26, 0x00 };
+						unsigned char Str[4] = { 0x56, 0x00, 0x26, 0x00 };
 						return command(id::ResetCamera,Str, 4, 70);
 					}
 					//写真撮影
 					inline command takePicture(){
-						static unsigned char Str[5] = { 0x56, 0x00, 0x36, 0x01, 0x00 };
+						unsigned char Str[5] = { 0x56, 0x00, 0x36, 0x01, 0x00 };
 						return command(id::TakePicture,Str, 5, 5);
 					}
 					//データサイズを得る
@@ -112,22 +112,22 @@ namespace hmr{
 					};
 					//データサイズを得る
 					inline command getDataSize(ans_getDataSize& Ans_getDataSize){
-						static unsigned char Str[5] = { 0x56, 0x00, 0x34, 0x01, 0x00 };
+						unsigned char Str[5] = { 0x56, 0x00, 0x34, 0x01, 0x00 };
 						return command(id::GetDataSize, Str, 5, 9, Ans_getDataSize);
 					}
 					//写真撮るのやめる
 					inline command stop_takePicture(){
-						static unsigned char Str[5] = { 0x56, 0x00, 0x36, 0x01, 0x03 };
+						unsigned char Str[5] = { 0x56, 0x00, 0x36, 0x01, 0x03 };
 						return command(id::StopTakePicture, Str, 5, 5);
 					}
 					//省電力モード
 					inline command savePower(){
-						static unsigned char Str[7] = { 0x56, 0x00, 0x3E, 0x03, 0x00, 0x01, 0x01 };
+						unsigned char Str[7] = { 0x56, 0x00, 0x3E, 0x03, 0x00, 0x01, 0x01 };
 						return command(id::SavePower, Str, 7, 4);
 					}
 					//省電力から復帰モード
 					inline command stop_savePower(){
-						static unsigned char Str[7] = { 0x56, 0x00, 0x3E, 0x03, 0x00, 0x01, 0x00 };
+						unsigned char Str[7] = { 0x56, 0x00, 0x3E, 0x03, 0x00, 0x01, 0x00 };
 						return command(id::StopSavePower, Str, 7, 5);
 					}
 					//データを得るコマンドの返答用オブジェクト
@@ -146,7 +146,7 @@ namespace hmr{
 					};
 					//データを得るコマンド(初めのADDRESS(8の倍数)と、データ数指定)
 					inline command getData(unsigned int Address_, unsigned int PackSize_, ans_getData& Ans_getData){
-						static unsigned char Str[16] = { 0x56, 0x00, 0x32, 0x0C, 0x00, 0x0A, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x0B };
+						unsigned char Str[16] = { 0x56, 0x00, 0x32, 0x0C, 0x00, 0x0A, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x0B };
 
 						//PackSizeは８の倍数なので、8の倍数にする！！　超えた分は読み捨てる方針で
 						if (PackSize_ % 8 != 0){
@@ -167,7 +167,7 @@ namespace hmr{
 					}
 					//圧縮率の指定(defo 0x36)
 					inline command setCompessRate(unsigned char CompressRate_){
-						static unsigned char Str[9] = { 0x56, 0x00, 0x31, 0x05, 0x01, 0x01, 0x12, 0x04, 0x36 };
+						unsigned char Str[9] = { 0x56, 0x00, 0x31, 0x05, 0x01, 0x01, 0x12, 0x04, 0x36 };
 
 						command Command(id::SetCompressRate, Str, 9, 6);
 
@@ -178,7 +178,7 @@ namespace hmr{
 					}
 					//画像サイズの指定(定義した３通り)リセット不要
 					inline command setImageSize(imagesize::type ImageSize_){
-						static unsigned char Str[5] = { 0x56, 0x00, 0x54, 0x01, 0xFF };
+						unsigned char Str[5] = { 0x56, 0x00, 0x54, 0x01, 0xFF };
 
 						command Command(id::SetImageSize, Str, 5, 5);
 
@@ -189,7 +189,7 @@ namespace hmr{
 					}
 					//ボーレートの指定(定義した５通り)
 					inline command setBaudrate(unsigned int Baudrate_){
-						static unsigned char Str[7] = { 0x56, 0x00, 0x24, 0x03, 0x01, 0x00, 0x00 };
+						unsigned char Str[7] = { 0x56, 0x00, 0x24, 0x03, 0x01, 0x00, 0x00 };
 
 						command Command(id::SetBaudrate, Str, 7, 5);
 
