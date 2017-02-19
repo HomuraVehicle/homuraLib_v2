@@ -3,18 +3,18 @@
 #
 #include"crc8.h"
 #include<stdlib.h>
-//CRC8—pŠÖ”
-//‹L†’è”
+//CRC8ç”¨é–¢æ•°
+//è¨˜å·å®šæ•°
 #define crc8_KEY (0xD5)// x8 + x7 + x6 + x4 + x2 + x1 + x0
-//CRC8ƒe[ƒuƒ‹ƒoƒbƒtƒ@
+//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ãƒãƒƒãƒ•ã‚¡
 unsigned char* x_crc8_Table=0;
-//CRC8ƒe[ƒuƒ‹‚Ìmallocƒtƒ‰ƒO
+//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã®mallocãƒ•ãƒ©ã‚°
 unsigned char x_crc8_IsMallocTable=0;
-//CRC8ƒe[ƒuƒ‹—LŒø«Šm”F
+//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«æœ‰åŠ¹æ€§ç¢ºèª
 unsigned char crc8_table_is_valid() {
 	return x_crc8_Table!=0;
 }
-//CRC8ƒe[ƒuƒ‹‚Ì‰Šú‰»
+//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã®åˆæœŸåŒ–
 void crc8_table_initialize() {
 	unsigned char value;
         int n ;
@@ -39,7 +39,7 @@ void crc8_table_initialize() {
 		x_crc8_Table[n] = value;
 	}
 }
-//CRC8ƒe[ƒuƒ‹‚Ìƒƒ‚ƒŠŠ„‚è“–‚Ä‰Šú‰»
+//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ¡ãƒ¢ãƒªå‰²ã‚Šå½“ã¦åˆæœŸåŒ–
 void crc8_table_placement_initialize(unsigned char Table[256]) {
 	unsigned char value;
         int n ;
@@ -64,13 +64,13 @@ void crc8_table_placement_initialize(unsigned char Table[256]) {
 		x_crc8_Table[n] = value;
 	}
 }
-//CRC8ƒe[ƒuƒ‹‚ÌI’[‰»
+//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã®çµ‚ç«¯åŒ–
 void crc8_table_finalize() {
 	if(x_crc8_IsMallocTable)free(x_crc8_Table);
 	x_crc8_Table=0;
 	x_crc8_IsMallocTable=0;
 }
-//ƒrƒbƒgƒVƒtƒg‚É‚æ‚éCRC8‚Ì’PƒoƒCƒgŒvZ
+//ãƒ“ãƒƒãƒˆã‚·ãƒ•ãƒˆã«ã‚ˆã‚‹CRC8ã®å˜ãƒã‚¤ãƒˆè¨ˆç®—
 unsigned char crc8_bitshift_putc(unsigned char crc8, unsigned char data) {
 	unsigned char i;
 
@@ -85,7 +85,7 @@ unsigned char crc8_bitshift_putc(unsigned char crc8, unsigned char data) {
 	}
 	return crc8;
 }
-//ƒrƒbƒgƒVƒtƒg‚É‚æ‚éCRC8‚Ì•¡”ƒoƒCƒgŒvZ
+//ãƒ“ãƒƒãƒˆã‚·ãƒ•ãƒˆã«ã‚ˆã‚‹CRC8ã®è¤‡æ•°ãƒã‚¤ãƒˆè¨ˆç®—
 unsigned char crc8_bitshift_puts(unsigned char crc8, const void *buff, unsigned int size) {
 	unsigned char *itr = (unsigned char *)buff;
 
@@ -93,11 +93,11 @@ unsigned char crc8_bitshift_puts(unsigned char crc8, const void *buff, unsigned 
 
 	return crc8;
 }
-//CRC8ƒe[ƒuƒ‹‚É‚æ‚éCRC8‚Ì’PƒoƒCƒgŒvZ
+//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã«ã‚ˆã‚‹CRC8ã®å˜ãƒã‚¤ãƒˆè¨ˆç®—
 unsigned char crc8_table_putc(unsigned char crc8, unsigned char data) {
 	return x_crc8_Table[crc8 ^data];
 }
-//CRC8ƒe[ƒuƒ‹‚É‚æ‚éCRC8‚Ì•¡”ƒoƒCƒgŒvZ
+//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã«ã‚ˆã‚‹CRC8ã®è¤‡æ•°ãƒã‚¤ãƒˆè¨ˆç®—
 unsigned char crc8_table_puts(unsigned char crc8, const void *buff, unsigned int size) {
 	unsigned char *itr = (unsigned char *)buff;
 
@@ -105,12 +105,12 @@ unsigned char crc8_table_puts(unsigned char crc8, const void *buff, unsigned int
 
 	return crc8;
 }
-//CRC8‚Ì’PƒoƒCƒgŒvZ
+//CRC8ã®å˜ãƒã‚¤ãƒˆè¨ˆç®—
 unsigned char crc8_putc(unsigned char crc8, unsigned char data) {
 	if(crc8_table_is_valid())return crc8_table_putc(crc8, data);
 	else return crc8_bitshift_putc(crc8, data);
 }
-//CRC8‚Ì•¡”ƒoƒCƒgŒvZ
+//CRC8ã®è¤‡æ•°ãƒã‚¤ãƒˆè¨ˆç®—
 unsigned char crc8_puts(unsigned char crc8, const void *buff, unsigned int size) {
 	if(crc8_table_is_valid())return crc8_table_puts(crc8, buff, size);
 	else return crc8_bitshift_puts(crc8, buff, size);

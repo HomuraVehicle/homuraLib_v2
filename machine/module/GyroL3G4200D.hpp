@@ -74,16 +74,16 @@ namespace hmr {
 				};
 			}
 
-			//g—pã‚Ì’ˆÓ
-			//	Ä‹N“®Œã‚ÍAˆê“x“dŒ¹‚ğƒIƒt‚É‚µ‚Ä‚©‚çAƒpƒ[‚ğ“ü‚ê’¼‚·•K—v‚ª‚ ‚é
-			//	500ms‚Ù‚ÇAŠÔ‚Édelay‚ğ‚©‚Ü‚¹‚é‚±‚Æ
+			//ä½¿ç”¨ä¸Šã®æ³¨æ„
+			//	å†èµ·å‹•å¾Œã¯ã€ä¸€åº¦é›»æºã‚’ã‚ªãƒ•ã«ã—ã¦ã‹ã‚‰ã€ãƒ‘ãƒ¯ãƒ¼ã‚’å…¥ã‚Œç›´ã™å¿…è¦ãŒã‚ã‚‹
+			//	500msã»ã©ã€é–“ã«delayã‚’ã‹ã¾ã›ã‚‹ã“ã¨
 			template<typename i2c_register_, typename shared_i2c_identifier_>
 			class cGyroL3G4200D_I2C{
 				typedef cGyroL3G4200D_I2C<i2c_register_, shared_i2c_identifier_> my_type;
 			private:
-				//GyroL3G4200DŒÅ—LƒAƒhƒŒƒX
+				//GyroL3G4200Då›ºæœ‰ã‚¢ãƒ‰ãƒ¬ã‚¹
 				static const unsigned char ModuleI2CAddress;
-				//GyroL3G4200D—pƒRƒ}ƒ“ƒh
+				//GyroL3G4200Dç”¨ã‚³ãƒãƒ³ãƒ‰
 				static const unsigned char i2ccmd_reg_ctrl;
 				static const unsigned char i2ccmd_reg_data;
 				static const unsigned char i2ccmd_reg_fifoctrl;
@@ -102,11 +102,11 @@ namespace hmr {
 				typedef xc::function<void(angle)> observer;
 				typedef xc::function<void(raw_data)> raw_observer;
 			private:
-				//Å‘åÄ‘—‰ñ”
+				//æœ€å¤§å†é€å›æ•°
 				unsigned int MaxTryNum;
-				//ƒTƒ“ƒvƒŠƒ“ƒOŠÔŠu
+				//ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°é–“éš”
 				gyroL3G4200D::sampling_rate::type SamplingRate;
-				//ƒf[ƒ^‚Ìƒtƒ‹ƒXƒP[ƒ‹
+				//ãƒ‡ãƒ¼ã‚¿ã®ãƒ•ãƒ«ã‚¹ã‚±ãƒ¼ãƒ«
 				gyroL3G4200D::fullscale::type FullScale;
 			public:
 				cGyroL3G4200D_I2C()
@@ -139,24 +139,24 @@ namespace hmr {
 			public:
 				void module_config(bool Power, gyroL3G4200D::sampling_rate::type SamplingRate_ = gyroL3G4200D::sampling_rate::_100Hz, gyroL3G4200D::fullscale::type FullScale_ = gyroL3G4200D::fullscale::_250dps){
 					hmr_assert(is_lock(), non_locked_exception());
-					//======================= Gyro ‰Šú‰» ===========================
+					//======================= Gyro åˆæœŸåŒ– ===========================
 					for (unsigned int TryCnt = 0; TryCnt < MaxTryNum; ++TryCnt){
 						if (I2C.start(ModuleI2CAddress, 0))continue;
-						//CTRL_REGƒŒƒWƒXƒ^‚Ö‚Ì‘‚«‚İ—v‹(•¡”ƒoƒCƒg)
+						//CTRL_REGãƒ¬ã‚¸ã‚¹ã‚¿ã¸ã®æ›¸ãè¾¼ã¿è¦æ±‚(è¤‡æ•°ãƒã‚¤ãƒˆ)
 						if (I2C.write(i2ccmd_reg_ctrl | i2ccmd_regmode_multi))continue;
-						//CTRL_REG1ƒŒƒWƒXƒ^ NormalMode‚Éİ’è‚·‚é 100Hz
+						//CTRL_REG1ãƒ¬ã‚¸ã‚¹ã‚¿ NormalModeã«è¨­å®šã™ã‚‹ 100Hz
 						if (I2C.write((static_cast<uint8>(SamplingRate_) << 6) | (Power ? 0x0F : 0x00)))continue;
-						//CTRL_REG2ƒŒƒWƒXƒ^ Default
+						//CTRL_REG2ãƒ¬ã‚¸ã‚¹ã‚¿ Default
 						if (I2C.write(0x00))continue;
-						//CTRL_REG3ƒŒƒWƒXƒ^ BufOverrun‚ÅŠ„‚è‚İPinON
+						//CTRL_REG3ãƒ¬ã‚¸ã‚¹ã‚¿ BufOverrunã§å‰²ã‚Šè¾¼ã¿PinON
 						if (I2C.write(0x02))continue;
-						//CTRL_REG4ƒŒƒWƒXƒ^ Default 250dps 8.75mdps/digit
+						//CTRL_REG4ãƒ¬ã‚¸ã‚¹ã‚¿ Default 250dps 8.75mdps/digit
 						if (I2C.write(static_cast<uint8>(FullScale_ & 0x03) << 4))continue;
-						//CTRL_REG5ƒŒƒWƒXƒ^ FIFO enable
+						//CTRL_REG5ãƒ¬ã‚¸ã‚¹ã‚¿ FIFO enable
 						if (I2C.write(0x40))continue;
 						//if(I2C.write(0x00))continue;
 
-						//I2CI—¹
+						//I2Cçµ‚äº†
 						I2C.stop();
 
 						SamplingRate = SamplingRate_;
@@ -167,22 +167,22 @@ namespace hmr {
 				}
 				void buffer_config(gyroL3G4200D::buffer_mode::type BufferMode_,unsigned char WatermarkLevel_){
 					hmr_assert(is_lock(), non_locked_exception());
-					//===== FIFOƒoƒbƒtƒ@ƒ‚[ƒh‚ğİ’è =====
+					//===== FIFOãƒãƒƒãƒ•ã‚¡ãƒ¢ãƒ¼ãƒ‰ã‚’è¨­å®š =====
 					for (unsigned TryCnt = 0; TryCnt < MaxTryNum; ++TryCnt){
 						if (I2C.start(ModuleI2CAddress, 0))continue;
-						//FIFO_CTRL_REGƒŒƒWƒXƒ^‚Ö‚Ì‘‚«‚İ—v‹
+						//FIFO_CTRL_REGãƒ¬ã‚¸ã‚¹ã‚¿ã¸ã®æ›¸ãè¾¼ã¿è¦æ±‚
 						if (I2C.write(i2ccmd_reg_fifoctrl | i2ccmd_regmode_single))continue;
-						//FIFO_CTRL_REGƒŒƒWƒXƒ^ StreamMode WTM=32‚Éİ’è‚·‚é
+						//FIFO_CTRL_REGãƒ¬ã‚¸ã‚¹ã‚¿ StreamMode WTM=32ã«è¨­å®šã™ã‚‹
 						if (I2C.write((static_cast<uint8>(BufferMode_)<<5)|(WatermarkLevel_&0x1F)))continue;
 
-						//I2CI—¹
+						//I2Cçµ‚äº†
 						I2C.stop();
 						return;
 					}
 				}
 				bufstatus buffer_status(){
 					hmr_assert(is_lock(), non_locked_exception());
-					//FIFOSRCæ“¾—v¿
+					//FIFOSRCå–å¾—è¦è«‹
 					for (unsigned int TryCnt = 0; TryCnt < MaxTryNum; ++TryCnt){
 						if (I2C.start(ModuleI2CAddress, 0))continue;
 						if (I2C.write(i2ccmd_reg_fifosrc | i2ccmd_regmode_single))continue;
@@ -196,13 +196,13 @@ namespace hmr {
 				}
 				raw_data read_raw(){
 					hmr_assert(is_lock(), non_locked_exception());
-					//Dataæ“¾—v¿
+					//Dataå–å¾—è¦è«‹
 					for (unsigned int TryCnt = 0; TryCnt < MaxTryNum; ++TryCnt){
 						if (I2C.start(ModuleI2CAddress, 0))continue;
 						if (I2C.write(i2ccmd_reg_data | i2ccmd_regmode_multi))continue;
 						if (I2C.restart(ModuleI2CAddress, 1))continue;
 
-						//ƒf[ƒ^”‚Ì”‚¾‚¯A“Ç‚İo‚µˆ—
+						//ãƒ‡ãƒ¼ã‚¿æ•°ã®æ•°ã ã‘ã€èª­ã¿å‡ºã—å‡¦ç†
 						raw_data Data;
 						Data.FullScale = FullScale;
 						Data.SamplingRate = SamplingRate;
@@ -232,13 +232,13 @@ namespace hmr {
 
 					if(DataNum_ == 0)return;
 
-					//Dataæ“¾—v¿
+					//Dataå–å¾—è¦è«‹
 					for (unsigned int TryCnt = 0; TryCnt < MaxTryNum; ++TryCnt){
 						if (I2C.start(ModuleI2CAddress, 0))continue;
 						if (I2C.write(i2ccmd_reg_data | i2ccmd_regmode_multi))continue;
 						if (I2C.restart(ModuleI2CAddress, 1))continue;
 
-						//ƒf[ƒ^”‚Ì”‚¾‚¯A“Ç‚İo‚µˆ—
+						//ãƒ‡ãƒ¼ã‚¿æ•°ã®æ•°ã ã‘ã€èª­ã¿å‡ºã—å‡¦ç†
 						raw_data Data;
 						Data.FullScale = FullScale;
 						Data.SamplingRate = SamplingRate;
@@ -255,7 +255,7 @@ namespace hmr {
 							HighData = I2C.read(DataCnt + 1 == DataNum_);
 							Data.z = static_cast<sint16>((LowData & 0x00FF) | ((HighData << 8) & 0xFF00));
 
-							//ƒIƒuƒU[ƒo[‚É’Ê’m
+							//ã‚ªãƒ–ã‚¶ãƒ¼ãƒãƒ¼ã«é€šçŸ¥
 							if (RawObserver_) RawObserver_(Data);
 						}
 						I2C.stop();
@@ -267,13 +267,13 @@ namespace hmr {
 
 					if(DataNum_ == 0)return;
 
-					//Dataæ“¾—v¿
+					//Dataå–å¾—è¦è«‹
 					for(unsigned int TryCnt = 0; TryCnt < MaxTryNum; ++TryCnt){
 						if(I2C.start(ModuleI2CAddress, 0))continue;
 						if(I2C.write(i2ccmd_reg_data | i2ccmd_regmode_multi))continue;
 						if(I2C.restart(ModuleI2CAddress, 1))continue;
 
-						//ƒf[ƒ^”‚Ì”‚¾‚¯A“Ç‚İo‚µˆ—
+						//ãƒ‡ãƒ¼ã‚¿æ•°ã®æ•°ã ã‘ã€èª­ã¿å‡ºã—å‡¦ç†
 						raw_data Data;
 						Data.FullScale = FullScale;
 						Data.SamplingRate = SamplingRate;
@@ -290,7 +290,7 @@ namespace hmr {
 							HighData = I2C.read(DataCnt + 1 == DataNum_);
 							Data.z = static_cast<sint16>((LowData & 0x00FF) | ((HighData << 8) & 0xFF00));
 
-							//ƒIƒuƒU[ƒo[‚É’Ê’m
+							//ã‚ªãƒ–ã‚¶ãƒ¼ãƒãƒ¼ã«é€šçŸ¥
 							if(Observer_) Observer_(Data.to_angle());
 						}
 						I2C.stop();
@@ -364,7 +364,7 @@ namespace hmr {
 					//power ON!
 					I2C.module_config(true, gyroL3G4200D::sampling_rate::_100Hz, gyroL3G4200D::fullscale::_250dps);
 
-					//buffer İ’è
+					//buffer è¨­å®š
 					I2C.buffer_config(gyroL3G4200D::buffer_mode::stream, 31);
 
 					IsLock = true;

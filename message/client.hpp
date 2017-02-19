@@ -42,7 +42,7 @@ namespace hmr {
 				IsListening=false;
 			}
 			virtual bool io_can_get() {
-				//Array‚ª‚©‚ç‚Ìê‡AŠm”F‚µ‚És‚­
+				//ArrayãŒã‹ã‚‰ã®å ´åˆã€ç¢ºèªã—ã«è¡Œã
 				if(!Array) {
 					if(!IsTalking) {
 						IsTalking=true;
@@ -54,7 +54,7 @@ namespace hmr {
 						IsTalking=false;
 					}
 				}
-				//Array‚ªŠm•ÛÏ‚İ‚©‚Ç‚¤‚©
+				//ArrayãŒç¢ºä¿æ¸ˆã¿ã‹ã©ã†ã‹
 				return static_cast<bool>(Array);
 			}
 			virtual bool io_get(data& rData_) {

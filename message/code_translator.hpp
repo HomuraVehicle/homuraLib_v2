@@ -56,7 +56,7 @@ namespace hmr {
 			unsigned int SendCnt;
 			bool SendIncrement;
 		public:
-			//code‰Šú‰»
+			//codeåˆæœŸåŒ–
 			code_translator()
 				: IsLock(false)
 				, RecvMode(recvmode_ID)
@@ -114,59 +114,59 @@ namespace hmr {
 			}
 		public:
 			//======== gate interface =======
-			//‚·‚Å‚É—˜—p‰Â”\‚É‚È‚Á‚Ä‚¢‚é‚©
+			//ã™ã§ã«åˆ©ç”¨å¯èƒ½ã«ãªã£ã¦ã„ã‚‹ã‹
 			virtual bool is_open() {
 				return pIOs.size()>0;
 			}
-			//send‚Å‚«‚é‚©H
+			//sendã§ãã‚‹ã‹ï¼Ÿ
 			virtual bool can_getc() {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
-				//Data‚ª‹ó‚Å‚È‚¢‚È‚çAI—¹
+				//DataãŒç©ºã§ãªã„ãªã‚‰ã€çµ‚äº†
 				if(SendData==true) {
 					if(SendMode==sendmode_DATA)return SendData.size() > SendCnt;
 					else return 1;
 				}
 
-				//‘O‰ñƒCƒ“ƒNƒŠƒƒ“ƒg‚³‚ê‚Ä‚¢‚È‚­‚ÄAflowing‚ª—‚¿‚Ä‚¢‚ê‚ÎAƒCƒ“ƒNƒŠƒƒ“ƒg
+				//å‰å›ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã•ã‚Œã¦ã„ãªãã¦ã€flowingãŒè½ã¡ã¦ã„ã‚Œã°ã€ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 				if(!SendIncrement & !SendIO->second->flowing()) {
 					++SendIO;
 					if(SendIO == pIOs.end())SendIO = pIOs.begin();
 					SendIncrement=true;
 				}
 
-				//Data‚ğ“Ç‚İo‚¹‚È‚¢‚È‚çI—¹
+				//Dataã‚’èª­ã¿å‡ºã›ãªã„ãªã‚‰çµ‚äº†
 				if(SendIO->second->can_get()==false)return 0;
 
-				//Data“Ç‚İo‚µ ¸”s‚µ‚½‚çI—¹
+				//Dataèª­ã¿å‡ºã— å¤±æ•—ã—ãŸã‚‰çµ‚äº†
 				if(SendIO->second->get(SendData))return 0;
 				SendCnt=0;
 
-				//‹óƒf[ƒ^‚È‚ç‚Í‚¶‚­
+				//ç©ºãƒ‡ãƒ¼ã‚¿ãªã‚‰ã¯ã˜ã
 				if(SendData==false)return 0;
 
-				//Data“Ç‚İo‚µ‚É¬Œ÷‚·‚ê‚ÎAOK
+				//Dataèª­ã¿å‡ºã—ã«æˆåŠŸã™ã‚Œã°ã€OK
 				SendIncrement=false;
 				return 1;
 			}
-			//‘—M•¶š—ñ‚ğ1byteæ“¾‚·‚é
+			//é€ä¿¡æ–‡å­—åˆ—ã‚’1byteå–å¾—ã™ã‚‹
 			virtual unsigned char getc() {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
-				//Data‚ª‹ó‚È‚çAI—¹
+				//DataãŒç©ºãªã‚‰ã€çµ‚äº†
 				if(SendData==false) {
 					SendMode=sendmode_ID;
 					return 0xC0;
 				}
 
 				unsigned char c;
-				//ID‘—Mƒ‚[ƒh
+				//IDé€ä¿¡ãƒ¢ãƒ¼ãƒ‰
 				switch(SendMode) {
 				case sendmode_ID:
 					SendMode=sendmode_SIZE1;
@@ -197,14 +197,14 @@ namespace hmr {
 					return 0xCC;
 				}
 			}
-			//‘—M•¶š—ñ‚ªeofˆÊ’u=PacI’[‚©‚Ç‚¤‚©‚ğŒŸ’m‚·‚é
+			//é€ä¿¡æ–‡å­—åˆ—ãŒeofä½ç½®=Pacçµ‚ç«¯ã‹ã©ã†ã‹ã‚’æ¤œçŸ¥ã™ã‚‹
 			virtual bool flowing() {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
-				//‘O‰ñƒCƒ“ƒNƒŠƒƒ“ƒg‚³‚ê‚Ä‚¢‚È‚­‚ÄAflowing‚ª—‚¿‚Ä‚¢‚ê‚ÎAƒCƒ“ƒNƒŠƒƒ“ƒg
+				//å‰å›ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã•ã‚Œã¦ã„ãªãã¦ã€flowingãŒè½ã¡ã¦ã„ã‚Œã°ã€ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 				if(!SendIncrement & !SendIO->second->flowing()) {
 					++SendIO;
 					if(SendIO == pIOs.end())SendIO = pIOs.begin();
@@ -213,172 +213,172 @@ namespace hmr {
 
 				return SendIO->second->flowing();
 			}
-			//recv‚Å‚«‚é‚©H(’P‚Éreturn 1)
+			//recvã§ãã‚‹ã‹ï¼Ÿ(å˜ã«return 1)
 			virtual bool can_putc() {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
-				//RecvIO‚ª–³Œø‚È‚çA‘åŠ½Œ}i–³‹‚·‚é‚¯‚Çj
+				//RecvIOãŒç„¡åŠ¹ãªã‚‰ã€å¤§æ­“è¿ï¼ˆç„¡è¦–ã™ã‚‹ã‘ã©ï¼‰
 				if(RecvIO==pIOs.end())return true;
 
-				//ƒGƒ‰[ó‘Ô‚Ì‚É‚ÍA‘åŠ½Œ}i–³‹‚·‚é‚¯‚Çj
+				//ã‚¨ãƒ©ãƒ¼çŠ¶æ…‹ã®æ™‚ã«ã¯ã€å¤§æ­“è¿ï¼ˆç„¡è¦–ã™ã‚‹ã‘ã©ï¼‰
 				if(RecvMode==recvmode_ERROR)return true;
 
-				//ƒoƒbƒtƒ@‘¤‚ªóM‚Å‚«‚é‚È‚çOK
+				//ãƒãƒƒãƒ•ã‚¡å´ãŒå—ä¿¡ã§ãã‚‹ãªã‚‰OK
 				return RecvIO->second->can_put();
 			}
-			//óM•¶š—ñ‚ğ1byte—^‚¦‚é
+			//å—ä¿¡æ–‡å­—åˆ—ã‚’1byteä¸ãˆã‚‹
 			virtual void putc(unsigned char c) {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
-				//RecvIO‚ª–³Œø‚È‚çA‘åŠ½Œ}i–³‹‚·‚é‚¯‚Çj
+				//RecvIOãŒç„¡åŠ¹ãªã‚‰ã€å¤§æ­“è¿ï¼ˆç„¡è¦–ã™ã‚‹ã‘ã©ï¼‰
 				if(RecvIO==pIOs.end())return;
 
-				//ƒf[ƒ^idóM
+				//ãƒ‡ãƒ¼ã‚¿idå—ä¿¡æ™‚
 				if(RecvMode==recvmode_ID) {
-					//NullID‚Í‚Â‚©‚¦‚È‚¢‚Ì‚Å–³‹
+					//NullIDã¯ã¤ã‹ãˆãªã„ã®ã§ç„¡è¦–
 					if(c==message::data_id::null) {
-						//ˆÈŒã‚Ìƒf[ƒ^‚Íflush‚ª‚ ‚é‚Ü‚ÅM‚¶‚ç‚ê‚È‚¢‚Ì‚Åƒ‚[ƒh‚ğˆÚs
+						//ä»¥å¾Œã®ãƒ‡ãƒ¼ã‚¿ã¯flushãŒã‚ã‚‹ã¾ã§ä¿¡ã˜ã‚‰ã‚Œãªã„ã®ã§ãƒ¢ãƒ¼ãƒ‰ã‚’ç§»è¡Œ
 						RecvMode=recvmode_ERROR;
 						return;
 					}
 
-					//ƒf[ƒ^ID‚ğæ“¾
+					//ãƒ‡ãƒ¼ã‚¿IDã‚’å–å¾—
 					RecvDataID=c;
 					RecvDataError=error::null;
 					RecvDataArray.release();
 
-					//ID‚ÉŠÖ‚·‚éƒGƒ‰[“o˜^
+					//IDã«é–¢ã™ã‚‹ã‚¨ãƒ©ãƒ¼ç™»éŒ²
 					if(data_id::is_special_id(RecvDataID)) RecvDataError|=error::unknown;
 
-					//ƒ‚[ƒh‚ğƒTƒCƒYóMƒ‚[ƒh(SIZE1)‚ÖˆÚs
+					//ãƒ¢ãƒ¼ãƒ‰ã‚’ã‚µã‚¤ã‚ºå—ä¿¡ãƒ¢ãƒ¼ãƒ‰(SIZE1)ã¸ç§»è¡Œ
 					RecvMode=recvmode_SIZE1;
-				}//ƒf[ƒ^ƒTƒCƒYóM‘Ò1
+				}//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºå—ä¿¡å¾…1
 				else if(RecvMode==recvmode_SIZE1) {
-					//ƒf[ƒ^ƒTƒCƒY‚ğæ“¾
+					//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºã‚’å–å¾—
 					RecvCnt=static_cast<unsigned char>(c);
 
-					//ƒ‚[ƒh‚ğƒTƒCƒYóMƒ‚[ƒh(SIZE2)‚ÖˆÚs
+					//ãƒ¢ãƒ¼ãƒ‰ã‚’ã‚µã‚¤ã‚ºå—ä¿¡ãƒ¢ãƒ¼ãƒ‰(SIZE2)ã¸ç§»è¡Œ
 					RecvMode=recvmode_SIZE2;
-				}//ƒf[ƒ^ƒTƒCƒYóM‘Ò2
+				}//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºå—ä¿¡å¾…2
 				else if(RecvMode==recvmode_SIZE2) {
-					//ƒf[ƒ^ƒTƒCƒY‚ğæ“¾
+					//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºã‚’å–å¾—
 					RecvCnt|=(static_cast<unsigned int>(static_cast<unsigned char>(c))<<8);
 
-					//ƒf[ƒ^ƒTƒCƒY‚ª‹KŠiãŒÀ‚ğã‰ñ‚Á‚Ä‚¢‚½ê‡‚Í–³‹
+					//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºãŒè¦æ ¼ä¸Šé™ã‚’ä¸Šå›ã£ã¦ã„ãŸå ´åˆã¯ç„¡è¦–
 					if(RecvCnt>HMR_MESSAGE_CODE_MAXSIZE) {
-						//ƒf[ƒ^‚ğ‘—‚é
+						//ãƒ‡ãƒ¼ã‚¿ã‚’é€ã‚‹
 						if(RecvIO->second->can_put()) {
 							RecvDataError|=error::sizeover;
 							RecvIO->second->put(data(RecvDataID, RecvDataArray, RecvDataError));
 						}
 
-						//ˆÈŒã‚Ìƒf[ƒ^‚Íflush‚ª‚ ‚é‚Ü‚ÅM‚¶‚ç‚ê‚È‚¢‚Ì‚Åƒ‚[ƒh‚ğˆÚs
+						//ä»¥å¾Œã®ãƒ‡ãƒ¼ã‚¿ã¯flushãŒã‚ã‚‹ã¾ã§ä¿¡ã˜ã‚‰ã‚Œãªã„ã®ã§ãƒ¢ãƒ¼ãƒ‰ã‚’ç§»è¡Œ
 						RecvMode=recvmode_ERROR;
 						return;
 					}
 
-					//ƒf[ƒ^ƒTƒCƒY‚ª0‚Ì
+					//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºãŒ0ã®æ™‚
 					if(RecvCnt==0) {
-						//ƒf[ƒ^‚ğ‘—‚é
+						//ãƒ‡ãƒ¼ã‚¿ã‚’é€ã‚‹
 						if(RecvIO->second->can_put()) {
 							RecvIO->second->put(data(RecvDataID, RecvDataArray, RecvDataError));
 						}
 
-						//ƒ‚[ƒh‚ğIDóMƒ‚[ƒh‚ÖˆÚs
+						//ãƒ¢ãƒ¼ãƒ‰ã‚’IDå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 						RecvMode=recvmode_ID;
 						return;
 					}
 
-					//ƒoƒbƒtƒ@‚ğŠm•Û
+					//ãƒãƒƒãƒ•ã‚¡ã‚’ç¢ºä¿
 					RecvDataArray = make_shared_array(RecvCnt);
 
-					//ƒf[ƒ^ƒTƒCƒYŠm•Û‚É¸”s‚µ‚½‚Æ‚«
+					//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºç¢ºä¿ã«å¤±æ•—ã—ãŸã¨ã
 					if(RecvDataArray.size()!=RecvCnt) {
-						//Šm•Û¸”sƒGƒ‰[“o˜^
+						//ç¢ºä¿å¤±æ•—ã‚¨ãƒ©ãƒ¼ç™»éŒ²
 						RecvDataError|=error::failnew;
-						//ˆÈŒãA‘‚«‚İ‚Å‚«‚È‚¢‚Ì‚ÅAŸ‚Ìƒf[ƒ^‚ª‚ ‚é‚Ü‚Å–³‹
+						//ä»¥å¾Œã€æ›¸ãè¾¼ã¿ã§ããªã„ã®ã§ã€æ¬¡ã®ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹ã¾ã§ç„¡è¦–
 						RecvMode=recvmode_IGNORE;
 						return;
 					}
 
-					//ƒ‚[ƒh‚ğPacóMƒ‚[ƒh‚ÖˆÚs
+					//ãƒ¢ãƒ¼ãƒ‰ã‚’Pacå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 					RecvCnt=0;
 					RecvMode=recvmode_DATA;
-				}//ƒf[ƒ^óM’†
+				}//ãƒ‡ãƒ¼ã‚¿å—ä¿¡ä¸­
 				else if(RecvMode==recvmode_DATA) {
-					//ƒf[ƒ^‘‚«‚İ
+					//ãƒ‡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿
 					RecvDataArray[RecvCnt]=c;
 
-					//‘‚«‚İƒTƒCƒYãŒÀ‚É’B‚µ‚½ê‡
+					//æ›¸ãè¾¼ã¿ã‚µã‚¤ã‚ºä¸Šé™ã«é”ã—ãŸå ´åˆ
 					if(RecvCnt==RecvDataArray.size()) {
-						//ƒf[ƒ^‚ğ‘—‚é
+						//ãƒ‡ãƒ¼ã‚¿ã‚’é€ã‚‹
 						if(RecvIO->second->can_put()) {
 							RecvIO->second->put(data(RecvDataID, hmLib::move(static_cast<shared_read_array>(RecvDataArray)), RecvDataError));
 						}
 						RecvDataArray.release();
 						
-						//ƒ‚[ƒh‚ğIDóMƒ‚[ƒh‚ÖˆÚs
+						//ãƒ¢ãƒ¼ãƒ‰ã‚’IDå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 						RecvMode=recvmode_ID;
 						return;
 					}
-				}//ƒf[ƒ^–³‹’†
+				}//ãƒ‡ãƒ¼ã‚¿ç„¡è¦–ä¸­
 				else if(RecvMode==recvmode_IGNORE) {
 					--(RecvCnt);
 
-					//‘Sƒf[ƒ^óM‚µI‚¦‚½‚Æ‚«
+					//å…¨ãƒ‡ãƒ¼ã‚¿å—ä¿¡ã—çµ‚ãˆãŸã¨ã
 					if(RecvCnt==0) {
 						if(RecvIO->second->can_put()) {
 							RecvIO->second->put(data(RecvDataID, hmLib::move(static_cast<shared_read_array>(RecvDataArray)), RecvDataError));
 						}
 						RecvDataArray.release();
 
-						//ƒ‚[ƒh‚ğIDóM‚ÉˆÚs
+						//ãƒ¢ãƒ¼ãƒ‰ã‚’IDå—ä¿¡ã«ç§»è¡Œ
 						RecvMode=recvmode_ID;
 						return;
 					}
 				}
 			}
-			//flush‚·‚é(eof‰»‚·‚é=Pac‚ğ•Â‚¶‚é)
+			//flushã™ã‚‹(eofåŒ–ã™ã‚‹=Pacã‚’é–‰ã˜ã‚‹)
 			virtual void flush() {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
-				//óM’†‚Ìƒf[ƒ^‚ª‘¶İ‚·‚éê‡
+				//å—ä¿¡ä¸­ã®ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã™ã‚‹å ´åˆ
 				if(RecvMode==recvmode_DATA || RecvMode==recvmode_IGNORE) {
-					//–¢óMŠ®—¹ƒGƒ‰[“o˜^
+					//æœªå—ä¿¡å®Œäº†ã‚¨ãƒ©ãƒ¼ç™»éŒ²
 					RecvDataError|=error::underflow;
 
-					//ƒf[ƒ^‘—•t
+					//ãƒ‡ãƒ¼ã‚¿é€ä»˜
 					if(RecvIO->second->can_put()) {
 						RecvIO->second->put(data(RecvDataID, hmLib::move(static_cast<shared_read_array>(RecvDataArray)), RecvDataError));
 					}
 					RecvDataArray.release();
 				}
 
-				//ƒtƒ‰ƒbƒVƒ…I
+				//ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ï¼
 				RecvIO->second->flush();
 
-				//ƒ‚[ƒh‚ğIDóM‚ÉˆÚs
+				//ãƒ¢ãƒ¼ãƒ‰ã‚’IDå—ä¿¡ã«ç§»è¡Œ
 				RecvMode=recvmode_ID;
 			}
 		public:
 			//======= vcom functions ========
-			//‘—Mæch‚ğæ“¾‚·‚é
+			//é€ä¿¡å…ˆchã‚’å–å¾—ã™ã‚‹
 			virtual unsigned char get_ch() {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
-				//‘O‰ñƒCƒ“ƒNƒŠƒƒ“ƒg‚³‚ê‚Ä‚¢‚È‚­‚ÄAflowing‚ª—‚¿‚Ä‚¢‚ê‚ÎAƒCƒ“ƒNƒŠƒƒ“ƒg
+				//å‰å›ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã•ã‚Œã¦ã„ãªãã¦ã€flowingãŒè½ã¡ã¦ã„ã‚Œã°ã€ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 				if(!SendIncrement & !SendIO->second->flowing()) {
 					++SendIO;
 					if(SendIO == pIOs.end())SendIO = pIOs.begin();
@@ -387,41 +387,41 @@ namespace hmr {
 
 				return SendIO->first;
 			}
-			//‘—M‚ğƒLƒƒƒ“ƒZƒ‹‚·‚é
+			//é€ä¿¡ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹
 			virtual void cancel_get() {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
 				SendMode=sendmode_ID;
 				SendCnt=0;
 			}
-			//‘—M‚ğƒXƒLƒbƒv‚·‚é
+			//é€ä¿¡ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹
 			virtual void skip_get() {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
 				SendMode=sendmode_ID;
 				SendCnt=0;
 				SendData.release();
 			}
-			//óM‚·‚éch‚ğæ“¾‚·‚é
+			//å—ä¿¡ã™ã‚‹chã‚’å–å¾—ã™ã‚‹
 			virtual void put_ch(unsigned char Ch) {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
 				RecvIO=std::lower_bound(pIOs.begin(), pIOs.end(), element(Ch, 0), compare());
 			}
-			//óM‚ğƒLƒƒƒ“ƒZƒ‹‚·‚é
+			//å—ä¿¡ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹
 			virtual void cancel_put() {
 				hmr_assert(is_open(), exceptions::not_opend());
 
-				//Lock‚³‚ê‚Ä‚È‚¯‚ê‚ÎA©“®ƒƒbƒN
+				//Lockã•ã‚Œã¦ãªã‘ã‚Œã°ã€è‡ªå‹•ãƒ­ãƒƒã‚¯
 				if(!is_lock())lock();
 
 				RecvMode=recvmode_ID;

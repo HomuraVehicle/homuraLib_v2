@@ -57,7 +57,7 @@ namespace hmr {
 			void operator()(void) {
 				if(!is_open())return;
 
-				//ŽóM(‰º‚è)ˆ—
+				//å—ä¿¡(ä¸‹ã‚Š)å‡¦ç†
 				while(Buffer.DownIO.can_get() && pIO->can_put()) {
 					if(!DownFlush && !Buffer.DownIO.flowing()) {
 						pIO->flush();
@@ -76,7 +76,7 @@ namespace hmr {
 					}
 				}
 
-				//‘—M(ã‚è)ˆ—
+				//é€ä¿¡(ä¸Šã‚Š)å‡¦ç†
 				while(Buffer.DownIO.can_put() && pIO->can_get()) {
 					if(!UpFlush && !pIO->flowing()) {
 						Buffer.DownIO.flush();

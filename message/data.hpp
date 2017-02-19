@@ -12,14 +12,14 @@ namespace hmr {
 		}
 		namespace error {
 			enum error_code {
-				null	=0x00,		//Data‚ÉƒGƒ‰[‚ª‚È‚¢
-				stranger=0x01,		//Data‚Ì‘—MŒ³CH‚ª‚¨‚©‚µ‚¢
-				unknown	=0x02,		//Data‚Ì¯•ÊID‚ª‚¨‚©‚µ‚¢
-				failnew	=0x04,		//Data‚ÌŠm•Û‚É¸”s‚µ‚½
-				sizeover=0x08,		//Data‚ÌSize‚ª‘å‚«‚·‚¬‚é
-				overflow=0x10,		//Data‚ªSize‚É”ä‚×‚Ä‘½‚·‚¬‚é
-				underflow=0x20,		//Data‚ªSize‚É”ä‚×‚Ä­‚È‚·‚¬‚é
-				broken=0x40			//Data‚ª‰ó‚ê‚Ä‚¢‚é
+				null	=0x00,		//Dataã«ã‚¨ãƒ©ãƒ¼ãŒãªã„
+				stranger=0x01,		//Dataã®é€ä¿¡å…ƒCHãŒãŠã‹ã—ã„
+				unknown	=0x02,		//Dataã®è­˜åˆ¥IDãŒãŠã‹ã—ã„
+				failnew	=0x04,		//Dataã®ç¢ºä¿ã«å¤±æ•—ã—ãŸ
+				sizeover=0x08,		//Dataã®SizeãŒå¤§ãã™ãã‚‹
+				overflow=0x10,		//DataãŒSizeã«æ¯”ã¹ã¦å¤šã™ãã‚‹
+				underflow=0x20,		//DataãŒSizeã«æ¯”ã¹ã¦å°‘ãªã™ãã‚‹
+				broken=0x40			//DataãŒå£Šã‚Œã¦ã„ã‚‹
 			};
 		}
 		struct data {

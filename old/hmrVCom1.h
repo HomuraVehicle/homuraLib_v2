@@ -3,20 +3,20 @@
 #
 #include"hmrVComData.h"
 /*---vcom1---
-vcom_data‚Ævcom1Œ`®‚Ìƒf[ƒ^•¶š—ñ‚Æ‚ğ•ÏŠ·‚·‚é
+vcom_dataã¨vcom1å½¢å¼ã®ãƒ‡ãƒ¼ã‚¿æ–‡å­—åˆ—ã¨ã‚’å¤‰æ›ã™ã‚‹
 
 === vcom1 ===
 v1_04/140302 hmIto
-	vcom1_skip_getŠÖ”‚ğ’Ç‰Á
+	vcom1_skip_geté–¢æ•°ã‚’è¿½åŠ 
 v1_03/140118 hmIto
-	0byteƒf[ƒ^‚ğ‘—M‚·‚éÛ‚ÉAƒf[ƒ^‚Ì”jŠü‚ğ‚µ‚Ä‚¢‚È‚©‚Á‚½‚½‚ßA‰½“x‚à“¯‚¶ƒf[ƒ^‚ğ‘—‚ë‚¤‚Æ‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚½–â‘è‚ğC³
+	0byteãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡ã™ã‚‹éš›ã«ã€ãƒ‡ãƒ¼ã‚¿ã®ç ´æ£„ã‚’ã—ã¦ã„ãªã‹ã£ãŸãŸã‚ã€ä½•åº¦ã‚‚åŒã˜ãƒ‡ãƒ¼ã‚¿ã‚’é€ã‚ã†ã¨ã—ã¦ã—ã¾ã£ã¦ã„ãŸå•é¡Œã‚’ä¿®æ­£
 v1_02/140110 hmIto
-	vcom_data‚Ìid‚É‚©‚©‚í‚é‹K–ñ•ÏX‚É‘Î‰
+	vcom_dataã®idã«ã‹ã‹ã‚ã‚‹è¦ç´„å¤‰æ›´ã«å¯¾å¿œ
 v1_01/131224 hmIto
-	ƒfƒoƒbƒOƒfƒoƒbƒOƒfƒoƒbƒO
-	‚Ù‚ÚƒeƒXƒg‚µ‚Â‚­‚µ‚½‚Í‚¸
+	ãƒ‡ãƒãƒƒã‚°ãƒ‡ãƒãƒƒã‚°ãƒ‡ãƒãƒƒã‚°
+	ã»ã¼ãƒ†ã‚¹ãƒˆã—ã¤ãã—ãŸã¯ãš
 v1_00/131220 hmIto
-	VMC‚©‚ç•ª—£‚µ‚Äì¬
+	VMCã‹ã‚‰åˆ†é›¢ã—ã¦ä½œæˆ
 */
 #ifdef __cplusplus
 extern "C"{
@@ -37,45 +37,45 @@ extern "C"{
 		vcom_size_t SendCnt;
 		hmLib_boolian SendEof;
 		//============== functions ===============
-		vcom1_bFp_v _fp_can_move_push;					//óMƒf[ƒ^‚ğ‚Ô‚¿‚±‚ñ‚Å‚¢‚¢‚©
-		vcom1_vFp_pdata _fp_move_push;					//óMƒf[ƒ^‚ğ‚Ô‚¿‚Ş
-		vcom1_bFp_v _fp_can_move_pop;					//‘—Mƒf[ƒ^‚ğ”²‚«o‚µ‚Ä‚¢‚¢‚©
-		vcom1_vFp_pdata _fp_move_pop;					//‘—Mƒf[ƒ^‚ğ”²‚«o‚·
-		vcom1_bFp_pstr_strsize _fp_cstring_construct;	//cstringŠm•ÛˆË—ŠŠÖ”	
+		vcom1_bFp_v _fp_can_move_push;					//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’ã¶ã¡ã“ã‚“ã§ã„ã„ã‹
+		vcom1_vFp_pdata _fp_move_push;					//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’ã¶ã¡è¾¼ã‚€
+		vcom1_bFp_v _fp_can_move_pop;					//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠœãå‡ºã—ã¦ã„ã„ã‹
+		vcom1_vFp_pdata _fp_move_pop;					//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠœãå‡ºã™
+		vcom1_bFp_pstr_strsize _fp_cstring_construct;	//cstringç¢ºä¿ä¾é ¼é–¢æ•°	
 	}vcom1;
-	//vcom1‰Šú‰»
+	//vcom1åˆæœŸåŒ–
 	void vcom1_initialize(vcom1* pVCom1,
 		vcom1_bFp_v Fp_can_move_push,
 		vcom1_vFp_pdata Fp_move_push,
 		vcom1_bFp_v Fp_can_move_pop,
 		vcom1_vFp_pdata Fp_move_pop,
 		vcom1_bFp_pstr_strsize Fp_cstring_construct);
-	//vcom1I’[‰»
+	//vcom1çµ‚ç«¯åŒ–
 	void vcom1_finalize(vcom1* pVCom1);
 	//======== gate interface =======
-	//send‚Å‚«‚é‚©H
+	//sendã§ãã‚‹ã‹ï¼Ÿ
 	hmLib_boolian vcom1_can_getc(vcom1* pVCom);
-	//‘—M•¶š—ñ‚ğ1byteæ“¾‚·‚é
+	//é€ä¿¡æ–‡å­—åˆ—ã‚’1byteå–å¾—ã™ã‚‹
 	unsigned char vcom1_getc(vcom1* pVCom);
-	//‘—M•¶š—ñ‚ªeofˆÊ’u=PacI’[‚©‚Ç‚¤‚©‚ğŒŸ’m‚·‚é
+	//é€ä¿¡æ–‡å­—åˆ—ãŒeofä½ç½®=Pacçµ‚ç«¯ã‹ã©ã†ã‹ã‚’æ¤œçŸ¥ã™ã‚‹
 	hmLib_boolian vcom1_flowing(vcom1* pVCom);
-	//recv‚Å‚«‚é‚©H(’P‚Éreturn 1)
+	//recvã§ãã‚‹ã‹ï¼Ÿ(å˜ã«return 1)
 	hmLib_boolian vcom1_can_putc(vcom1* pVCom);
-	//óM•¶š—ñ‚ğ1byte—^‚¦‚é
+	//å—ä¿¡æ–‡å­—åˆ—ã‚’1byteä¸ãˆã‚‹
 	void vcom1_putc(vcom1* pVCom, unsigned char c);
-	//flush‚·‚é(eof‰»‚·‚é=Pac‚ğ•Â‚¶‚é)
+	//flushã™ã‚‹(eofåŒ–ã™ã‚‹=Pacã‚’é–‰ã˜ã‚‹)
 	void vcom1_flush(vcom1* pVCom);
 
 	//======= vcom functions ========
-	//‘—Mæch‚ğæ“¾‚·‚é
+	//é€ä¿¡å…ˆchã‚’å–å¾—ã™ã‚‹
 	unsigned char vcom1_get_ch(vcom1* pVCom);
-	//‘—M‚ğƒLƒƒƒ“ƒZƒ‹‚·‚éiŸ‰ñ‘—M‚ÍA¡‚Ìƒf[ƒ^j
+	//é€ä¿¡ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ï¼ˆæ¬¡å›é€ä¿¡ã¯ã€ä»Šã®ãƒ‡ãƒ¼ã‚¿ï¼‰
 	void vcom1_cancel_get(vcom1* pVCom);
-	//‘—M‚ğƒXƒLƒbƒv‚·‚éiŸ‰ñ‘—M‚ÍAŸ‚Ìƒf[ƒ^j
+	//é€ä¿¡ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ï¼ˆæ¬¡å›é€ä¿¡ã¯ã€æ¬¡ã®ãƒ‡ãƒ¼ã‚¿ï¼‰
 	void vcom1_skip_get(vcom1* pVCom);
-	//óM‚·‚éch‚ğæ“¾‚·‚é
+	//å—ä¿¡ã™ã‚‹chã‚’å–å¾—ã™ã‚‹
 	void vcom1_put_ch(vcom1* pVCom, unsigned char Ch);
-	//óM‚ğƒLƒƒƒ“ƒZƒ‹‚·‚é
+	//å—ä¿¡ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹
 	void vcom1_cancel_put(vcom1* pVCom);
 
 #ifdef __cplusplus

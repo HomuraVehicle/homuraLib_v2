@@ -12,41 +12,41 @@ namespace hmr {
 		const unsigned char vmc2::PacTrmn[4]={'#', '|', 0x0d, 0x0a};
 		const unsigned char vmc2::PacTrmnSize=4;
 
-		//vmc2‚ğ‰Šú‰»‚·‚é
+		//vmc2ã‚’åˆæœŸåŒ–ã™ã‚‹
 		vmc2::vmc2(unsigned char Ch_) :Ch(Ch_) {}
 		vmc2::vmc2(unsigned char Ch_, client& rVCom1) :Ch(Ch_) {open(rVCom1);}
-		//vmc2‚ğI’[‰»‚·‚é
+		//vmc2ã‚’çµ‚ç«¯åŒ–ã™ã‚‹
 		vmc2::~vmc2() {close();}
-		//VCom1‚ğŠJ‚­
+		//VCom1ã‚’é–‹ã
 		bool vmc2::open(client& rVCom1) {
 			if(is_open())return true;
 
 			pVCom1=&rVCom1;
 
-			//óM‘¤•Ï”
+			//å—ä¿¡å´å¤‰æ•°
 			RecvErr=puterr_NULL;
 			RecvMode=putmode_IDLE;
 			RecvCnt=0;
 			RecvCh=0xFF;
 
-			//‘—M‘¤•Ï”
+			//é€ä¿¡å´å¤‰æ•°
 			SendErr=geterr_NULL;
 			SendMode=getmode_STRT;
 			SendCnt=0;
 
 			return false;
 		}
-		//VCom1‚ğ•Â‚¶‚é
+		//VCom1ã‚’é–‰ã˜ã‚‹
 		bool vmc2::close() {
 			if(!is_open())return true;
 
-			//óMƒ‚[ƒh‚Ì‚Ü‚Ü‚Ìê‡
+			//å—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã®ã¾ã¾ã®å ´åˆ
 			if(RecvMode==putmode_DATA) {
 				pVCom1->flush();
 				RecvMode=putmode_IDLE;
 				RecvCnt=0;
 			}
-			//‘—Mƒ‚[ƒh‚Ì‚Ü‚Ü‚Ìê‡
+			//é€ä¿¡ãƒ¢ãƒ¼ãƒ‰ã®ã¾ã¾ã®å ´åˆ
 			if(SendMode==getmode_DATA) {
 				pVCom1->cancel_get();
 				SendMode=getmode_STRT;
@@ -55,201 +55,201 @@ namespace hmr {
 
 			pVCom1=0;
 		}
-		//‚·‚Å‚É—˜—p‰Â”\‚É‚È‚Á‚Ä‚¢‚é‚©
+		//ã™ã§ã«åˆ©ç”¨å¯èƒ½ã«ãªã£ã¦ã„ã‚‹ã‹
 		bool vmc2::is_open() { return pVCom1!=0; }
-		//ƒtƒ‰ƒbƒVƒ…‚·‚éiÀ¿‰½‚à‚µ‚È‚¢j
+		//ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ï¼ˆå®Ÿè³ªä½•ã‚‚ã—ãªã„ï¼‰
 		void vmc2::flush() { return; }
-		//óMƒf[ƒ^‚ğ“Š‚°“ü‚ê‰Â”\‚©Šm”F 0:•s‰Â,1:‰Â
+		//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠ•ã’å…¥ã‚Œå¯èƒ½ã‹ç¢ºèª 0:ä¸å¯,1:å¯
 		bool vmc2::can_putc() {
 			if(RecvMode==putmode_DATA) {
 				return pVCom1->can_putc();
 			}
 			return 1;
 		}
-		//óMƒf[ƒ^‚ğ“Š‚°“ü‚ê‚é
+		//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠ•ã’å…¥ã‚Œã‚‹
 		void vmc2::putc(unsigned char c) {
 			unsigned char cnt;
 
-			//óM‚Å‚«‚È‚¢‚Ì‚É“Š‚°“ü‚ê‚½‚çƒGƒ‰[
+			//å—ä¿¡ã§ããªã„ã®ã«æŠ•ã’å…¥ã‚ŒãŸã‚‰ã‚¨ãƒ©ãƒ¼
 			if(!can_putc()) {
 				RecvErr=puterr_INVALID_PUTC;
 			}
 
-			//”ñóMƒ‚[ƒh(RecvPacStrt‘Ò‚¿)
+			//éå—ä¿¡ãƒ¢ãƒ¼ãƒ‰(RecvPacStrtå¾…ã¡)
 			if(RecvMode==putmode_IDLE) {
-				//CH•”•ªóM’†‚ÉCh‚Æˆê’v
+				//CHéƒ¨åˆ†å—ä¿¡ä¸­ã«Chã¨ä¸€è‡´
 				if(RecvCnt==2 && (c&0x0F)==Ch) {
 					++(RecvCnt);
 
-					//‘Šè‚ÌCh‚ğó‚¯æ‚é
+					//ç›¸æ‰‹ã®Chã‚’å—ã‘å–ã‚‹
 					RecvCh=((c>>4)&0x0F);
-				}//”ñCH•”•ªóM’†‚ÉStrt‚Æˆê’v
+				}//éCHéƒ¨åˆ†å—ä¿¡ä¸­ã«Strtã¨ä¸€è‡´
 				else if(RecvCnt!=2 && c==PacStrt[RecvCnt]) {
 					++(RecvCnt);
 
-					//‚·‚×‚Ä‚ÌSTRT‚ğóM
+					//ã™ã¹ã¦ã®STRTã‚’å—ä¿¡
 					if(RecvCnt==PacStrtSize) {
-						//ƒ‚[ƒh‚ğPacóMƒ‚[ƒh‚ÖˆÚs
+						//ãƒ¢ãƒ¼ãƒ‰ã‚’Pacå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 						RecvMode=putmode_DATA;
 						RecvCnt=0;
 
-						//óMch‚ğ’Ê’m
+						//å—ä¿¡chã‚’é€šçŸ¥
 						pVCom1->put_ch(RecvCh);
 					}
-				}//STRT‚Í•sˆê’v‚¾‚ªæ“ªSTRT‚Æ‚Íˆê’v
+				}//STRTã¯ä¸ä¸€è‡´ã ãŒå…ˆé ­STRTã¨ã¯ä¸€è‡´
 				else if(c==PacStrt[0]) {
 					RecvCnt=1;
-				}//‚»‚êˆÈŠO
+				}//ãã‚Œä»¥å¤–
 				else {
 					RecvCnt=0;
 				}
-			}//óMƒ‚[ƒh(PacTrmn‘Ò‚¿)
+			}//å—ä¿¡ãƒ¢ãƒ¼ãƒ‰(PacTrmnå¾…ã¡)
 			else {
-				//óM•¶š‚ªputmodeCnt”Ô–Ú‚ÌPacTrmn•¶š‚Æˆê’v
+				//å—ä¿¡æ–‡å­—ãŒputmodeCntç•ªç›®ã®PacTrmnæ–‡å­—ã¨ä¸€è‡´
 				if(PacTrmn[RecvCnt]==c) {
-					//ƒJƒEƒ“ƒ^[‰ÁZ
+					//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼åŠ ç®—
 					++(RecvCnt);
 
-					//‘SRecvPacTrmnóM
+					//å…¨RecvPacTrmnå—ä¿¡
 					if(RecvCnt==PacTrmnSize) {
-						//I—¹’Ê’m
+						//çµ‚äº†é€šçŸ¥
 						pVCom1->flush();
 
-						//ƒ‚[ƒh‚ğPacóMƒ‚[ƒh‚ÖˆÚs
+						//ãƒ¢ãƒ¼ãƒ‰ã‚’Pacå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 						RecvMode=putmode_IDLE;
 						RecvCnt=0;
 					}
-				}//óM•¶š‚ª0”Ô–Ú‚ÌPacTrmn•¶š‚Æˆê’v
+				}//å—ä¿¡æ–‡å­—ãŒ0ç•ªç›®ã®PacTrmnæ–‡å­—ã¨ä¸€è‡´
 				else if(PacTrmn[0]==c) {
 					for(cnt=0; cnt<RecvCnt; ++cnt) {
-						//óM‚Å‚«‚È‚¢ê‡
+						//å—ä¿¡ã§ããªã„å ´åˆ
 						if(pVCom1->can_putc()==0) {
-							//ƒGƒ‰[”­•ñ
+							//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 							RecvErr=puterr_RECVREJECTED;
-							//óM‚ğƒXƒgƒbƒv
+							//å—ä¿¡ã‚’ã‚¹ãƒˆãƒƒãƒ—
 							pVCom1->flush();
-							//ƒ‚[ƒh‚ğ–ß‚·
+							//ãƒ¢ãƒ¼ãƒ‰ã‚’æˆ»ã™
 							RecvMode=putmode_IDLE;
 							RecvCnt=0;
 							return;
 						}
 
-						//ƒf[ƒ^‚ğˆø‚«“n‚·
+						//ãƒ‡ãƒ¼ã‚¿ã‚’å¼•ãæ¸¡ã™
 						pVCom1->putc(PacTrmn[cnt]);
 					}
-					//ƒJƒEƒ“ƒ^[‚ğ1‚É(1•¶š‚Íˆê’v‚µ‚½‚©‚ç)
+					//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’1ã«(1æ–‡å­—ã¯ä¸€è‡´ã—ãŸã‹ã‚‰)
 					RecvCnt=1;
-				}//óM•¶š‚ªPacTrmn•¶š‚Æ•sˆê’v
+				}//å—ä¿¡æ–‡å­—ãŒPacTrmnæ–‡å­—ã¨ä¸ä¸€è‡´
 				else {
 					for(cnt=0; cnt<RecvCnt; ++cnt) {
-						//óM‚Å‚«‚È‚¢ê‡
+						//å—ä¿¡ã§ããªã„å ´åˆ
 						if(pVCom1->can_putc()==0) {
-							//ƒGƒ‰[”­•ñ
+							//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 							RecvErr=puterr_RECVREJECTED;
-							//óM‚ğƒXƒgƒbƒv
+							//å—ä¿¡ã‚’ã‚¹ãƒˆãƒƒãƒ—
 							pVCom1->flush();
-							//ƒ‚[ƒh‚ğ–ß‚·
+							//ãƒ¢ãƒ¼ãƒ‰ã‚’æˆ»ã™
 							RecvMode=putmode_IDLE;
 							RecvCnt=0;
 							return;
 						}
 
-						//ƒf[ƒ^‚ğˆø‚«“n‚·
+						//ãƒ‡ãƒ¼ã‚¿ã‚’å¼•ãæ¸¡ã™
 						pVCom1->putc(PacTrmn[cnt]);
 					}
-					//ƒJƒEƒ“ƒ^[ƒŠƒZƒbƒg
+					//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ãƒªã‚»ãƒƒãƒˆ
 					RecvCnt=0;
 
-					//óM‚Å‚«‚È‚¢ê‡
+					//å—ä¿¡ã§ããªã„å ´åˆ
 					if(pVCom1->can_putc()==0) {
-						//ƒGƒ‰[”­•ñ
+						//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 						RecvErr=puterr_RECVREJECTED;
-						//óM‚ğƒXƒgƒbƒv
+						//å—ä¿¡ã‚’ã‚¹ãƒˆãƒƒãƒ—
 						pVCom1->flush();
-						//ƒ‚[ƒh‚ğ–ß‚·
+						//ãƒ¢ãƒ¼ãƒ‰ã‚’æˆ»ã™
 						RecvMode=putmode_IDLE;
 						RecvCnt=0;
 						return;
 					}
 
-					//ƒf[ƒ^‚ğˆø‚«“n‚·
+					//ãƒ‡ãƒ¼ã‚¿ã‚’å¼•ãæ¸¡ã™
 					pVCom1->putc(c);
 
 				}
 			}
 		}
-		//‘—Mƒf[ƒ^‚ğŒÄ‚Ño‚µ‰Â”\‚©Šm”F 0:•s‰Â,1:‰Â
+		//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å‘¼ã³å‡ºã—å¯èƒ½ã‹ç¢ºèª 0:ä¸å¯,1:å¯
 		bool vmc2::can_getc() {
 			if(SendMode==getmode_STRT&&SendCnt==0) {
-				//‘—óM‚Å‚«‚éƒf[ƒ^‚ª‘¶İ‚·‚é‚©
+				//é€å—ä¿¡ã§ãã‚‹ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã™ã‚‹ã‹
 				return pVCom1->can_getc();
 			} else if(SendMode==getmode_DATA) {
-				//‘—MÏ‚İó‘Ôƒf[ƒ^––”ö‚É‚¢‚éê‡‚ÍAŸ‚ÍTRMN‚Ì‚Í‚¸‚È‚Ì‚Å1
+				//é€ä¿¡æ¸ˆã¿çŠ¶æ…‹ãƒ‡ãƒ¼ã‚¿æœ«å°¾ã«ã„ã‚‹å ´åˆã¯ã€æ¬¡ã¯TRMNã®ã¯ãšãªã®ã§1
 				if(pVCom1->flowing()==0 && SendCnt!=0)return 1;
 				return pVCom1->can_getc();
 			}
 
 			return 1;
 		}
-		//‘—Mƒf[ƒ^‚ğŒÄ‚Ño‚·
+		//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å‘¼ã³å‡ºã™
 		unsigned char vmc2::getc() {
 			unsigned char c;
 
-			//getc‚Å‚«‚È‚¢‚Æ‚«‚É‚ÍCƒGƒ‰[
+			//getcã§ããªã„ã¨ãã«ã¯ï¼Œã‚¨ãƒ©ãƒ¼
 			if(!can_getc()) {
 				SendCnt=geterr_INVALID_GETC;
 				return 0xC0;
 			}
 
-			//”ñ‘—Mƒ‚[ƒh(SendPacStrt‘Ò‚¿)
+			//éé€ä¿¡ãƒ¢ãƒ¼ãƒ‰(SendPacStrtå¾…ã¡)
 			if(SendMode==getmode_STRT) {
-				//CHƒtƒF[ƒY‚Ì
+				//CHãƒ•ã‚§ãƒ¼ã‚ºã®æ™‚
 				if(SendCnt==2) {
 					c = ((Ch)<<4)|(pVCom1->get_ch()&0x0F);
 					++(SendCnt);
-				}//ŒÅ’è•¶š—ñ‘—MƒtƒF[ƒY
+				}//å›ºå®šæ–‡å­—åˆ—é€ä¿¡ãƒ•ã‚§ãƒ¼ã‚º
 				else {
 					c = PacStrt[SendCnt];
 					++(SendCnt);
 
-					//PacStrt‚ğ‘—‚èI‚í‚Á‚½‚çA‘—M—p‚É‰Šú‰»
+					//PacStrtã‚’é€ã‚Šçµ‚ã‚ã£ãŸã‚‰ã€é€ä¿¡ç”¨ã«åˆæœŸåŒ–
 					if(SendCnt>=4) {
 						SendMode=getmode_DATA;
 						SendCnt=0;
 					}
 				}
-			}//Data‘—Mƒ‚[ƒh
+			}//Dataé€ä¿¡ãƒ¢ãƒ¼ãƒ‰
 			else if(SendMode==getmode_DATA) {
-				//ƒf[ƒ^‚ªI—¹‚µ‚½ê‡ATRMN‚ÉˆÚs‚·‚é
+				//ãƒ‡ãƒ¼ã‚¿ãŒçµ‚äº†ã—ãŸå ´åˆã€TRMNã«ç§»è¡Œã™ã‚‹
 				if(pVCom1->flowing()==0 && SendCnt!=0) {
-					//TRMN‘—M
+					//TRMNé€ä¿¡
 					SendMode=getmode_TRMN;
 					c=PacTrmn[0];
 					SendCnt=1;
-				}//send‚É¸”s‚·‚éê‡‚Í‹­§I—¹
+				}//sendã«å¤±æ•—ã™ã‚‹å ´åˆã¯å¼·åˆ¶çµ‚äº†
 				else if(pVCom1->can_getc()==0) {
-					//ƒGƒ‰[”­•ñ
+					//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 					SendErr=geterr_SENDREJECTED;
 
-					//vcomŒãˆ—
+					//vcomå¾Œå‡¦ç†
 					pVCom1->cancel_get();
 
-					//TRMN‚ğ‹­§‘—M
+					//TRMNã‚’å¼·åˆ¶é€ä¿¡
 					SendMode=getmode_TRMN;
 					c=PacTrmn[0];
 					SendCnt=1;
 				} else {
-					//ƒf[ƒ^‚ğ‘—M
+					//ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡
 					c=pVCom1->getc();
 					SendCnt=1;
 				}
-			}//TRMN‚ğ‘—‚é
+			}//TRMNã‚’é€ã‚‹
 			else if(SendMode==getmode_TRMN) {
-				//SendPacTrmn‘—M
+				//SendPacTrmné€ä¿¡
 				c=PacTrmn[SendCnt];
 				++(SendCnt);
 
-				//PacTrmn‚ğ‘—‚èI‚í‚Á‚½‚çA‘—M—p‚É‰Šú‰»
+				//PacTrmnã‚’é€ã‚Šçµ‚ã‚ã£ãŸã‚‰ã€é€ä¿¡ç”¨ã«åˆæœŸåŒ–
 				if(SendCnt>=PacTrmnSize) {
 					SendMode=getmode_STRT;
 					SendCnt=0;
@@ -258,25 +258,25 @@ namespace hmr {
 			}
 			return c;
 		}
-		//‘—Mƒf[ƒ^‚ªeofˆÊ’u‚Å‚È‚¢‚©‚ğŠm”F‚·‚é
+		//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ãŒeofä½ç½®ã§ãªã„ã‹ã‚’ç¢ºèªã™ã‚‹
 		bool vmc2::flowing() {
 			return !(SendMode==getmode_STRT&&SendCnt==0);
 		}
-		//óM‚ğ‹­§“I‚ÉI—¹‚³‚¹‚é
+		//å—ä¿¡ã‚’å¼·åˆ¶çš„ã«çµ‚äº†ã•ã›ã‚‹
 		void vmc2::force_end_get() {
 			if(RecvMode==putmode_IDLE)return;
-			//ƒf[ƒ^óM‚ğ‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
+			//ãƒ‡ãƒ¼ã‚¿å—ä¿¡ã‚’ãªã‹ã£ãŸã“ã¨ã«ã™ã‚‹
 			pVCom1->flush();
 
-			//vmc2‚ª‚ç‚İ‚ğŒãn––
+			//vmc2ãŒã‚‰ã¿ã‚’å¾Œå§‹æœ«
 			RecvMode=putmode_IDLE;
 			RecvCnt=0;
 		}
-		//‘—M‚ğ‹­§“I‚ÉI—¹‚³‚¹‚é
+		//é€ä¿¡ã‚’å¼·åˆ¶çš„ã«çµ‚äº†ã•ã›ã‚‹
 		void vmc2::force_end_put() {
 			if(SendMode==getmode_STRT)return;
 
-			//ƒf[ƒ^‘—M‚ğ‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
+			//ãƒ‡ãƒ¼ã‚¿é€ä¿¡ã‚’ãªã‹ã£ãŸã“ã¨ã«ã™ã‚‹
 			pVCom1->cancel_get();
 
 			SendMode=getmode_STRT;

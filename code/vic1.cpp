@@ -4,7 +4,7 @@
 /*
 === code::vic1 ===
 v2_01/140622 hmIto
-	open/close�֐��Œl��Ԃ��Ȃ��p�X�������������C��
+	open/close関数で値を返さないパスがあった問題を修正
 */
 #ifndef HMR_CRC8_INC
 #	include<homuraLib_v2/crc8.h>
@@ -19,7 +19,7 @@ v2_01/140622 hmIto
 namespace hmr {
 	namespace code {
 		//========== vic1::buf ===========
-		//�o�b�t�@������
+		//バッファ初期化
 		vic1::buffer::buffer(vic1* VIC1_, client* pClient_, unsigned char* BufBegin, unsigned char* BufEnd)
 			: VIC1(VIC1_)
 			,pClient(pClient_){
@@ -28,7 +28,7 @@ namespace hmr {
 			VComItr=BufBegin;
 			GateItr=BufBegin;
 		}
-		//�o�b�t�@������
+		//バッファ初期化
 		vic1::buffer::buffer(vic1* VIC1_, unsigned char* BufBegin, unsigned char* BufEnd)
 			: VIC1(VIC1_)
 			, pClient(0) {
@@ -37,28 +37,28 @@ namespace hmr {
 			VComItr=BufBegin;
 			GateItr=BufBegin;
 		}
-		//�o�b�t�@�I�[��
+		//バッファ終端化
 		vic1::buffer::~buffer() {
 			Begin=0;
 			End=0;
 			VComItr=0;
 			GateItr=0;
-			//�f�[�^��M���Ȃ��������Ƃɂ���
+			//データ受信をなかったことにする
 			pClient->flush();
-			//�f�[�^���M���Ȃ��������Ƃɂ���
+			//データ送信をなかったことにする
 			pClient->cancel_get();
 			pClient=0;
 		}
-		//��[�ł�������[
+		//補充できる限り補充
 		void vic1::buffer::load() {
-			//��M�\�ł��������s
+			//受信可能である限り実行
 			while(pClient->can_getc()) {
-				//���ۂɎ�M
+				//実際に受信
 				*((VComItr)++) = pClient->getc();
 
-				//�o�b�t�@�������ς��ɂȂ����ꍇ�A���邢��vcom����̑��M���r�؂ꂽ�ꍇ
+				//バッファがいっぱいになった場合、あるいはvcomからの送信が途切れた場合
 				if(VComItr+1 == End || pClient->flowing()==0) {
-					//crc8���v�Z���āA�����ɏ�������
+					//crc8を計算して、末尾に書き込む
 					*(VComItr) = crc8_puts(0x00, Begin, VComItr - Begin);
 					++(VComItr);
 					break;
@@ -73,196 +73,196 @@ namespace hmr {
 			pClient=0;
 			return false;
 		}
-		//���łɗ��p�\�ɂȂ��Ă��邩
+		//すでに利用可能になっているか
 		bool vic1::buffer::is_open() {return pClient!=0;}
-		//�o�b�t�@�֏������񂾃f�[�^������
+		//バッファへ書き込んだデータを処理
 		void vic1::buffer::flush() {
 			unsigned char CRC8;
 
-			//���łɎ��s���Ă���Ζ���
+			//すでに失敗していれば無視
 			if(VIC1->Fail==1)return;
 
-			//����������M���Ă��Ȃ���Ζ���
+			//そもそも受信していなければ無視
 			if(GateItr==Begin) {
-				//���s�������Ƃ�ʒm
+				//失敗したことを通知
 				VIC1->Fail=1;
-				//Iterator�������ʒu��
+				//Iteratorを初期位置へ
 				VComItr=Begin;
 				GateItr=Begin;
 
 				return;
 			}
 
-			//1byte�߂�
+			//1byte戻す
 			--(GateItr);
 
-			//GateItr�܂ł̃`�F�b�N�T�������Z
+			//GateItrまでのチェックサムを演算
 			CRC8=crc8_puts(0x00, Begin, GateItr - Begin);
 
-			//�`�F�b�N�T���Ɏ��s���Ă���ꍇ�͔j��
+			//チェックサムに失敗している場合は破棄
 			if(*(GateItr)!=CRC8) {
-				//���s�������Ƃ�ʒm
+				//失敗したことを通知
 				VIC1->Fail=1;
-				//Iterator�������ʒu��
+				//Iteratorを初期位置へ
 				VComItr=Begin;
 				GateItr=Begin;
 
 				return;
 			}
 
-			//�f�[�^�Z�[�u
-			//VCom�ɏ������������
+			//データセーブ
+			//VComに順次投げ入れる
 			VComItr = Begin;
 			while(VComItr!= GateItr) {
 				if(pClient->can_putc()==0) {
-					//�G���[����
+					//エラー発報
 					VIC1->Err=error_SAVE_REJECTED;
 					break;
 				}
 				pClient->putc(*(VComItr++));
 			}
 
-			//Iterator�������ʒu��
+			//Iteratorを初期位置へ
 			VComItr=Begin;
 			GateItr=Begin;
 		}
-		//�o�b�t�@�ɏ������݉\��
+		//バッファに書き込み可能か
 		bool vic1::buffer::can_putc() {
-			//�o�b�t�@�ɋ󂫂�����ꍇ
-			//	���M�ƈ����flush����܂łǂꂪCheckSum���킩��Ȃ��̂ŁA
-			//	1byte�����Ă����K�v���Ȃ��_�ɒ���
+			//バッファに空きがある場合
+			//	送信と違ってflushするまでどれがCheckSumかわからないので、
+			//	1byteあけておく必要がない点に注意
 			return GateItr < End;
 		}
-		//�o�b�t�@�֏�������
+		//バッファへ書き込み
 		void vic1::buffer::putc(unsigned char c) {
-			//�������݉\�łȂ��ꍇ�A�G���[����
+			//書き込み可能でない場合、エラー発報
 			if(!can_putc()) {
-				//�G���[����
+				//エラー発報
 				VIC1->Err=error_OVERFLOW;
-				//���s�������Ƃ�ʒm
+				//失敗したことを通知
 				VIC1->Fail=1;
-				//Iterator�������ʒu��
+				//Iteratorを初期位置へ
 				VComItr=Begin;
 				GateItr=Begin;
 			}
 
-			//�f�[�^��������
+			//データ書き込み
 			*((GateItr)++)=c;
 		}
-		//�o�b�t�@�ւ���̓ǂݏo������؂�ʒu�ɂ��邩
+		//バッファへからの読み出しが区切り位置にいるか
 		bool vic1::buffer::flowing() {
-			//�������ݍς݃o�b�t�@�����܂œǂݏo���Ă��Ȃ�
-			//���邢�́A�o�b�t�@�����܂ŏ�������ł��炸���f�[�^�͌p�����Ă���ivcom�����M�]�n������j
+			//書き込み済みバッファ末尾まで読み出していない
+			//あるいは、バッファ末尾まで書き込んでおらずかつデータは継続している（vcomから受信余地がある）
 			return GateItr < VComItr
 				|| (VComItr < End && pClient->flowing());
 		}
-		//�o�b�t�@����̓ǂݏo���\��
+		//バッファからの読み出し可能か
 		bool vic1::buffer::can_getc() {
-			//�������ݍς݃o�b�t�@�����܂œǂݏo���Ă��Ȃ�
-			//���邢�́Avcom�����M�\�ł���
+			//書き込み済みバッファ末尾まで読み出していない
+			//あるいは、vcomから受信可能である
 			return GateItr != VComItr
 				|| pClient->can_getc();
 		}
-		//�o�b�t�@����̓ǂݏo��
+		//バッファからの読み出し
 		unsigned char vic1::buffer::getc() {
-			//�o�b�t�@�ւ̕�[�]�n������ꍇ
+			//バッファへの補充余地がある場合
 			if(VComItr != End && pClient->flowing()) {
-				//��[�ł�������[
+				//補充できる限り補充
 				load();
-			}//��[�]�n���Ȃ����S�đ��M�������� => �V�K�o�b�t�@������ꍇ
+			}//補充余地がないが全て送信しつくした => 新規バッファを作れる場合
 			else if(GateItr == VComItr) {
-				//Iterator�������ʒu��
+				//Iteratorを初期位置へ
 				GateItr=Begin;
 				VComItr=Begin;
 
-				//��[�ł�������[
+				//補充できる限り補充
 				load();
 			}
 
-			//�܂��c���Ă���ꍇ
+			//まだ残っている場合
 			if(GateItr < VComItr) {
 				return *((GateItr)++);
 			} else {
-				//�G���[����
+				//エラー発報
 				VIC1->Err=error_OVERREAD;
 				return 0;
 			}
 		}
-		//�o�b�t�@�ւ̏�������/�ǂݍ��݂��I�����A�o�b�t�@���N���A����
+		//バッファへの書き込み/読み込みを終了し、バッファをクリアする
 		void vic1::buffer::clear() {
 			GateItr=Begin;
 			VComItr=Begin;
 		}
-		//�o�b�t�@�ւ̓ǂݍ��݂��Ȃ��������Ƃɂ���
+		//バッファへの読み込みをなかったことにする
 		void vic1::buffer::cancel_get() { GateItr=Begin; }
-		//�o�b�t�@�̓����f�[�^�����ׂĔj�����Avcom�ɂ�Packet�I����ʒm
+		//バッファの内部データをすべて破棄し、vcomにもPacket終了を通知
 		void vic1::buffer::errorflush() {
 			GateItr=Begin;
 			VComItr=Begin;
 			pClient->flush();
 		}
-		//vcom���̂��f�[�^�������Ă��邩
+		//vcom自体がデータを持っているか
 		bool vic1::buffer::vcom_can_getc() { return pClient->can_getc(); }
-		//vcom���̂��f�[�^�������Ă��邩
+		//vcom自体がデータを持っているか
 		bool vic1::buffer::vcom_flowing() { return pClient->flowing(); }
-		//vcom���̂��f�[�^�������Ă��邩
+		//vcom自体がデータを持っているか
 		void vic1::buffer::vcom_skip_get() { return pClient->skip_get(); }
-		//vcom���̂��f�[�^�������Ă��邩
+		//vcom自体がデータを持っているか
 		unsigned char vic1::buffer::vcom_get_ch() { return pClient->get_ch(); }
 
 		//========== vic1::gate ===========
-		//-------- Mode�J��4�֐� ----------------
-		//�R�}���h���M������
+		//-------- Mode遷移4関数 ----------------
+		//コマンド送信完了時
 		void vic1::inform_send() {
-			//ActiveCmd�ɓo�^
+			//ActiveCmdに登録
 			ActiveCmd=Send;
 
 			switch(Mode) {
 			case mode_IDLE:
-				//�Ђ܂ɂȂ������A�b�������l�������ꍇ
+				//ひまになったし、話したい人がいた場合
 				if(NextTergetCh!=ch_NULL) {
 					TergetCh=NextTergetCh;
 					NextTergetCh=ch_NULL;
 					SendCnt=0;
 					Send=cmd_WHAT;
 
-				}//�{���ɒP�ɉɂȏꍇ
+				}//本当に単に暇な場合
 				else {
 					SendCnt=0;
 					Send=cmd_NULL;
 				}
 				break;
 			case mode_RESEND:
-				//com���瑗�M�f�[�^���擾�\�ȏꍇ
+				//comから送信データを取得可能な場合
 				if(Buffer.can_getc()) {
-					//�f�[�^���M�J�n
+					//データ送信開始
 					Mode=mode_SEND;
-					SendCnt=0xFF;		//Data���M�̏ꍇ�̂݁ASendCnt��ff�ɃZ�b�g����K�v������
+					SendCnt=0xFF;		//Data送信の場合のみ、SendCntをffにセットする必要がある
 					Send=cmd_DATA;
 				} else {
-					//Stop���M
+					//Stop送信
 					Mode=mode_STOP;
 					Send=cmd_STOP;
 					SendCnt=0;
 				}
 				break;
 			default:
-				//���M���I���đҋ@��Ԃɓ���
+				//送信を終えて待機状態に入る
 				SendCnt=0;
 				Send=cmd_NULL;
 				break;
 			}
 		}
-		//�������̃R�}���h��M����
+		//自分宛のコマンド受信完了
 		void vic1::inform_recv() {
 			RecvCnt=0;
-			//�Ђ܂ɂ��Ă���Ƃ�
+			//ひまにしているとき
 			if(Mode==mode_IDLE) {
-				//���肩��̃R�}���h���e�ŕ���
+				//相手からのコマンド内容で分岐
 				switch(Recv) {
-					//���肪Start�v�������Ă����ꍇ
+					//相手がStart要求をしてきた場合
 				case cmd_START:
-					//Ack��Ԃ��A���g��Recv�ɂ���
+					//Ackを返し、自身をRecvにする
 					Mode=mode_RECV;
 					Buffer.clear();
 					TergetCh=RecvCh;
@@ -270,10 +270,10 @@ namespace hmr {
 					Send=cmd_ACK;
 					break;
 				case cmd_ERR:
-					//��������
+					//無視する
 					break;
 				default:
-					//�������Ȃ��Ƃ������Ă���̂ŁA�����Ă�����
+					//おかしなことを言っているので、教えてあげる
 					TergetCh=RecvCh;
 					SendCnt=0;
 					Send=cmd_ERR;
@@ -281,272 +281,272 @@ namespace hmr {
 				return;
 			}
 
-			//�ʐM���ɑ��肪�m��Ȃ��l����ʐM�������ꍇ
+			//通信中に相手が知らない人から通信が来た場合
 			if(RecvCh!=TergetCh) {
-				//Start�v���������ꍇ�A�؂�ւ��\��
+				//Start要求だった場合、切り替え予約
 				if(Recv==cmd_START && NextTergetCh>RecvCh) {
 					NextTergetCh=RecvCh;
 					return;
 				}
-				//����ȊO�Ȃ�A����
+				//それ以外なら、無視
 			}
 
-			//�Ԏ��������̂ŁA�ЂƂ܂��^�C���A�E�g���Z�b�g
+			//返事が来たので、ひとまずタイムアウトリセット
 			pTimeout->restart();
-			//�Ԏ��������̂ŁA�^�C���A�E�g�̃J�E���g��߂�
+			//返事が来たので、タイムアウトのカウントを戻す
 			TimeOutCnt=0;
 
-			//�G���[�̏ꍇ�͖ⓚ���p��IDLE��
+			//エラーの場合は問答無用でIDLEへ
 			if(Recv == cmd_ERR) {
-				//���ɘb�������鑊�肪�o�^����Ă����ꍇ
+				//次に話しかける相手が登録されていた場合
 				if(NextTergetCh!=ch_NULL) {
-					//WHAT�R�}���h��ԑ����A������IDLE�ɂȂ�
+					//WHATコマンドを返送し、自分はIDLEになる
 					Mode=mode_IDLE;
 					pTimeout->disable();
 					TergetCh=NextTergetCh;
 					NextTergetCh=ch_NULL;
 					SendCnt=0;
 					Send=cmd_WHAT;
-				}//���̗\����Ȃ��ꍇ
+				}//何の予定もない場合
 				else {
-					//���[�h��Idle�ɂ��A�ق�
+					//モードをIdleにし、黙る
 					Mode=mode_IDLE;
 					SendCnt=0;
 					Send=cmd_NULL;
 				}
-			}//Recv��
+			}//Recv時
 			else if(Mode==mode_RECV) {
-				//�f�[�^�𑗂��Ă����ꍇ
+				//データを送ってきた場合
 				switch(Recv) {
 				case cmd_START:
-					//ACK���M
+					//ACK送信
 					SendCnt=0;
 					Send=cmd_ACK;
 					break;
 				case cmd_DATA:
-					//�t���b�V��
+					//フラッシュ
 					Buffer.flush();
 
-					//��M�ɐ������Ă��邩�m�F
+					//受信に成功しているか確認
 					if(Fail==0) {
-						//ACK���M
+						//ACK送信
 						SendCnt=0;
 						Send=cmd_ACK;
 					} else {
-						//�t���O�����낷
+						//フラグをおろす
 						Fail=0;
-						//NACK���M
+						//NACK送信
 						SendCnt=0;
 						Send=cmd_NACK;
 					}
 					break;
 				case cmd_STOP:
-					//�p�P�b�g�I���ʒm
+					//パケット終了通知
 					Buffer.errorflush();
 
-					//com���瑗�M�f�[�^���擾�\�ȏꍇ(�܂�Ԃ��Ȃ̂�flowing�͋C�ɂ��Ȃ�)
+					//comから送信データを取得可能な場合(折り返しなのでflowingは気にしない)
 					if(Buffer.can_getc()) {
-						//����M����ւ��v��
+						//送受信入れ替え要求
 						Mode=mode_START;
 						pTimeout->restart();
 						pTimeout->enable();
 						SendCnt=0;
 						Send=cmd_NACK;
-					}//com���瑗�M�f�[�^���擾�ł��Ȃ��ꍇ
+					}//comから送信データを取得できない場合
 					else {
-						//�I���󂯓���
+						//終了受け入れ
 						Mode=mode_IDLE;
 						SendCnt=0;
 						Send=cmd_ACK;
 					}
 					break;
 				default:
-					//�p�P�b�g�I���ʒm
+					//パケット終了通知
 					Buffer.errorflush();
 
-					//�������Ȃ��Ƃ������Ă���̂ŁA�����Ă�����
+					//おかしなことを言っているので、教えてあげる
 					Mode=mode_IDLE;
 					SendCnt=0;
 					Send=cmd_ERR;
 					break;
 				}
 
-				//ReecvMode�̎��ɂ́A�f�[�^���o�b�t�@�ɂ���Ă��܂��Ă���̂ŁA���Z�b�g�B
+				//ReecvModeの時には、データをバッファにいれてしまっているので、リセット。
 				Buffer.clear();
 				Fail=0;
-			}//Start�R�}���h�ɑ΂���ԓ�
+			}//Startコマンドに対する返答
 			else if(Mode==mode_START && (ActiveCmd==cmd_START || ActiveCmd==cmd_NACK)) {
 				switch(Recv) {
-					//���肪��������ꍇ
+					//相手が受諾した場合
 				case cmd_ACK:
-					//com���瑗�M�f�[�^���擾�\�ȏꍇ
+					//comから送信データを取得可能な場合
 					if(Buffer.can_getc()) {
-						//���M���������ꍇ
+						//送信中だった場合
 						if(Send!=cmd_NULL) {
-							//ESC����U���M
+							//ESCを一旦送信
 							Mode=mode_RESEND;
 							SendCnt=0;
 							Send=cmd_ESC;
-						}//�����M�\�ȏꍇ
+						}//即送信可能な場合
 						else {
-							//DATA�𑗐M
+							//DATAを送信
 							Mode=mode_SEND;
-							SendCnt=0xFF;		//Data���M�̏ꍇ�̂݁ASendCnt��ff�ɃZ�b�g����K�v������
+							SendCnt=0xFF;		//Data送信の場合のみ、SendCntをffにセットする必要がある
 							Send=cmd_DATA;
 						}
-					}//com���瑗�M�f�[�^���擾�ł��Ȃ��ꍇ
+					}//comから送信データを取得できない場合
 					else {
-						//Stop���M
+						//Stop送信
 						Mode=mode_STOP;
 						SendCnt=0;
 						Send=cmd_STOP;
 					}
 					break;
-					//���肪���ۂ��Ă����ꍇ
+					//相手が拒否してきた場合
 				case cmd_NACK:
-					//���ɘb�������鑊�肪�o�^����Ă����ꍇ
+					//次に話しかける相手が登録されていた場合
 					if(NextTergetCh!=ch_NULL) {
-						//WHAT�R�}���h��ԑ����A������IDLE�ɂȂ�
+						//WHATコマンドを返送し、自分はIDLEになる
 						Mode=mode_IDLE;
 						pTimeout->disable();
 						TergetCh=NextTergetCh;
 						NextTergetCh=ch_NULL;
 						SendCnt=0;
 						Send=cmd_WHAT;
-					}//���̗\����Ȃ��ꍇ
+					}//何の予定もない場合
 					else {
-						//���[�h��Idle�ɂ��A�ق�
+						//モードをIdleにし、黙る
 						Mode=mode_IDLE;
 						SendCnt=0;
 						Send=cmd_NULL;
 					}
 					break;
-					//���肪Start�v�����d�˂Ă����ꍇ
+					//相手がStart要求を重ねてきた場合
 				case cmd_START:
-					//�����莩���̕����傫��ch�̂Ƃ�
+					//相手より自分の方が大きなchのとき
 					if(RecvCh < Ch) {
-						//Ack��Ԃ��A���g��Recv�ɂ���
+						//Ackを返し、自身をRecvにする
 						Mode=mode_RECV;
 						pTimeout->disable();
 						SendCnt=0;
 						Send=cmd_ACK;
 					}
-					//�������ꍇ�͖���
+					//小さい場合は無視
 					break;
-					//����ȊO�̂��Ƃ������Ă���ꍇ
+					//それ以外のことを言っている場合
 				default:
-					//�������Ȃ��Ƃ������Ă���̂ŁA�����Ă�����
+					//おかしなことを言っているので、教えてあげる
 					Mode=mode_IDLE;
 					pTimeout->disable();
 					SendCnt=0;
 					Send=cmd_ERR;
 					break;
 				}
-			}//DATA�R�}���h�ɑ΂���ԓ�
+			}//DATAコマンドに対する返答
 			else if(Mode==mode_SEND && ActiveCmd==cmd_DATA) {
 				switch(Recv) {
-					//���肪��M�ɐ������Ă����ꍇ
+					//相手が受信に成功していた場合
 				case cmd_ACK:
-					//com���瑗�M�f�[�^���擾�\�ȏꍇ�iDATA�Ɍp����������ꍇ�Ɍ���j
+					//comから送信データを取得可能な場合（DATAに継続性がある場合に限る）
 					if(Buffer.vcom_can_getc() && Buffer.vcom_flowing()) {
-						//���M���������ꍇ
+						//送信中だった場合
 						if(Send!=cmd_NULL) {
-							//ESC����U���M
+							//ESCを一旦送信
 							Mode=mode_RESEND;
 							SendCnt=0;
 							Send=cmd_ESC;
-						}//�����M�\�ȏꍇ
+						}//即送信可能な場合
 						else {
-							//DATA�𑗐M
+							//DATAを送信
 							Mode=mode_SEND;
-							SendCnt=0xFF;		//Data���M�̏ꍇ�̂݁ASendCnt��ff�ɃZ�b�g����K�v������
+							SendCnt=0xFF;		//Data送信の場合のみ、SendCntをffにセットする必要がある
 							Send=cmd_DATA;
 						}
-					}//com���瑗�M�f�[�^���擾�ł��Ȃ��ꍇ
+					}//comから送信データを取得できない場合
 					else {
-						//Stop���M
+						//Stop送信
 						Mode=mode_STOP;
 						SendCnt=0;
 						Send=cmd_STOP;
 					}
 					break;
-					//���肪��M�Ɏ��s���Ă����ꍇ
+					//相手が受信に失敗していた場合
 				case cmd_NACK:
-					//�o�b�t�@�̓ǂݏo���ʒu��������
+					//バッファの読み出し位置を初期化
 					Buffer.cancel_get();
-					//���M���������ꍇ
+					//送信中だった場合
 					if(Send!=cmd_NULL) {
-						//ESC����U���M
+						//ESCを一旦送信
 						Mode=mode_RESEND;
 						SendCnt=0;
 						Send=cmd_ESC;
-					}//�����M�\�ȏꍇ
+					}//即送信可能な場合
 					else {
-						//DATA�𑗐M
+						//DATAを送信
 						Mode=mode_SEND;
-						SendCnt=0xFF;		//Data���M�̏ꍇ�̂݁ASendCnt��ff�ɃZ�b�g����K�v������
+						SendCnt=0xFF;		//Data送信の場合のみ、SendCntをffにセットする必要がある
 						Send=cmd_DATA;
 					}
 					break;
 				default:
-					//�������Ȃ��Ƃ������Ă���̂ŁA�����Ă�����
+					//おかしなことを言っているので、教えてあげる
 					Mode=mode_IDLE;
 					pTimeout->disable();
 					SendCnt=0;
 					Send=cmd_ERR;
 				}
-			}//Stop�R�}���h�ɑ΂���ԓ�
+			}//Stopコマンドに対する返答
 			else if(Mode==mode_STOP && ActiveCmd==cmd_STOP) {
 				switch(Recv) {
-					//���肪��������ꍇ
+					//相手が受諾した場合
 				case cmd_ACK:
-					//���ɘb�������鑊�肪�o�^����Ă����ꍇ
+					//次に話しかける相手が登録されていた場合
 					if(NextTergetCh!=ch_NULL) {
-						//WHAT�R�}���h��ԑ����A������IDLE�ɂȂ�
+						//WHATコマンドを返送し、自分はIDLEになる
 						Mode=mode_IDLE;
 						pTimeout->disable();
 						TergetCh=NextTergetCh;
 						NextTergetCh=ch_NULL;
 						SendCnt=0;
 						Send=cmd_WHAT;
-					}//���̗\����Ȃ��ꍇ
+					}//何の予定もない場合
 					else {
-						//���[�h��Idle�ɂ��A�ق�
+						//モードをIdleにし、黙る
 						Mode=mode_IDLE;
 						pTimeout->disable();
 						SendCnt=0;
 						Send=cmd_NULL;
 					}
 					break;
-					//���肪���ۂ��Ă����ꍇ
+					//相手が拒否してきた場合
 				case cmd_NACK:
-					//���g�͎�M���[�h�ɂ��A����Ɏ���̈ӎv��`����
+					//自身は受信モードにし、相手に受諾の意思を伝える
 					Mode=mode_RECV;
-					Buffer.clear();	//�o�b�t�@���N���A���Ď�M�ɔ�����
+					Buffer.clear();	//バッファをクリアして受信に備える
 					pTimeout->disable();
 					SendCnt=0;
 					Send=cmd_ACK;
 					break;
 				default:
-					//�������Ȃ��Ƃ������Ă���̂ŁA�����Ă�����
+					//おかしなことを言っているので、教えてあげる
 					Mode=mode_IDLE;
 					pTimeout->disable();
 					SendCnt=0;
 					Send=cmd_ERR;
 				}
 			} else {
-				//�������Ȃ��Ƃ������Ă���̂ŁA�����Ă�����
+				//おかしなことを言っているので、教えてあげる
 				Mode=mode_IDLE;
 				pTimeout->disable();
 				SendCnt=0;
 				Send=cmd_ERR;
 			}
 		}
-		//�f�[�^�̗L�����m�F���āAIDLE����START�֑J�ڂ���֐�
+		//データの有無を確認して、IDLEからSTARTへ遷移する関数
 		bool vic1::checkData() {
-			//IDLE�ł���A���M���R�}���h���Ȃ��A���M�������f�[�^������A�̂R�������������ꂽ�ꍇ�̂ݔ���
+			//IDLEである、送信中コマンドがない、送信したいデータがある、の３条件が満たされた場合のみ発動
 			if(Mode==mode_IDLE && Send==cmd_NULL && Buffer.vcom_can_getc()) {
-				//ch�擾���Astart���[�h�ֈڍs
+				//ch取得し、startモードへ移行
 				TergetCh=Buffer.vcom_get_ch();
 				Mode=mode_START;
 				pTimeout->restart();
@@ -557,14 +557,14 @@ namespace hmr {
 			}
 			return hmLib_false;
 		}
-		//timeout�����[�h���ꕔ�ς��Ă���ł�����
-		//vic1��timeout�R�}���h�đ��֐�
+		//timeoutもモードを一部変えているでござる
+		//vic1のtimeoutコマンド再送関数
 		void vic1::timeout() {
 			if(Mode==mode_START) {
 				if(TimeOutCnt>=MaxTimeOutNum) {
 					TimeOutCnt=0;
 					Buffer.vcom_skip_get();
-					//�������Ȃ��Ƃ������Ă���̂ŁA�����Ă�����
+					//おかしなことを言っているので、教えてあげる
 					Mode=mode_IDLE;
 					SendCnt=0;
 					Send=cmd_ERR;
@@ -576,20 +576,20 @@ namespace hmr {
 				if(TimeOutCnt>=MaxTimeOutNum) {
 					TimeOutCnt=0;
 					Buffer.vcom_skip_get();
-					//ESC����U���M
+					//ESCを一旦送信
 					Mode=mode_RESEND;
 					SendCnt=0;
 					Send=cmd_ESC;
 					return;
 				}
-				//ESC����U���M
+				//ESCを一旦送信
 				Mode=mode_RESEND;
 				SendCnt=0;
 				Send=cmd_ESC;
 			} else if(Mode==mode_STOP) {
 				if(TimeOutCnt>=MaxTimeOutNum) {
 					TimeOutCnt=0;
-					//�������Ȃ��Ƃ������Ă���̂ŁA�����Ă�����
+					//おかしなことを言っているので、教えてあげる
 					Mode=mode_IDLE;
 					SendCnt=0;
 					Send=cmd_ERR;
@@ -600,8 +600,8 @@ namespace hmr {
 			++(TimeOutCnt);
 		}
 
-		//========== vic1 ��{�֐� ==========
-		//vic1������������ �����́A�����̃`�����l���ԍ�(0x00-0x0F)�A����̃`�����l���ԍ��A�^���鑗��M�p�Œ蒷�o�b�t�@�A�h���X
+		//========== vic1 基本関数 ==========
+		//vic1を初期化する 引数は、自分のチャンネル番号(0x00-0x0F)、相手のチャンネル番号、与える送受信用固定長バッファアドレス
 		vic1::vic1(client& rClient_
 			, const unsigned char Ch_
 			, unsigned char* BufBegin
@@ -626,7 +626,7 @@ namespace hmr {
 			RecvCnt=0;
 			//	maintask_start(task, 0, 0, 0);
 		}		
-		//vic1������������
+		//vic1を初期化する
 		vic1::vic1(const unsigned char Ch_
 			, unsigned char* BufBegin
 			, unsigned char* BufEnd
@@ -650,7 +650,7 @@ namespace hmr {
 			RecvCnt=0;
 		}
 
-		//vic1���I�[������
+		//vic1を終端化する
 		vic1::~vic1() {
 			pTimeout->disable();
 
@@ -677,55 +677,55 @@ namespace hmr {
 			return Buffer.close();
 		}
 		//========== gate interface =================
-		//��M�f�[�^1byte�ڔ��ʊ֐�
+		//受信データ1byte目判別関数
 		void vic1::putc_1byte(unsigned char c) {
-			//��������Ch���H
+			//自分宛のChか？
 			if(Ch==(c&0x0F)) {
 				RecvCh=(c>>4);
 				++(RecvCnt);
-			}//��L�ȊO�Ȃ�A���Ȃ��Ƃ������ɂƂ��ăR�}���h�ł͂Ȃ�
+			}//上記以外なら、少なくとも自分にとってコマンドではない
 			else {
-				//��M���Ȃ�f�[�^���������Ă���
+				//受信中ならデータ扱いをしておく
 				if(Mode==mode_RECV) {
 					Buffer.putc(c);
 				}
 			}
 		}
-		//��M�f�[�^2byte�ڔ��ʊ֐�
+		//受信データ2byte目判別関数
 		void vic1::putc_2byte(unsigned char c1, unsigned char c2) {
-			//���ʐM���̑���̏ꍇ
+			//今通信中の相手の場合
 			if(RecvCh==TergetCh) {
-				//�Ƃɂ����R�����g�͕����Ă���
+				//とにかくコメントは聞いておく
 				Recv=c2;
 				++(RecvCnt);
-			}//�m��Ȃ��l����Start�R�}���h�������ꍇ
+			}//知らない人からStartコマンドが来た場合
 			else if(c2==cmd_START) {
-				//����������Ă���
+				//これも聞いておく
 				Recv=c2;
 				++(RecvCnt);
-			}//��L�ȊO�Ȃ�A���Ȃ��Ƃ������ɂƂ��ăR�}���h�ł͂Ȃ�
+			}//上記以外なら、少なくとも自分にとってコマンドではない
 			else {
-				//�J�E���^��߂�
+				//カウンタを戻す
 				RecvCnt=0;
 
-				//��M���Ȃ�f�[�^���������Ă���
+				//受信中ならデータ扱いをしておく
 				if(Mode==mode_RECV) {
 					Buffer.putc(c1);
 				}
 				putc_1byte(c2);
 			}
 		}
-		//��M�f�[�^3byte�ڔ��ʊ֐�
+		//受信データ3byte目判別関数
 		void vic1::putc_3byte(unsigned char c1, unsigned char c2, unsigned char c3) {
 			//Trmn1
 			if(c3==0x0d) {
 				++(RecvCnt);
-			}//��L�ȊO�Ȃ�A���Ȃ��Ƃ�1byte�ڂ̕����͎����ɂƂ��ăR�}���h�ł͂Ȃ�
+			}//上記以外なら、少なくとも1byte目の文字は自分にとってコマンドではない
 			else {
-				//�J�E���^��߂�
+				//カウンタを戻す
 				RecvCnt=0;
 
-				//��M���Ȃ�f�[�^���������Ă���
+				//受信中ならデータ扱いをしておく
 				if(Mode==mode_RECV) {
 					Buffer.putc(c1);
 				}
@@ -738,18 +738,18 @@ namespace hmr {
 				}
 			}
 		}
-		//��M�f�[�^3byte�ڔ��ʊ֐�
+		//受信データ3byte目判別関数
 		void vic1::putc_4byte(unsigned char c1, unsigned char c2, unsigned char c3, unsigned char c4) {
 			//Trmn1
 			if(c4==0x0a) {
-				//�R�}���h��M�����A����
+				//コマンド受信完了、発報
 				inform_recv();
-			}//��L�ȊO�Ȃ�A���Ȃ��Ƃ�1byte�ڂ̕����͎����ɂƂ��ăR�}���h�ł͂Ȃ�
+			}//上記以外なら、少なくとも1byte目の文字は自分にとってコマンドではない
 			else {
-				//�J�E���^��߂�
+				//カウンタを戻す
 				RecvCnt=0;
 
-				//��M���Ȃ�f�[�^���������Ă���
+				//受信中ならデータ扱いをしておく
 				if(Mode==mode_RECV) {
 					Buffer.putc(c1);
 				}
@@ -779,14 +779,14 @@ namespace hmr {
 
 			}
 		}
-		//���łɗ��p�\�ɂȂ��Ă��邩
+		//すでに利用可能になっているか
 		bool vic1::is_open() {return Buffer.is_open();}
-		//��M�f�[�^�𓊂�����\���m�F 0:�s��,1:��
+		//受信データを投げ入れ可能か確認 0:不可,1:可
 		bool vic1::can_putc() {
-			//��M�f�[�^�͏�Ɏ󂯓���\�i�ǂݎ̂Ă邩�ǂ����͕ʁj
+			//受信データは常に受け入れ可能（読み捨てるかどうかは別）
 			return hmLib_true;
 		}
-		//��M�f�[�^�𓊂������
+		//受信データを投げ入れる
 		void vic1::putc(unsigned char c) {
 			if(RecvCnt==0) {
 				putc_1byte(c);
@@ -798,53 +798,53 @@ namespace hmr {
 				putc_4byte(((RecvCh)<<4)|(Ch), Recv, 0x0d, c);
 			}
 		}
-		//��M�f�[�^���t���b�V������igate�݊��p�AVIC���ł̏����͂Ȃ��j
+		//受信データをフラッシュする（gate互換用、VIC内での処理はない）
 		void vic1::flush() {}
-		//���M�f�[�^���Ăяo���\���m�F 0:�s��,1:��
+		//送信データを呼び出し可能か確認 0:不可,1:可
 		bool vic1::can_getc() {
-			//���M���[�h�ɑJ�ڂł���Ƃ̒ʍ�������΁A�J��
+			//送信モードに遷移できるとの通告があれば、遷移
 			if(checkData())return hmLib_true;
 
-			//���M���[�h�ŁA���M�f�[�^���S�đ��M�������Ă��Ȃ��ꍇ
+			//送信モードで、送信データが全て送信完了していない場合
 			if(Send==cmd_DATA && SendCnt==0xFF)return Buffer.can_getc();
 
-			//�R�}���h���M���̏ꍇ
+			//コマンド送信中の場合
 			if(Send!=cmd_NULL)return hmLib_true;
 
 			return hmLib_false;
 		}
-		//���M�f�[�^���Ăяo��
+		//送信データを呼び出す
 		unsigned char vic1::getc() {
 			unsigned char c;
 
-			//���M�ł��Ȃ��ꍇ�̓G���[
+			//送信できない場合はエラー
 			if(!can_getc()) {
 				Err=error_INVALID_GETC;
 				return 0xC0;
 			}
 
-			//�f�[�^���M���[�h�ŁA���f�[�^�𑗂�I���Ă��Ȃ��ꍇ
+			//データ送信モードで、かつデータを送り終えていない場合
 			if(Send==cmd_DATA && SendCnt==0xFF) {
-				//�f�[�^���M���̏ꍇ�́A�f�[�^�𑗐M����
+				//データ送信中の場合は、データを送信処理
 				c=Buffer.getc();
 
-				//���M���ׂ��f�[�^�𑗂�I�����ꍇ�́ASendCnt��߂�
+				//送信すべきデータを送り終えた場合は、SendCntを戻す
 				if(Buffer.flowing()==0) {
-					//SendCnt�𐳂����l�ɖ߂�
+					//SendCntを正しい値に戻す
 					SendCnt=0;
 				}
 			} else {
-				//SendCnt�����Ă�����A�G���[����
+				//SendCntが壊れていたら、エラー発報
 				if(SendCnt>3) {
 					Err=error_INCORRECT_SENDCNT;
 					Send=cmd_ERR;
 					SendCnt=0;
 				}
 
-				//�R�}���h���M���̏ꍇ�́A�R�}���h��ǂ�
+				//コマンド送信中の場合は、コマンドを読む
 				if(SendCnt==0) {
 					c=((Ch<<4) | TergetCh);
-					//���M�J�E���^��i�߂�
+					//送信カウンタを進める
 					++(SendCnt);
 				} else if(SendCnt==1) {
 					switch(Send) {
@@ -868,11 +868,11 @@ namespace hmr {
 						c=cmd_ERR;
 						break;
 					}
-					//���M�J�E���^��i�߂�
+					//送信カウンタを進める
 					++(SendCnt);
 				} else if(SendCnt==2) {
 					c=0x0d;
-					//���M�J�E���^��i�߂�
+					//送信カウンタを進める
 					++(SendCnt);
 				} else if(SendCnt==3) {
 					inform_send();
@@ -882,11 +882,11 @@ namespace hmr {
 			}
 			return c;
 		}
-		//���M�f�[�^�𗬂ꑱ���Ă��邩�m�F�iVIC�̏ꍇ�́A�R�}���h������0,����ȊO��1�j
+		//送信データを流れ続けているか確認（VICの場合は、コマンド末尾が0,それ以外は1）
 		bool vic1::flowing() { return Send!=cmd_NULL; }
 
 		//============ vic functions ================
-		//�ʐM�������I�ɏI��������
+		//通信を強制的に終了させる
 		void vic1::force_end() {
 			Mode=mode_IDLE;
 			Send=cmd_ERR;

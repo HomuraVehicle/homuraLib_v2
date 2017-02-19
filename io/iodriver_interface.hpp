@@ -4,39 +4,39 @@
 /*--- homuraLib_v2::io::iodriver_interface ---
 === homuraLib_v2::io::iodriver_interface ===
 v1_00/140707 hmIto
-	‹N“®A’â~§Œä‚Ì‚İ‚É§ŒÀ‚µ‚ÄAì¬
+	èµ·å‹•ã€åœæ­¢åˆ¶å¾¡ã®ã¿ã«åˆ¶é™ã—ã¦ã€ä½œæˆ
 ===IODriver::ItfIODriver===
 v1_00/140126 hmIto
-cExclusiveWorkIODriver‚ğ’Ç‰Á
-”ñƒXƒŒƒbƒhŠÖ”‚ÅIO‚ğ”r‘¼“I‚É‹ì“®‚·‚éƒ^ƒCƒv‚ÌIODriver
-”r‘¼“I‚È‚Ì‚ÅA•¡”IO‚Ì“¯‹ì“®‚Í‚Å‚«‚È‚¢
-void operator()(void)ŠÖ”‚ğ’èŠú“I‚ÉÀs‚µ‚Ä‚â‚é•K—v‚ª‚ ‚é
+cExclusiveWorkIODriverã‚’è¿½åŠ 
+éã‚¹ãƒ¬ãƒƒãƒ‰é–¢æ•°ã§IOã‚’æ’ä»–çš„ã«é§†å‹•ã™ã‚‹ã‚¿ã‚¤ãƒ—ã®IODriver
+æ’ä»–çš„ãªã®ã§ã€è¤‡æ•°IOã®åŒæ™‚é§†å‹•ã¯ã§ããªã„
+void operator()(void)é–¢æ•°ã‚’å®šæœŸçš„ã«å®Ÿè¡Œã—ã¦ã‚„ã‚‹å¿…è¦ãŒã‚ã‚‹
 v1_00/140118 amby
-ì¬ŠJn
+ä½œæˆé–‹å§‹
 
-İŒv
-@	’ÊM‚ğŠJn‚·‚é‚ÆTask‚ÌƒIƒyƒŒ[ƒ^‚ğ’èŠú“I‚ÉŒÄ‚Ô
-	@
+è¨­è¨ˆ
+ã€€	é€šä¿¡ã‚’é–‹å§‹ã™ã‚‹ã¨Taskã®ã‚ªãƒšãƒ¬ãƒ¼ã‚¿ã‚’å®šæœŸçš„ã«å‘¼ã¶
+	ã€€
 	 */
 
 #include <memory>
 #include <functional>
 namespace hmr {
 	namespace io{
-		//IODriver‚ÌŠî’êƒNƒ‰ƒX
+		//IODriverã®åŸºåº•ã‚¯ãƒ©ã‚¹
 		class iodriver_interface {
 		public:
 			typedef unsigned int ch_t;
 		public://--- iodriver_interface ---
-			// startŠÖ” : Ch ‚Åw’è‚³‚ê‚½‚à‚Ì‚Ì’ÊM‚ğŠJn‚·‚é
+			// starté–¢æ•° : Ch ã§æŒ‡å®šã•ã‚ŒãŸã‚‚ã®ã®é€šä¿¡ã‚’é–‹å§‹ã™ã‚‹
 			virtual bool start(ch_t Ch_)=0;
-			// Chw’èstopŠÖ” : Ch ‚Åw’è‚³‚ê‚½‚à‚Ì‚Ì’ÊM‚ğI—¹‚·‚é
+			// ChæŒ‡å®šstopé–¢æ•° : Ch ã§æŒ‡å®šã•ã‚ŒãŸã‚‚ã®ã®é€šä¿¡ã‚’çµ‚äº†ã™ã‚‹
 			virtual void stop(ch_t Ch_)=0;
-			// stopŠÖ” : “®‚¢‚Ä‚¢‚é‚à‚Ì‚ğ‚·‚×‚Ä~‚ß‚Ä‚µ‚Ü‚¤
+			// stopé–¢æ•° : å‹•ã„ã¦ã„ã‚‹ã‚‚ã®ã‚’ã™ã¹ã¦æ­¢ã‚ã¦ã—ã¾ã†
 			virtual void stop()=0;
-			// Chw’èis_startŠÖ” : Ch ‚Åw’è‚³‚ê‚½‚à‚Ì‚ª’ÊM’†‚©‚ğ•Ô‚·
+			// ChæŒ‡å®šis_starté–¢æ•° : Ch ã§æŒ‡å®šã•ã‚ŒãŸã‚‚ã®ãŒé€šä¿¡ä¸­ã‹ã‚’è¿”ã™
 			virtual bool is_start(ch_t Ch_)const=0;
-			// is_startŠÖ” : ‚¢‚¸‚ê‚©‚ª’ÊM’†‚©‚ğ•Ô‚·
+			// is_starté–¢æ•° : ã„ãšã‚Œã‹ãŒé€šä¿¡ä¸­ã‹ã‚’è¿”ã™
 			virtual bool is_start()const=0;
 		};
 	}

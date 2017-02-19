@@ -21,19 +21,19 @@ namespace hmr{
 			return *this;
 		}
 	public:
-		//gate‚ªŠJ‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ÌŠm”F
+		//gateãŒé–‹ã„ã¦ã„ã‚‹ã‹ã©ã†ã‹ã®ç¢ºèª
 		virtual bool is_open() { return rGate.is_open(); }
-		//óM‰Â”\ó‘Ô‚©‚ÌŠm”F
+		//å—ä¿¡å¯èƒ½çŠ¶æ…‹ã‹ã®ç¢ºèª
 		virtual bool can_getc() {return rGate.can_getc();}
-		//’PbyteóM
+		//å˜byteå—ä¿¡
 		virtual char getc() { return static_cast<char>(rGate.getc()); }
-		//óM‚ªŒp‘±‚µ‚Ä‚¢‚é‚©‚ğŠm”F‚·‚é
+		//å—ä¿¡ãŒç¶™ç¶šã—ã¦ã„ã‚‹ã‹ã‚’ç¢ºèªã™ã‚‹
 		virtual bool flowing() {return rGate.flowing();}
-		//‘—M‰Â”\ó‘Ô‚©‚ÌŠm”F
+		//é€ä¿¡å¯èƒ½çŠ¶æ…‹ã‹ã®ç¢ºèª
 		virtual bool can_putc() { return rGate.can_putc(); }
-		//’Pbyte‘—M
+		//å˜byteé€ä¿¡
 		virtual void putc(char c) { rGate.putc(static_cast<unsigned char>(c));}
-		//‘—M‚ğ‘Å‚¿Ø‚é
+		//é€ä¿¡ã‚’æ‰“ã¡åˆ‡ã‚‹
 		virtual void flush() {rGate.flush();}
 	};
 	struct hmLibgate_adaptor :public hmr::gate{
@@ -42,19 +42,19 @@ namespace hmr{
 	public:
 		hmLibgate_adaptor(hmLib::gate& rGate_) :rGate(rGate_) {}
 	public:
-		//gate‚ªŠJ‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ÌŠm”F
+		//gateãŒé–‹ã„ã¦ã„ã‚‹ã‹ã©ã†ã‹ã®ç¢ºèª
 		virtual bool is_open() { return rGate.is_open(); }
-		//óM‰Â”\ó‘Ô‚©‚ÌŠm”F
+		//å—ä¿¡å¯èƒ½çŠ¶æ…‹ã‹ã®ç¢ºèª
 		virtual bool can_getc() { return rGate.can_getc(); }
-		//’PbyteóM
+		//å˜byteå—ä¿¡
 		virtual unsigned char getc() { return static_cast<unsigned char>(rGate.getc()); }
-		//óM‚ªŒp‘±‚µ‚Ä‚¢‚é‚©‚ğŠm”F‚·‚é
+		//å—ä¿¡ãŒç¶™ç¶šã—ã¦ã„ã‚‹ã‹ã‚’ç¢ºèªã™ã‚‹
 		virtual bool flowing() { return rGate.flowing(); }
-		//‘—M‰Â”\ó‘Ô‚©‚ÌŠm”F
+		//é€ä¿¡å¯èƒ½çŠ¶æ…‹ã‹ã®ç¢ºèª
 		virtual bool can_putc() { return rGate.can_putc(); }
-		//’Pbyte‘—M
+		//å˜byteé€ä¿¡
 		virtual void putc(unsigned char c) { rGate.putc(static_cast<char>(c)); }
-		//‘—M‚ğ‘Å‚¿Ø‚é
+		//é€ä¿¡ã‚’æ‰“ã¡åˆ‡ã‚‹
 		virtual void flush() { rGate.flush(); }
 	};
 }

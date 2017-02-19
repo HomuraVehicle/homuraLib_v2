@@ -6,49 +6,49 @@
 #include<homuraLib_v2/machine/service/delay.hpp>
 
 /*=== module::cGPSPic ===
-GPSPic‚Æ‚Ì‚â‚è‚Æ‚è‚ğ’S“–‚·‚éƒNƒ‰ƒX
+GPSPicã¨ã®ã‚„ã‚Šã¨ã‚Šã‚’æ‹…å½“ã™ã‚‹ã‚¯ãƒ©ã‚¹
 
-//ƒRƒ}ƒ“ƒh
+//ã‚³ãƒãƒ³ãƒ‰
 //>>0x00 : NULL
-//<<0xYX : ƒ‚[ƒhYAƒXƒe[ƒ^ƒXX
+//<<0xYX : ãƒ¢ãƒ¼ãƒ‰Yã€ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹X
 //
-//>>0x10 : “dŒ¹OFF
+//>>0x10 : é›»æºOFF
 //<<0xE0 : ACK
 //
-//>>0x20 : ©“®ƒ‚[ƒh‚Åæ“¾ŠJn
-//<<0xE0 : ACK ƒXƒe[ƒ^ƒXX
+//>>0x20 : è‡ªå‹•ãƒ¢ãƒ¼ãƒ‰ã§å–å¾—é–‹å§‹
+//<<0xE0 : ACK ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹X
 //
-//>>0x3X : è“®ƒ‚[ƒhAƒXƒe[ƒ^ƒXX‚Åæ“¾ŠJn
-//<<0xE0 : ACK@ƒXƒe[ƒ^ƒXX
+//>>0x3X : æ‰‹å‹•ãƒ¢ãƒ¼ãƒ‰ã€ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹Xã§å–å¾—é–‹å§‹
+//<<0xE0 : ACKã€€ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹X
 //
-//>>0x40 : ƒf[ƒ^—v‹
-//<<0xF0 : —LŒøƒf[ƒ^‚È‚µ
-//<<0xYX, Data[18] : ACK ƒ‚[ƒhYAƒXƒe[ƒ^ƒXX‚Ìƒf[ƒ^iˆÈ~A18byteƒf[ƒ^j
-			//['1h','1m','1s','0.01s','0.0001s']	//5
-			//ˆÜ“x['1d','1m','0.01m','0.0001m']			//4
-			//“ì–k['N or S']							//1
-			//Œo“x['1d','1m','0.01m','0.0001m']			//4
-			//“Œ¼['E or W']							//1
-			//‚“x['1000m','10m','0.1m']				//3
+//>>0x40 : ãƒ‡ãƒ¼ã‚¿è¦æ±‚
+//<<0xF0 : æœ‰åŠ¹ãƒ‡ãƒ¼ã‚¿ãªã—
+//<<0xYX, Data[18] : ACK ãƒ¢ãƒ¼ãƒ‰Yã€ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹Xã®ãƒ‡ãƒ¼ã‚¿ï¼ˆä»¥é™ã€18byteãƒ‡ãƒ¼ã‚¿ï¼‰
+			//æ™‚åˆ»['1h','1m','1s','0.01s','0.0001s']	//5
+			//ç·¯åº¦['1d','1m','0.01m','0.0001m']			//4
+			//å—åŒ—['N or S']							//1
+			//çµŒåº¦['1d','1m','0.01m','0.0001m']			//4
+			//æ±è¥¿['E or W']							//1
+			//é«˜åº¦['1000m','10m','0.1m']				//3
 //
-//ƒ‚[ƒh
-//	0x10:‹x~
-//	0x2X:©“®ƒ‚[ƒh
-//	0x3X:è“®ƒ‚[ƒh
-//ƒpƒ[
-//	0xX[2::00][2::XX] : “dŒ¹ƒIƒt
-//	0xX[2::01][2::XX] : Ch1‚Ì‚İ“dŒ¹ON
-//	0xX[2::10][2::XX] : Ch2‚Ì‚İ“dŒ¹ON
-//	0xX[2::11][2::XX] : Ch1,2‚Æ‚à“dŒ¹ON
-//ƒXƒe[ƒ^ƒX
-//	0xX[2::XX][2::00] : Ch1‚ªƒ^[ƒQƒbƒgA–³Œø
-//	0xX[2::XX][2::01] : Ch1‚ªƒ^[ƒQƒbƒgA—LŒø
-//	0xX[2::XX][2::10] : Ch2‚ªƒ^[ƒQƒbƒgA–³Œø
-//	0xX[2::XX][2::11] : Ch2‚ªƒ^[ƒQƒbƒgA—LŒø#define GPSMODE_is_powerGPS(Mode) (0x0C&Mode!=0)
+//ãƒ¢ãƒ¼ãƒ‰
+//	0x10:ä¼‘æ­¢
+//	0x2X:è‡ªå‹•ãƒ¢ãƒ¼ãƒ‰
+//	0x3X:æ‰‹å‹•ãƒ¢ãƒ¼ãƒ‰
+//ãƒ‘ãƒ¯ãƒ¼
+//	0xX[2::00][2::XX] : é›»æºã‚ªãƒ•
+//	0xX[2::01][2::XX] : Ch1ã®ã¿é›»æºON
+//	0xX[2::10][2::XX] : Ch2ã®ã¿é›»æºON
+//	0xX[2::11][2::XX] : Ch1,2ã¨ã‚‚é›»æºON
+//ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
+//	0xX[2::XX][2::00] : Ch1ãŒã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€ç„¡åŠ¹
+//	0xX[2::XX][2::01] : Ch1ãŒã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€æœ‰åŠ¹
+//	0xX[2::XX][2::10] : Ch2ãŒã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€ç„¡åŠ¹
+//	0xX[2::XX][2::11] : Ch2ãŒã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€æœ‰åŠ¹#define GPSMODE_is_powerGPS(Mode) (0x0C&Mode!=0)
 
 === sensor::gps_pic ===
 v1_00/140714 hmIto
-	ì¬
+	ä½œæˆ
 */
 namespace hmr {
 	namespace machine {
@@ -56,10 +56,10 @@ namespace hmr {
 			namespace {
 				namespace gpscmd {
 					enum cmd {
-						Null=0x00,			//NullƒRƒ}ƒ“ƒh
-						Off=0x10,			//ƒpƒ[ƒIƒt
-						Auto=0x20,			//ƒI[ƒgƒ‚[ƒh
-						Manual=0x30,		//ƒ}ƒjƒ…ƒAƒ‹ƒ‚[ƒh
+						Null=0x00,			//Nullã‚³ãƒãƒ³ãƒ‰
+						Off=0x10,			//ãƒ‘ãƒ¯ãƒ¼ã‚ªãƒ•
+						Auto=0x20,			//ã‚ªãƒ¼ãƒˆãƒ¢ãƒ¼ãƒ‰
+						Manual=0x30,		//ãƒãƒ‹ãƒ¥ã‚¢ãƒ«ãƒ¢ãƒ¼ãƒ‰
 						RequestData=0x40	//
 					};
 				}
@@ -119,14 +119,14 @@ namespace hmr {
 					return IsOpen;
 				}
 			public:
-				//ƒf[ƒ^‚ğ—v‹‚·‚é
+				//ãƒ‡ãƒ¼ã‚¿ã‚’è¦æ±‚ã™ã‚‹
 				bool request_data(hmr::gps::data& Data_) {
 					if(SPI.open(true, true, 256))return true;
 					xc32::scoped_open<syncrhronous_spi> ScopedOpen(SPI):
 
-					//ƒf[ƒ^æ“¾
+					//ãƒ‡ãƒ¼ã‚¿å–å¾—
 					service::delay_ms(1);
-					SPI.write(gpscmd::GetData);//GPSdata‚æ‚±‚¹ƒRƒ}ƒ“ƒh
+					SPI.write(gpscmd::GetData);//GPSdataã‚ˆã“ã›ã‚³ãƒãƒ³ãƒ‰
 
 					unsigned char Str[19];
 
@@ -153,9 +153,9 @@ namespace hmr {
 
 					return false;
 				}
-				//ƒ‚[ƒh•ÏX‚ğ‚İ‚é
+				//ãƒ¢ãƒ¼ãƒ‰å¤‰æ›´ã‚’è©¦ã¿ã‚‹
 				bool request_setMode(gps::mode::value Mode_) {
-					//SPIƒI[ƒvƒ“
+					//SPIã‚ªãƒ¼ãƒ—ãƒ³
 					if(SPI.open(true, true, 256))return true;
 
 					xc32::scoped_open<syncrhronous_spi> ScopedOpen(SPI):
@@ -164,11 +164,11 @@ namespace hmr {
 
 					switch(Mode_){
 					case gps::mode::Off:
-						//GPS‚ğOFF‚É‚·‚é
+						//GPSã‚’OFFã«ã™ã‚‹
 						SPI.write(gpscmd::Off);
 
 						service::delay_ms(1);
-						unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACK‚ğóM
+						unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACKã‚’å—ä¿¡
 
 						service::delay_ms(1);
 
@@ -178,11 +178,11 @@ namespace hmr {
 
 						return tmp!=0xE0;
 					case gps::mode::Manual_Ch1:
-						//ƒ}ƒjƒ…ƒAƒ‹§Œä‚ÅGPS‚ğON‚É‚·‚é
+						//ãƒãƒ‹ãƒ¥ã‚¢ãƒ«åˆ¶å¾¡ã§GPSã‚’ONã«ã™ã‚‹
 						SPI.write(gpscmd::Manual | gpscmd_manual::Ch1Only);
 
 						service::delay_ms(1);
-						unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACK‚ğóM
+						unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACKã‚’å—ä¿¡
 
 						service::delay_ms(1);
 
@@ -192,11 +192,11 @@ namespace hmr {
 
 						return tmp!=0xE0;
 					case gps::mode::Manual_Ch2:
-						//ƒ}ƒjƒ…ƒAƒ‹§Œä‚ÅGPS‚ğON‚É‚·‚é
+						//ãƒãƒ‹ãƒ¥ã‚¢ãƒ«åˆ¶å¾¡ã§GPSã‚’ONã«ã™ã‚‹
 						SPI.write(gpscmd::Manual | gpscmd_manual::Ch2Only);
 
 						service::delay_ms(1);
-						unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACK‚ğóM
+						unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACKã‚’å—ä¿¡
 
 						service::delay_ms(1);
 
@@ -206,11 +206,11 @@ namespace hmr {
 
 						return tmp!=0xE0;
 					case gps::mode::Auto:
-						//ƒI[ƒg§Œä‚ÅGPS‚ğON‚É‚·‚é
+						//ã‚ªãƒ¼ãƒˆåˆ¶å¾¡ã§GPSã‚’ONã«ã™ã‚‹
 						SPI.write(gpscmd::Auto);
 
 						service::delay_ms(1);
-						unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACK‚ğóM
+						unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACKã‚’å—ä¿¡
 
 						service::delay_ms(1);
 
@@ -223,7 +223,7 @@ namespace hmr {
 						return true;
 					}
 				}
-				//GPS‚ÌCh‚ğ•Ï‚¦‚é ManualMode‚Ìê‡‚Ì‚İÀs‰Â”\
+				//GPSã®Chã‚’å¤‰ãˆã‚‹ ManualModeã®å ´åˆã®ã¿å®Ÿè¡Œå¯èƒ½
 				bool request_setCh(unsigned char Ch_) {
 					if(Mode!=gps::mode::Manual)return true;
 					if(Ch_!=0x01 && Ch_!=0x02)return true;
@@ -232,18 +232,18 @@ namespace hmr {
 
 					service::delay_ms(1);
 
-					//ƒ}ƒjƒ…ƒAƒ‹§Œä‚ÅGPS‚ğON‚É‚·‚é
+					//ãƒãƒ‹ãƒ¥ã‚¢ãƒ«åˆ¶å¾¡ã§GPSã‚’ONã«ã™ã‚‹
 					if(Ch_==0x01)SPI.write(gpscmd::Manual | gpscmd_manual::Ch1Only);
 					else if(Ch_==0x02)SPI.write(gpscmd::Manual | gpscmd_manual::Ch2Only);
 
 					service::delay_ms(1);
-					unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACK‚ğóM
+					unsigned char tmp=SPI.read(gpscmd::Null);	//ACK or NACKã‚’å—ä¿¡
 
 					service::delay_ms(1);
 
 					return tmp!=0xE0;
 				}
-				//Œ»İ‚Ìƒ‚[ƒh‚ğæ“¾‚·‚é
+				//ç¾åœ¨ã®ãƒ¢ãƒ¼ãƒ‰ã‚’å–å¾—ã™ã‚‹
 				gps::mode::value getMode()const { return Mode; }
 			};
 		}

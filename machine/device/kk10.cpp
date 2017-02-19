@@ -4,7 +4,7 @@
 #include"kk10.hpp"
 
 #ifndef HMR_TEST
-//===========configuration bitsiMicrochip/xc32/vX.YZ/docs/config_docs ‚ÉÚ‚µ‚¢‚±‚Æ‚Í‘‚¢‚Ä‚ ‚éj================
+//===========configuration bitsï¼ˆMicrochip/xc32/vX.YZ/docs/config_docs ã«è©³ã—ã„ã“ã¨ã¯æ›¸ã„ã¦ã‚ã‚‹ï¼‰================
 
 //#pragma config FMIIEN = OFF				//Ethernet RMII/MII Enable:RMII Enabled
 //#pragma config FETHIO = ON				//Ethernet I/O Pin Select:Default Ethernet I/O
@@ -49,7 +49,7 @@
 #pragma config CP = OFF					//Code Protect:Protection Disabled 
 #endif
 
-//system clock‚ğ•ÏX‚·‚é‚É‚Íã‚Ìconfiguration bits‚ğ•ÏX‚·‚é•K—v‚ª‚ ‚é
+//system clockã‚’å¤‰æ›´ã™ã‚‹ã«ã¯ä¸Šã®configuration bitsã‚’å¤‰æ›´ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
 const hmr::uint64 hmr::machine::device::kk10::system_clock = 80000000;
 
 #

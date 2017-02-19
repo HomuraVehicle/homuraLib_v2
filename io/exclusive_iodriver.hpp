@@ -4,13 +4,13 @@
 /*--- homura IO Driver ---
 === homuraLib_v2::io::exclusive_iodriver ===
 v1_00/140707 hmIto
-	Pic‚©‚ç‚àg‚¦‚é‚æ‚¤‚É‹@”\§ŒÀ
+	Picã‹ã‚‰ã‚‚ä½¿ãˆã‚‹ã‚ˆã†ã«æ©Ÿèƒ½åˆ¶é™
 ===IODriver::ExclusiveFunctionalIODriver===
 v1_00/140126 hmIto
-cExclusiveFunctionalIODriver‚ğ’Ç‰Á
-	”ñƒXƒŒƒbƒhŠÖ”‚ÅIO‚ğ”r‘¼“I‚É‹ì“®‚·‚éƒ^ƒCƒv‚ÌIODriver
-	”r‘¼“I‚È‚Ì‚ÅA•¡”IO‚Ì“¯‹ì“®‚Í‚Å‚«‚È‚¢
-	void operator()(void)ŠÖ”‚ğ’èŠú“I‚ÉÀs‚µ‚Ä‚â‚é•K—v‚ª‚ ‚é
+cExclusiveFunctionalIODriverã‚’è¿½åŠ 
+	éã‚¹ãƒ¬ãƒƒãƒ‰é–¢æ•°ã§IOã‚’æ’ä»–çš„ã«é§†å‹•ã™ã‚‹ã‚¿ã‚¤ãƒ—ã®IODriver
+	æ’ä»–çš„ãªã®ã§ã€è¤‡æ•°IOã®åŒæ™‚é§†å‹•ã¯ã§ããªã„
+	void operator()(void)é–¢æ•°ã‚’å®šæœŸçš„ã«å®Ÿè¡Œã—ã¦ã‚„ã‚‹å¿…è¦ãŒã‚ã‚‹
  */
 
 #include <map>
@@ -20,7 +20,7 @@ cExclusiveFunctionalIODriver‚ğ’Ç‰Á
 
 namespace hmr {
 	namespace io {
-		//IO‚ğ”r‘¼“I‚É‹ì“®‚·‚éƒ^ƒCƒv‚ÌIODriver
+		//IOã‚’æ’ä»–çš„ã«é§†å‹•ã™ã‚‹ã‚¿ã‚¤ãƒ—ã®IODriver
 		class exclusive_iodriver:public iodriver_interface{
 		private:
 			typedef std::map<ch_t, io_interface&,std::less<ch_t>,allocator> io_map;
@@ -31,62 +31,62 @@ namespace hmr {
 		public:
 			exclusive_iodriver() :TaskCh(0) {}
 		public://--- iodriver_interface ---
-			// startŠÖ” : Ch ‚Åw’è‚³‚ê‚½‚à‚Ì‚Ì’ÊM‚ğŠJn‚·‚é
+			// starté–¢æ•° : Ch ã§æŒ‡å®šã•ã‚ŒãŸã‚‚ã®ã®é€šä¿¡ã‚’é–‹å§‹ã™ã‚‹
 			virtual bool start(ch_t Ch_) {
 				auto itr=TaskMap.find(Ch_);
 
-				// ‚»‚ÌCh‚ª‘¶İ‚µ‚È‚¯‚ê‚ÎAƒGƒ‰[‚ğ•Ô‚·
+				// ãã®ChãŒå­˜åœ¨ã—ãªã‘ã‚Œã°ã€ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™
 				if(itr == std::end(TaskMap)) return true;
 				itr->second.start();
 
-				//Ch“o˜^
+				//Chç™»éŒ²
 				TaskCh=Ch_;
 
 				return false;
 			}
-			// Chw’èstopŠÖ” : Ch ‚Åw’è‚³‚ê‚½‚à‚Ì‚Ì’ÊM‚ğI—¹‚·‚é
+			// ChæŒ‡å®šstopé–¢æ•° : Ch ã§æŒ‡å®šã•ã‚ŒãŸã‚‚ã®ã®é€šä¿¡ã‚’çµ‚äº†ã™ã‚‹
 			virtual void stop(ch_t Ch_) {
 				if(TaskCh!=Ch_)return;
 				stop();
 			}
-			// stopŠÖ” : “®‚¢‚Ä‚¢‚é‚à‚Ì‚ğ‚·‚×‚Ä~‚ß‚Ä‚µ‚Ü‚¤
+			// stopé–¢æ•° : å‹•ã„ã¦ã„ã‚‹ã‚‚ã®ã‚’ã™ã¹ã¦æ­¢ã‚ã¦ã—ã¾ã†
 			virtual void stop() {
-				//Œ»İƒ^ƒXƒN‚ª‹ì“®‚µ‚Ä‚¢‚È‚¯‚ê‚ÎAƒGƒ‰[‚ğ•Ô‚·
+				//ç¾åœ¨ã‚¿ã‚¹ã‚¯ãŒé§†å‹•ã—ã¦ã„ãªã‘ã‚Œã°ã€ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™
 				if(TaskCh==0)return;
 
-				//ƒ^ƒXƒN‚ğƒNƒŠƒA
+				//ã‚¿ã‚¹ã‚¯ã‚’ã‚¯ãƒªã‚¢
 				auto itr=TaskMap.find(TaskCh);
 
-				// ‚»‚ÌCh‚ª‘¶İ‚µ‚È‚¯‚ê‚ÎAƒGƒ‰[‚ğ•Ô‚·
+				// ãã®ChãŒå­˜åœ¨ã—ãªã‘ã‚Œã°ã€ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™
 				if(itr == std::end(TaskMap)) return;
 
-				//Task‚ğ~‚ß‚é
+				//Taskã‚’æ­¢ã‚ã‚‹
 				itr->second.stop();
 				TaskCh=0;
 			}
-			// Chw’èis_startŠÖ” : Ch ‚Åw’è‚³‚ê‚½‚à‚Ì‚ª’ÊM’†‚©‚ğ•Ô‚·
+			// ChæŒ‡å®šis_starté–¢æ•° : Ch ã§æŒ‡å®šã•ã‚ŒãŸã‚‚ã®ãŒé€šä¿¡ä¸­ã‹ã‚’è¿”ã™
 			virtual bool is_start(ch_t Ch_)const {
 				return TaskCh==Ch_;
 			}
-			// is_startŠÖ” : ‚¢‚¸‚ê‚©‚ª’ÊM’†‚©‚ğ•Ô‚·
+			// is_starté–¢æ•° : ã„ãšã‚Œã‹ãŒé€šä¿¡ä¸­ã‹ã‚’è¿”ã™
 			virtual bool is_start()const {
 				return TaskCh>0;
 			}
 		public:
-			// iotask‚ğƒŒƒWƒXƒg‚µ‚Ä‚¢‚­
+			// iotaskã‚’ãƒ¬ã‚¸ã‚¹ãƒˆã—ã¦ã„ã
 			bool regist(ch_t Ch_, io_interface& rIO_) {
-				//0Ch‚Íè—L
+				//0Chã¯å æœ‰
 				if(Ch_==0)return true;
 
-				//“o˜^Ï‚İ‚ÌCh‚È‚çAƒGƒ‰[‚ğ•Ô‚·
+				//ç™»éŒ²æ¸ˆã¿ã®Chãªã‚‰ã€ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™
 				if(TaskMap.find(Ch_) != std::end(TaskMap))return true;
 
-				//TaskMap‚É“o˜^
+				//TaskMapã«ç™»éŒ²
 				TaskMap.insert(io_pair(Ch_, rIO_));
 
 				return false;
 			}
-			//Œ»İ‚Ìƒ`ƒƒƒ“ƒlƒ‹‚ğæ“¾
+			//ç¾åœ¨ã®ãƒãƒ£ãƒ³ãƒãƒ«ã‚’å–å¾—
 			ch_t getCh()const { return TaskCh; }
 		};
 	}

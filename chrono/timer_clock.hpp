@@ -3,28 +3,28 @@
 #
 
 /*=== homura chrono ===
-’ñ‹Ÿ‹@”\
-	nowŠÖ”‚ÅŒ»İ‚ğ’ñ‹Ÿ‚·‚é
-	timer_registerƒNƒ‰ƒX‚ğˆê‚Âè—L‚·‚é
+æ™‚åˆ»æä¾›æ©Ÿèƒ½
+	nowé–¢æ•°ã§ç¾åœ¨æ™‚åˆ»ã‚’æä¾›ã™ã‚‹
+	timer_registerã‚¯ãƒ©ã‚¹ã‚’ä¸€ã¤å æœ‰ã™ã‚‹
 
 === chrono ===
 v2_00/140712 hmIto
-	cpp‰»
+	cppåŒ–
 ===hmrChrono===
 v1_03/140226 hmIto
-	Œv‹@”\‚Ì’ñ‹Ÿƒ‚ƒWƒ…[ƒ‹‚Æ‚µ‚ÄAchrono‚É–¼‘O•ÏX
-		timer‚ğˆê‚Â“Æè
-		•â³‹@”\/’ñ‹Ÿ‹@”\‚ğ‚Â
-		–ˆ•bÀsƒ^ƒXƒN‚à—\–ñ‚ğó‚¯‚Â
-		ƒ^ƒCƒ€ƒXƒ^ƒ“ƒv‚Æ‚¢‚¤ŠT”O‚ª‚È‚­‚È‚Á‚½‚½‚ßAƒƒbƒZ[ƒW‚Í”p~
+	æ™‚è¨ˆæ©Ÿèƒ½ã®æä¾›ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã¨ã—ã¦ã€chronoã«åå‰å¤‰æ›´
+		timerã‚’ä¸€ã¤ç‹¬å 
+		æ™‚åˆ»è£œæ­£æ©Ÿèƒ½/æä¾›æ©Ÿèƒ½ã‚’æŒã¤
+		æ¯ç§’å®Ÿè¡Œã‚¿ã‚¹ã‚¯ã‚‚äºˆç´„ã‚’å—ã‘æŒã¤
+		ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ã¨ã„ã†æ¦‚å¿µãŒãªããªã£ãŸãŸã‚ã€ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯å»ƒæ­¢
 ===hmrTimeStamp===
 v1_02/131202 hmIto
-	ƒ^ƒCƒ€ƒXƒ^ƒ“ƒv‚ÌˆÓ–¡‡‚¢‚ğ•ÏX@Ú‚µ‚­‚Íã‹L‚Ìg‚¢•û‚Ì’Ê‚è
+	ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ã®æ„å‘³åˆã„ã‚’å¤‰æ›´ã€€è©³ã—ãã¯ä¸Šè¨˜ã®ä½¿ã„æ–¹ã®é€šã‚Š
 v1_01/131201 hmIto
-	ƒ^ƒCƒ€ƒXƒ^ƒ“ƒv‚©‚çAŠÖ”“o˜^‹@”\‚ğœŠO
-		ŠÖ”“o˜^•Às‚Ítask‚ÉˆÏ÷
+	ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ã‹ã‚‰ã€é–¢æ•°ç™»éŒ²æ©Ÿèƒ½ã‚’é™¤å¤–
+		é–¢æ•°ç™»éŒ²ï¼†å®Ÿè¡Œã¯taskã«å§”è­²
 v1_00/131123 hmito
-	ì¬
+	ä½œæˆ
 */
 #include "homuraLib_config.hpp"
 #ifndef HMR_NOXC32LIB
@@ -84,16 +84,16 @@ namespace hmr {
 				}
 			public://interrupt::function
 				void operator()(void) {
-					//•â³
+					//æ™‚åˆ»è£œæ­£
 					if(RequestCorrection) {
-						//ƒtƒ‰ƒO‚ğ‰º‚·
+						//ãƒ•ãƒ©ã‚°ã‚’ä¸‹ã™
 						RequestCorrection = false;
 
-						//ÀÛ‚É•â³
+						//å®Ÿéš›ã«è£œæ­£
 						UnixTime += DifSec;
 
-						//ms‚Ì”÷C³
-						//	Œë·‚ğÅ¬‚É‚·‚é‚½‚ß‚ÉA”íœ”‚Éœ”‚Ì”¼•ª‚ğ‘«‚µ‚Ä‚©‚çŠ„‚Á‚Ä‚¢‚é
+						//msã®å¾®ä¿®æ­£
+						//	èª¤å·®ã‚’æœ€å°ã«ã™ã‚‹ãŸã‚ã«ã€è¢«é™¤æ•°ã«é™¤æ•°ã®åŠåˆ†ã‚’è¶³ã—ã¦ã‹ã‚‰å‰²ã£ã¦ã„ã‚‹
 						Timer.set_count((AddMSec * Timer.period()*2 + 1000)/2000);
 
 						Timer.clear_count();
@@ -101,10 +101,10 @@ namespace hmr {
 						return;
 					}
 
-					//ƒ^ƒCƒ}[ƒJƒEƒ“ƒgƒAƒbƒv
+					//ã‚¿ã‚¤ãƒãƒ¼ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—
 					++UnixTime;
 
-					//•bƒ^ƒXƒNÀs
+					//ç§’ã‚¿ã‚¹ã‚¯å®Ÿè¡Œ
 					if(pFn) (*pFn)();
 
 					Timer.clear_count();
@@ -124,14 +124,14 @@ namespace hmr {
 			void unlock() { Interrupt.unlock();}
 			bool is_lock() const{return Interrupt.is_lock();}
 		public://clock_interface
-			//Œ»İ‚Ì‚ğæ“¾
+			//ç¾åœ¨ã®æ™‚åˆ»ã‚’å–å¾—
 			time_point now(void) const{return Interrupt.now();}
-			//Œ»İ‚Ìunixƒ^ƒCƒ€‚ğæ“¾
+			//ç¾åœ¨ã®unixã‚¿ã‚¤ãƒ ã‚’å–å¾—
 			unix_time_point now_unix(void) const{return Interrupt.now_unix();}
 		public:
-			//ƒNƒƒm‚É–ˆ•bƒ^ƒXƒN‚ğ“o˜^
+			//ã‚¯ãƒ­ãƒã«æ¯ç§’ã‚¿ã‚¹ã‚¯ã‚’ç™»éŒ²
 			void set_sec_alarm(alarm_function& rFp_) {Interrupt.reset_func(&rFp_);}
-			//ƒNƒƒm‚Ì‚ğC³‚·‚é
+			//ã‚¯ãƒ­ãƒã®æ™‚åˆ»ã‚’ä¿®æ­£ã™ã‚‹
 			void correct(sint32 DifSec_, uint16 AddMSec_) {Interrupt.correct(DifSec_, AddMSec_);}
 		};
 	}

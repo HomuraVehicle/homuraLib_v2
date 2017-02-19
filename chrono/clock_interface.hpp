@@ -6,13 +6,13 @@ namespace hmr {
 	namespace chrono {
 		class clock_interface{
 		public://clock_interface
-			//Œ»İ‚Ì‚ğæ“¾
+			//ç¾åœ¨ã®æ™‚åˆ»ã‚’å–å¾—
 			virtual time_point now(void) const=0;
-			//Œ»İ‚Ìunixƒ^ƒCƒ€‚ğæ“¾
+			//ç¾åœ¨ã®unixã‚¿ã‚¤ãƒ ã‚’å–å¾—
 			virtual unix_time_point now_unix(void) const=0;
-			//Œ»İ‚Ì•ª•b‚ğæ“¾
+			//ç¾åœ¨ã®æ™‚åˆ†ç§’ã‚’å–å¾—
 			virtual hds_time_point now_hds(void) const{return now_unix()%hmr_chrono_HALFDAYSEC;}
-			//Œ»İ‚Ì•b‚ğæ“¾
+			//ç¾åœ¨ã®ç§’ã‚’å–å¾—
 			virtual sec_time_point now_sec(void) const{return now_unix()%hmr_chrono_HOURSEC;}
 		};
 

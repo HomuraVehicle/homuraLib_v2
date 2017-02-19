@@ -3,7 +3,7 @@
 #
 #include <cstdlib>
 namespace hmr {
-	//ƒƒbƒN¶¬ŠÖ”
+	//ãƒ­ãƒƒã‚¯ç”Ÿæˆé–¢æ•°
 	inline unsigned char lockcode(void){
 		unsigned char Key;
 		do{

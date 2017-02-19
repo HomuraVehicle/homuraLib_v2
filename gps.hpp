@@ -8,20 +8,20 @@
 #include"exceptions.hpp"
 namespace hmr {
 	namespace gps {
-		//GPS—p‚Ì—áŠO
+		//GPSç”¨ã®ä¾‹å¤–
 		class gps_exception :public exception {
 			typedef exception base_type;
 		public:
 			gps_exception() :base_type() {}
 			gps_exception(unsigned char Code_) :base_type(Code_) {}
 		};
-		//GPSƒf[ƒ^
+		//GPSãƒ‡ãƒ¼ã‚¿
 		struct data {
-			bool IsValid;							//—LŒø‚Èƒf[ƒ^‚È‚çtrue
-			uint32 GPSTime_mSec;		//000•ª00•b‚©‚ç‚ÌŒo‰ßŠÔ mSec‚ª1’PˆÊ
-			sint32 Latitude_100uMin;	//ˆÜ“x 100uMin‚ª1’PˆÊ	N‚ª+
-			sint32 Longitude_100uMin;	//Œo“x 100uMin‚ª1’PˆÊ	E‚ª+
-			uint32 Altitude_10cm;		//‚“x 100uMin‚ª1’PˆÊ
+			bool IsValid;							//æœ‰åŠ¹ãªãƒ‡ãƒ¼ã‚¿ãªã‚‰true
+			uint32 GPSTime_mSec;		//0æ™‚00åˆ†00ç§’ã‹ã‚‰ã®çµŒéæ™‚é–“ mSecãŒ1å˜ä½
+			sint32 Latitude_100uMin;	//ç·¯åº¦ 100uMinãŒ1å˜ä½	NãŒ+
+			sint32 Longitude_100uMin;	//çµŒåº¦ 100uMinãŒ1å˜ä½	EãŒ+
+			uint32 Altitude_10cm;		//é«˜åº¦ 100uMinãŒ1å˜ä½
 		public:
 			data()
 				: IsValid(false)
@@ -30,26 +30,26 @@ namespace hmr {
 				, Longitude_100uMin(0)
 				, Altitude_10cm(0) {}
 		public:
-			//ƒf[ƒ^–³Œø‰»
+			//ãƒ‡ãƒ¼ã‚¿ç„¡åŠ¹åŒ–
 			void invalid() { IsValid=false; }
-			//—LŒøƒf[ƒ^‚©H
+			//æœ‰åŠ¹ãƒ‡ãƒ¼ã‚¿ã‹ï¼Ÿ
 			bool is_valid()const { return IsValid; }
-			//GPSæ“¾@
+			//GPSå–å¾—ã€€æ™‚
 			unsigned int getHour()const { return (GPSTime_mSec/1000/60/600)%60; }
-			//GPSæ“¾@•ª
+			//GPSå–å¾—ã€€åˆ†
 			unsigned int getMin()const { return (GPSTime_mSec/1000/60)%60; }
-			//GPSæ“¾@•b
+			//GPSå–å¾—ã€€ç§’
 			unsigned int getSec()const { return (GPSTime_mSec/1000)%60; }
-			//GPSæ“¾@ƒ~ƒŠ•b
+			//GPSå–å¾—ã€€ãƒŸãƒªç§’
 			unsigned int getMSec()const { return GPSTime_mSec%1000; }
-			//Degree’PˆÊ‚ÌˆÜ“x
+			//Degreeå˜ä½ã®ç·¯åº¦
 			double getLatitude()const { return Latitude_100uMin/10000./60.; }
-			//Degree’PˆÊ‚ÌŒo“x
+			//Degreeå˜ä½ã®çµŒåº¦
 			double getLongitude()const { return Longitude_100uMin/10000./60.; }
-			//ƒ[ƒgƒ‹’PˆÊ‚Ì‚“x
+			//ãƒ¡ãƒ¼ãƒˆãƒ«å˜ä½ã®é«˜åº¦
 			double getAltitude()const { return Altitude_10cm/10.; }
 		public:
-			//$GPGGA,...‚Ån‚Ü‚é85byte•¶š—ñ‚©‚çdata\’z
+			//$GPGGA,...ã§å§‹ã¾ã‚‹85byteæ–‡å­—åˆ—ã‹ã‚‰dataæ§‹ç¯‰
 			template<typename input_iterator>
 			static data fromGPGGA(input_iterator begin, input_iterator end) {
 				hmr_assert(end-begin>=85, "GPGGA data need 85 bytes including \"$GPGGA,...\"");
@@ -62,18 +62,18 @@ namespace hmr {
 					+GPSTime_fromSec((buf[4]-'0')*10+(buf[5]-'0'))			//sec
 					+(buf[7]-'0')*100+(buf[8]-'0')*10+(buf[9]-'0');			//msec
 
-				Data.Latitude_100uMin=(((buf[11]-'0')*10+(buf[12]-'0'))*60*10000	//d (ˆÜ“xF“x)
-					+((buf[13]-'0')*10+(buf[14]-'0'))*10000						//m (ˆÜ“xF•ª)
-					+((buf[16]-'0')*10+(buf[17]-'0'))*100						//0.01m	(ˆÜ“xF0.01•ª)
-					+((buf[18]-'0')*10+(buf[19]-'0'))							//0.0001m (ˆÜ“xF0.0001•ª)
-					)*(buf[21]=='N'? 1: -1);									//N/S (–kˆÜor“ìˆÜ)
+				Data.Latitude_100uMin=(((buf[11]-'0')*10+(buf[12]-'0'))*60*10000	//d (ç·¯åº¦ï¼šåº¦)
+					+((buf[13]-'0')*10+(buf[14]-'0'))*10000						//m (ç·¯åº¦ï¼šåˆ†)
+					+((buf[16]-'0')*10+(buf[17]-'0'))*100						//0.01m	(ç·¯åº¦ï¼š0.01åˆ†)
+					+((buf[18]-'0')*10+(buf[19]-'0'))							//0.0001m (ç·¯åº¦ï¼š0.0001åˆ†)
+					)*(buf[21]=='N'? 1: -1);									//N/S (åŒ—ç·¯orå—ç·¯)
 
 
-				Data.Longitude_100uMin=(((buf[23]-'0')*100+(buf[24]-'0')*10+(buf[25]-'0'))*60*10000	//Œo“x@“x
-					+((buf[26]-'0')*10+(buf[27]-'0'))*10000										//Œo“x •ª
-					+((buf[29]-'0')*10+(buf[30]-'0'))*100										//Œo“x 0.01•ª
-					+((buf[31]-'0')*10+(buf[32]-'0'))											//Œo“x 0.0001•ª
-					)*(buf[34]=='E'? 1: -1);													//E/W (“ŒŒoor¼Œo)
+				Data.Longitude_100uMin=(((buf[23]-'0')*100+(buf[24]-'0')*10+(buf[25]-'0'))*60*10000	//çµŒåº¦ã€€åº¦
+					+((buf[26]-'0')*10+(buf[27]-'0'))*10000										//çµŒåº¦ åˆ†
+					+((buf[29]-'0')*10+(buf[30]-'0'))*100										//çµŒåº¦ 0.01åˆ†
+					+((buf[31]-'0')*10+(buf[32]-'0'))											//çµŒåº¦ 0.0001åˆ†
+					)*(buf[34]=='E'? 1: -1);													//E/W (æ±çµŒorè¥¿çµŒ)
 
 				Data.IsValid=((buf[36]-'0')!=0);
 
@@ -83,7 +83,7 @@ namespace hmr {
 					);
 				return Data;
 			}
-			//$GPGGA,‚Ån‚Ü‚é85byte•¶š—ñ‚ğdata‚©‚ç•œŒ³iˆê•”©“®•âŠ®j
+			//$GPGGA,ã§å§‹ã¾ã‚‹85byteæ–‡å­—åˆ—ã‚’dataã‹ã‚‰å¾©å…ƒï¼ˆä¸€éƒ¨è‡ªå‹•è£œå®Œï¼‰
 			template<typename output_iterator>
 			void toGPGGA(output_iterator oitr) {
 				*oitr++='$';
@@ -180,7 +180,7 @@ namespace hmr {
 				*oitr++=0x0a;
 			}
 		public:
-			//GPSTime‚ğA•ªA•b‚©‚çì¬
+			//GPSTimeã‚’æ™‚ã€åˆ†ã€ç§’ã‹ã‚‰ä½œæˆ
 			static uint32 GPSTime_fromHour(unsigned int Hour_) { return Hour_*60*60*1000; }
 			static uint32 GPSTime_fromMin(unsigned int Min_) { return Min_*60*1000; }
 			static uint32 GPSTime_fromSec(unsigned int Sec_) { return Sec_*1000; }

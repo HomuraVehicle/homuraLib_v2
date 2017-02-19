@@ -11,8 +11,8 @@ namespace hmr {
 				typedef cGPS2_ cGPS2;
 				typedef cGPSSwitcher<cGPS1, cGPS2> my_type;
 			public:
-				//ch1,ch2	: ���������Ă��Œ�
-				//roaming	: ������ON�ɂ��A������g����悤�ɂȂ�̂�҂B�g����ch��������ƁA�I��ch�������I��ch1/ch2�Ɉڍs����B
+				//ch1,ch2	: 何があっても固定
+				//roaming	: 両方をONにし、一方が使えるようになるのを待つ。使えるchを見つけると、選択chも自動的にch1/ch2に移行する。
 				enum gps_ch {gps_ch1,gps_ch2,gps_roaming};
 			private:
 				bool IsLock;
@@ -41,8 +41,8 @@ namespace hmr {
 					return IsLock;
 				}
 			private:
-				//���b�N��2��GPS�֔��f
-				//	���b�N�̐����̉ۂ܂ł͊m�F���Ă��Ȃ��_�ɒ���
+				//ロックを2つのGPSへ反映
+				//	ロックの成功の可否までは確認していない点に注意
 				void lock_apply(bool OnOff_) {
 					if(OnOff_) {
 						if(GPSCh==gps_ch1) {
@@ -96,7 +96,7 @@ namespace hmr {
 				bool can_read() {
 					if(!is_lock())return false;
 
-					//roaming���[�h�Ȃ�A�擾�ł����Ԃ��m�F���A���[�h��ς��ē�����
+					//roamingモードなら、取得できる常態か確認し、モードを変えて答える
 					if(GPSCh==gps_roaming) {
 						if(rGPS1.can_read()) {
 							GPSCh=gps_ch1;
@@ -109,7 +109,7 @@ namespace hmr {
 						} else {
 							return false;
 						}
-					}//�ʏ탂�[�h�Ȃ�A�w�肳�ꂽGPS�̎擾�\����ԐM
+					}//通常モードなら、指定されたGPSの取得可能性を返信
 					else {
 						switch(GPSCh) {
 						case gps_ch1:

@@ -2,13 +2,13 @@
 #define HMR_VMC2GATE_INC 101
 #
 /*---hmrVMC2Gate---
-vmc2‚ÌgateƒCƒ“ƒ^[ƒtƒF[ƒX‚Å‚Ìƒ‰ƒbƒsƒ“ƒO
+vmc2ã®gateã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã§ã®ãƒ©ãƒƒãƒ”ãƒ³ã‚°
 
 ===hmrVMC2Gate===
 v1_01/140126 hmIto
-	hmrVMC2‚ÌƒCƒ“ƒNƒ‹[ƒhƒpƒX‚ğ•ÏX
+	hmrVMC2ã®ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ‘ã‚¹ã‚’å¤‰æ›´
 v1_00/131230 hmIto
-	•´¸‚µ‚½‚Ì‚ÅÄì¬
+	ç´›å¤±ã—ãŸã®ã§å†ä½œæˆ
 
 */
 #include<memory>
@@ -53,60 +53,60 @@ namespace hmr {
 			vmc2_finalize(&VMC2);
 			pVCom1.reset(nullptr);
 		}
-		//gate‚ªŠJ‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ÌŠm”F
+		//gateãŒé–‹ã„ã¦ã„ã‚‹ã‹ã©ã†ã‹ã®ç¢ºèª
 		bool is_open() override { return static_cast<bool>(pVCom1); }
 	public://vmc2 functions
-		//‘—M‚ğ‹­§“I‚ÉI—¹‚³‚¹‚é
+		//é€ä¿¡ã‚’å¼·åˆ¶çš„ã«çµ‚äº†ã•ã›ã‚‹
 		void force_end_get() {
 			return vmc2_force_end_get(&VMC2);
 		}
-		//óM‚ğ‹­§“I‚ÉI—¹‚³‚¹‚é
+		//å—ä¿¡ã‚’å¼·åˆ¶çš„ã«çµ‚äº†ã•ã›ã‚‹
 		void force_end_put() {
 			return vmc2_force_end_put(&VMC2);
 		}
-		//‘—MƒGƒ‰[‚ğæ“¾‚·‚é
+		//é€ä¿¡ã‚¨ãƒ©ãƒ¼ã‚’å–å¾—ã™ã‚‹
 		unsigned char error_of_get() {
 			return vmc2_error_of_get(&VMC2);
 		}
-		//‘—MƒGƒ‰[‚ğƒNƒŠƒA‚·‚é
+		//é€ä¿¡ã‚¨ãƒ©ãƒ¼ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 		void clear_error_of_get() {
 			return vmc2_clear_error_of_get(&VMC2);
 		}
-		//óMƒGƒ‰[‚ğæ“¾‚·‚é
+		//å—ä¿¡ã‚¨ãƒ©ãƒ¼ã‚’å–å¾—ã™ã‚‹
 		unsigned char error_of_put() {
 			return vmc2_error_of_put(&VMC2);
 		}
-		//óMƒGƒ‰[‚ğƒNƒŠƒA‚·‚é
+		//å—ä¿¡ã‚¨ãƒ©ãƒ¼ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 		void clear_error_of_put(){
 			return vmc2_clear_error_of_get(&VMC2);
 		}
 	public://gate interface
-		//óM‰Â”\ó‘Ô‚©‚ÌŠm”F
+		//å—ä¿¡å¯èƒ½çŠ¶æ…‹ã‹ã®ç¢ºèª
 		bool can_getc() {
 			hmLib_assert(is_open(), hmLib::gate_not_opened_exception, "This gate have not been opened yet.");
 			return vmc2_can_getc(&VMC2)!=0;
 		}
-		//’PbyteóM
+		//å˜byteå—ä¿¡
 		char getc() {
 			hmLib_assert(is_open(), hmLib::gate_not_opened_exception, "This gate have not been opened yet.");
 			return static_cast<char>(vmc2_getc(&VMC2));
 		}
-		//óM‚ªŒp‘±‚µ‚Ä‚¢‚é‚©‚ğŠm”F‚·‚é
+		//å—ä¿¡ãŒç¶™ç¶šã—ã¦ã„ã‚‹ã‹ã‚’ç¢ºèªã™ã‚‹
 		bool flowing(){
 			hmLib_assert(is_open(), hmLib::gate_not_opened_exception, "This gate have not been opened yet.");
 			return vmc2_flowing(&VMC2)!=0;
 		}
-		//‘—M‰Â”\ó‘Ô‚©‚ÌŠm”F
+		//é€ä¿¡å¯èƒ½çŠ¶æ…‹ã‹ã®ç¢ºèª
 		bool can_putc() {
 			hmLib_assert(is_open(), hmLib::gate_not_opened_exception, "This gate have not been opened yet.");
 			return vmc2_can_putc(&VMC2)!=0;
 		}
-		//’Pbyte‘—M
+		//å˜byteé€ä¿¡
 		void putc(char c) {
 			hmLib_assert(is_open(), hmLib::gate_not_opened_exception, "This gate have not been opened yet.");
 			return vmc2_putc(&VMC2,c);
 		}
-		//‘—M‚ğ‘Å‚¿Ø‚é
+		//é€ä¿¡ã‚’æ‰“ã¡åˆ‡ã‚‹
 		void flush() {
 			hmLib_assert(is_open(), hmLib::gate_not_opened_exception, "This gate have not been opened yet.");
 			return vmc2_flush(&VMC2);

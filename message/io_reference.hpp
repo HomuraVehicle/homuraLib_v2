@@ -2,12 +2,12 @@
 #define HMR_MESSAGE_IOREFERENCE_INC 100
 #
 /*=== message::io_reference ===
-input_interface, output_interface, io_interface‚ ‚é‚¢‚Íinput_interface+output_interface‚ðA
-‚ ‚½‚©‚à“¯ˆê‚Éio_interface‚Æ‚µ‚Äˆµ‚¦‚é‚æ‚¤‚É‚È‚éAƒ‰ƒbƒp[ƒNƒ‰ƒX
+input_interface, output_interface, io_interfaceã‚ã‚‹ã„ã¯input_interface+output_interfaceã‚’ã€
+ã‚ãŸã‹ã‚‚åŒä¸€ã«io_interfaceã¨ã—ã¦æ‰±ãˆã‚‹ã‚ˆã†ã«ãªã‚‹ã€ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
 
 === io_reference ===
 v1_00/140412 hmIto
-	ƒŠƒŠ[ƒX
+	ãƒªãƒªãƒ¼ã‚¹
 */
 #include"io_interface.hpp"
 namespace hmr {

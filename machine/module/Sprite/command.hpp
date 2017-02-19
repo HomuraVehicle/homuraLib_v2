@@ -84,53 +84,53 @@ namespace hmr{
 							null = 0xff, size_160_120 = 0x22, size_320_240 = 0x11, size_640_480 = 0x00
 						};
 					}
-					//ƒŠƒZƒbƒg
+					//ãƒªã‚»ãƒƒãƒˆ
 					inline command resetCamera(){
 						static unsigned char Str[4] = { 0x56, 0x00, 0x26, 0x00 };
 						return command(id::ResetCamera,Str, 4, 70);
 					}
-					//Ê^B‰e
+					//å†™çœŸæ’®å½±
 					inline command takePicture(){
 						static unsigned char Str[5] = { 0x56, 0x00, 0x36, 0x01, 0x00 };
 						return command(id::TakePicture,Str, 5, 5);
 					}
-					//ƒf[ƒ^ƒTƒCƒY‚ğ“¾‚é
+					//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºã‚’å¾—ã‚‹
 					struct ans_getDataSize :public command_recv{
 						uint16 Size;
 					public:
 						bool operator()(unsigned char c, unsigned int pos){
-							//DataSize_highóM
+							//DataSize_highå—ä¿¡
 							if (pos == 7){
 								Size = (static_cast<uint16>(c) << 8) & 0xFF00;
-							}//DataSize_lowóM
+							}//DataSize_lowå—ä¿¡
 							else if (pos == 8){
-								//DataSize‰Šú‰»Š®—¹
+								//DataSizeåˆæœŸåŒ–å®Œäº†
 								Size += static_cast<uint16>(c)& 0x00FF;
 							}
 							return false;
 						}
 					};
-					//ƒf[ƒ^ƒTƒCƒY‚ğ“¾‚é
+					//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºã‚’å¾—ã‚‹
 					inline command getDataSize(ans_getDataSize& Ans_getDataSize){
 						static unsigned char Str[5] = { 0x56, 0x00, 0x34, 0x01, 0x00 };
 						return command(id::GetDataSize, Str, 5, 9, Ans_getDataSize);
 					}
-					//Ê^B‚é‚Ì‚â‚ß‚é
+					//å†™çœŸæ’®ã‚‹ã®ã‚„ã‚ã‚‹
 					inline command stop_takePicture(){
 						static unsigned char Str[5] = { 0x56, 0x00, 0x36, 0x01, 0x03 };
 						return command(id::StopTakePicture, Str, 5, 5);
 					}
-					//È“d—Íƒ‚[ƒh
+					//çœé›»åŠ›ãƒ¢ãƒ¼ãƒ‰
 					inline command savePower(){
 						static unsigned char Str[7] = { 0x56, 0x00, 0x3E, 0x03, 0x00, 0x01, 0x01 };
 						return command(id::SavePower, Str, 7, 4);
 					}
-					//È“d—Í‚©‚ç•œ‹Aƒ‚[ƒh
+					//çœé›»åŠ›ã‹ã‚‰å¾©å¸°ãƒ¢ãƒ¼ãƒ‰
 					inline command stop_savePower(){
 						static unsigned char Str[7] = { 0x56, 0x00, 0x3E, 0x03, 0x00, 0x01, 0x00 };
 						return command(id::StopSavePower, Str, 7, 5);
 					}
-					//ƒf[ƒ^‚ğ“¾‚éƒRƒ}ƒ“ƒh‚Ì•Ô“š—pƒIƒuƒWƒFƒNƒg
+					//ãƒ‡ãƒ¼ã‚¿ã‚’å¾—ã‚‹ã‚³ãƒãƒ³ãƒ‰ã®è¿”ç­”ç”¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 					struct ans_getData:public command_recv{
 					public:
 						unsigned char* Itr;
@@ -144,56 +144,56 @@ namespace hmr{
 							return false;
 						}
 					};
-					//ƒf[ƒ^‚ğ“¾‚éƒRƒ}ƒ“ƒh(‰‚ß‚ÌADDRESS(8‚Ì”{”)‚ÆAƒf[ƒ^”w’è)
+					//ãƒ‡ãƒ¼ã‚¿ã‚’å¾—ã‚‹ã‚³ãƒãƒ³ãƒ‰(åˆã‚ã®ADDRESS(8ã®å€æ•°)ã¨ã€ãƒ‡ãƒ¼ã‚¿æ•°æŒ‡å®š)
 					inline command getData(unsigned int Address_, unsigned int PackSize_, ans_getData& Ans_getData){
 						static unsigned char Str[16] = { 0x56, 0x00, 0x32, 0x0C, 0x00, 0x0A, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x0B };
 
-						//PackSize‚Í‚W‚Ì”{”‚È‚Ì‚ÅA8‚Ì”{”‚É‚·‚éII@’´‚¦‚½•ª‚Í“Ç‚İÌ‚Ä‚é•ûj‚Å
+						//PackSizeã¯ï¼˜ã®å€æ•°ãªã®ã§ã€8ã®å€æ•°ã«ã™ã‚‹ï¼ï¼ã€€è¶…ãˆãŸåˆ†ã¯èª­ã¿æ¨ã¦ã‚‹æ–¹é‡ã§
 						if (PackSize_ % 8 != 0){
 							PackSize_ = PackSize_ + 8 - PackSize_ % 8;
 						}
 
 						command Command(id::GetData, Str, 16, 10 + PackSize_, Ans_getData);
 
-						//óMŠJnƒAƒhƒŒƒXw’è
+						//å—ä¿¡é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹æŒ‡å®š
 						Command.SendStr[8] = (unsigned char)(Address_ / 256);
 						Command.SendStr[9] = (unsigned char)(Address_ % 256);
 
-						//óMƒpƒPƒbƒg‚ÌƒTƒCƒYw’è
+						//å—ä¿¡ãƒ‘ã‚±ãƒƒãƒˆã®ã‚µã‚¤ã‚ºæŒ‡å®š
 						Command.SendStr[12] = (unsigned char)(PackSize_ / 256);
 						Command.SendStr[13] = (unsigned char)(PackSize_ % 256);
 
 						return Command;
 					}
-					//ˆ³k—¦‚Ìw’è(defo 0x36)
+					//åœ§ç¸®ç‡ã®æŒ‡å®š(defo 0x36)
 					inline command setCompessRate(unsigned char CompressRate_){
 						static unsigned char Str[9] = { 0x56, 0x00, 0x31, 0x05, 0x01, 0x01, 0x12, 0x04, 0x36 };
 
 						command Command(id::SetCompressRate, Str, 9, 6);
 
-						//óMŠJnƒAƒhƒŒƒXw’è
+						//å—ä¿¡é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹æŒ‡å®š
 						Command.SendStr[8] = CompressRate_;
 
 						return Command;
 					}
-					//‰æ‘œƒTƒCƒY‚Ìw’è(’è‹`‚µ‚½‚R’Ê‚è)ƒŠƒZƒbƒg•s—v
+					//ç”»åƒã‚µã‚¤ã‚ºã®æŒ‡å®š(å®šç¾©ã—ãŸï¼“é€šã‚Š)ãƒªã‚»ãƒƒãƒˆä¸è¦
 					inline command setImageSize(imagesize::type ImageSize_){
 						static unsigned char Str[5] = { 0x56, 0x00, 0x54, 0x01, 0xFF };
 
 						command Command(id::SetImageSize, Str, 5, 5);
 
-						//óMŠJnƒAƒhƒŒƒXw’è
+						//å—ä¿¡é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹æŒ‡å®š
 						Command.SendStr[4] = static_cast<unsigned char>(ImageSize_);
 
 						return Command;
 					}
-					//ƒ{[ƒŒ[ƒg‚Ìw’è(’è‹`‚µ‚½‚T’Ê‚è)
+					//ãƒœãƒ¼ãƒ¬ãƒ¼ãƒˆã®æŒ‡å®š(å®šç¾©ã—ãŸï¼•é€šã‚Š)
 					inline command setBaudrate(unsigned int Baudrate_){
 						static unsigned char Str[7] = { 0x56, 0x00, 0x24, 0x03, 0x01, 0x00, 0x00 };
 
 						command Command(id::SetBaudrate, Str, 7, 5);
 
-						//óMŠJnƒAƒhƒŒƒXw’è
+						//å—ä¿¡é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹æŒ‡å®š
 						Command.SendStr[5] = (unsigned char)(Baudrate_ / 256);
 						Command.SendStr[6] = (unsigned char)(Baudrate_ % 256);
 

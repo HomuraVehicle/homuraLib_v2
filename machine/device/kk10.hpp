@@ -14,16 +14,16 @@ namespace hmr {
 		namespace device {
 			class kk10 {
 				xc32::device Device;
-			//===========================ƒfƒoƒCƒX=========================
+			//===========================ãƒ‡ãƒã‚¤ã‚¹=========================
 //			#define _device_SYSTEM_CLOCK 73700000
 				static const uint64 system_clock;
 			public:
 				kk10(xc32::clock_div::type PeripheralBathClockDiv_=xc32::clock_div::div8):Device(){
-					//ƒfƒoƒCƒXƒƒbƒN
+					//ãƒ‡ãƒã‚¤ã‚¹ãƒ­ãƒƒã‚¯
 					Device.lock(system_clock,PeripheralBathClockDiv_);
 					
-					//AD•ÏŠ·İ’è
-					//ADC‚ÌƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“—p‚ÌƒrƒbƒgCPIC32MZ‚Ìƒf[ƒ^ƒV[ƒg‚ÌADC‚ÌÍ‚É‘‚¢‚Ä‚ ‚Á‚½
+					//ADå¤‰æ›è¨­å®š
+					//ADCã®ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã®ãƒ“ãƒƒãƒˆï¼ŒPIC32MZã®ãƒ‡ãƒ¼ã‚¿ã‚·ãƒ¼ãƒˆã®ADCã®ç« ã«æ›¸ã„ã¦ã‚ã£ãŸ
 /*					AD1CAL1 = 0xF8894530;
 					AD1CAL2 = 0x01E4AF69;
 					AD1CAL3 = 0x0FBBBBB8;
@@ -41,75 +41,75 @@ AD1CAL5 = 0x02028002;
     AD1CAL3 = DEVADC3;
     AD1CAL4 = DEVADC4;
     AD1CAL5 = DEVADC5;
-*/					//=== À‚ÍAANSEL bits ‚É‚Â‚¢‚Ä‚ÍAanalog_pin‚Ìlock‚Éİ’è‚³‚ê‚é‚Ì‚ÅA–{—ˆ‚Ízero fill‚ÅOK ===
-					//ADİ’è
-					ANSELA = 0x0200;			//0,1,5,9,10‚ªİ’è‰Â”\,9:AD 
+*/					//=== å®Ÿã¯ã€ANSEL bits ã«ã¤ã„ã¦ã¯ã€analog_pinã®lockæ™‚ã«è¨­å®šã•ã‚Œã‚‹ã®ã§ã€æœ¬æ¥ã¯zero fillã§OK ===
+					//ADè¨­å®š
+					ANSELA = 0x0200;			//0,1,5,9,10ãŒè¨­å®šå¯èƒ½,9:AD 
 					__asm("nop");
-					ANSELB = 0x8B0B;			//0`15‚Ü‚Åİ’è‰Â”\,0,1,3,8,9,11,15:AD 
+					ANSELB = 0x8B0B;			//0ï½15ã¾ã§è¨­å®šå¯èƒ½,0,1,3,8,9,11,15:AD 
 					__asm("nop");
-					ANSELC = 0x0002;			//1`4‚Ü‚Åİ’è‰Â”\,1:AD 
+					ANSELC = 0x0002;			//1ï½4ã¾ã§è¨­å®šå¯èƒ½,1:AD 
 					__asm("nop");
-					ANSELD = 0x0000;			//14,15‚ªİ’è‰Â”\|
+					ANSELD = 0x0000;			//14,15ãŒè¨­å®šå¯èƒ½|
 					__asm("nop");
-					ANSELE = 0x0050;			//4`9‚Ü‚Åİ’è‰Â”\,4,6:AD 
+					ANSELE = 0x0050;			//4ï½9ã¾ã§è¨­å®šå¯èƒ½,4,6:AD 
 					__asm("nop");
-					ANSELF = 0x0000;			//12,13‚ªİ’è‰Â”\|
+					ANSELF = 0x0000;			//12,13ãŒè¨­å®šå¯èƒ½|
 					__asm("nop");
-					ANSELG = 0x0000;			//6`9,15‚ªİ’è‰Â”\|
+					ANSELG = 0x0000;			//6ï½9,15ãŒè¨­å®šå¯èƒ½|
 					__asm("nop");
 
-					//ReMapable pin‚Ìİ’è
+					//ReMapable pinã®è¨­å®š
 					xc32::oscillator::lock_guard Lock(xc32::oscillator::Mutex);
 					CFGCONbits.IOLOCK = 0;
-					//=============UART1(RF#0)ƒsƒ“İ’è===============
+					//=============UART1(RF#0)ãƒ”ãƒ³è¨­å®š===============
 					__asm("nop");
-					RPC13R = 1;		//U1TX‚ğC13pin‚Éİ’è
+					RPC13R = 1;		//U1TXã‚’C13pinã«è¨­å®š
 					__asm("nop");
-					U1RXR = 7;		//U1RX‚ğC14pin‚Éİ’è
+					U1RXR = 7;		//U1RXã‚’C14pinã«è¨­å®š
 					__asm("nop");
-					U1CTSR = 0;		//U1CTS‚ğD9pin‚Éİ’è
+					U1CTSR = 0;		//U1CTSã‚’D9pinã«è¨­å®š
 					__asm("nop");
-					RPD0R = 1;		//U1RTS‚ğD0pin‚Éİ’è
+					RPD0R = 1;		//U1RTSã‚’D0pinã«è¨­å®š
 					__asm("nop");
-					//=============UART3(RF#1)ƒsƒ“İ’è===============
-					RPD2R = 1;		//U3TX‚ğD2pin‚Éİ’è
+					//=============UART3(RF#1)ãƒ”ãƒ³è¨­å®š===============
+					RPD2R = 1;		//U3TXã‚’D2pinã«è¨­å®š
 					__asm("nop");
-					U3RXR = 0;		//U3RX‚ğD3pin‚Éİ’è
+					U3RXR = 0;		//U3RXã‚’D3pinã«è¨­å®š
 					__asm("nop");
-					RPD4R = 1;		//U3RTS‚ğD4pin‚Éİ’è
+					RPD4R = 1;		//U3RTSã‚’D4pinã«è¨­å®š
 					__asm("nop");
-					U3CTSR = 6;		//U3CTS‚ğD5pin‚Éİ’è
+					U3CTSR = 6;		//U3CTSã‚’D5pinã«è¨­å®š
 					__asm("nop");
-					//=============UART4(GPS#0)ƒsƒ“İ’è===============
-					U4RXR = 12;		//U4RX‚ğC2pin‚Éİ’è
+					//=============UART4(GPS#0)ãƒ”ãƒ³è¨­å®š===============
+					U4RXR = 12;		//U4RXã‚’C2pinã«è¨­å®š
 					__asm("nop");
-					RPC3R = 2;		//U4TX‚ğC3pin‚Éİ’è
+					RPC3R = 2;		//U4TXã‚’C3pinã«è¨­å®š
 					__asm("nop");
-					//=============UART2(GPS#1)ƒsƒ“İ’è===============
-					RPE8R = 2;		//U2TX‚ğE8pin‚Éİ’è
+					//=============UART2(GPS#1)ãƒ”ãƒ³è¨­å®š===============
+					RPE8R = 2;		//U2TXã‚’E8pinã«è¨­å®š
 					__asm("nop");
-					U2RXR = 13;		//U2RX‚ğE9pin‚Éİ’è
+					U2RXR = 13;		//U2RXã‚’E9pinã«è¨­å®š
 					__asm("nop");
-					//=============UART5(Camera#0)ƒsƒ“İ’è===============
-					RPD15R = 3;		//U5TX‚ğD15pin‚Éİ’è
+					//=============UART5(Camera#0)ãƒ”ãƒ³è¨­å®š===============
+					RPD15R = 3;		//U5TXã‚’D15pinã«è¨­å®š
 					__asm("nop");
-					U5RXR = 11;		//U5RX‚ğD14pin‚Éİ’è
+					U5RXR = 11;		//U5RXã‚’D14pinã«è¨­å®š
 					__asm("nop");
-					//=============UART6(Camera#1)ƒsƒ“İ’è===============
-					RPF3R = 4;		//U6TX‚ğF3pin‚Éİ’è
+					//=============UART6(Camera#1)ãƒ”ãƒ³è¨­å®š===============
+					RPF3R = 4;		//U6TXã‚’F3pinã«è¨­å®š
 					__asm("nop");
-					U6RXR = 11;		//U6RX‚ğF2pin‚Éİ’è
+					U6RXR = 11;		//U6RXã‚’F2pinã«è¨­å®š
 					__asm("nop");
-					//============SPI2ƒsƒ“İ’è=============
-					RPG8R = 6;		//SDO2‚ğG8pin‚Éİ’è
+					//============SPI2ãƒ”ãƒ³è¨­å®š=============
+					RPG8R = 6;		//SDO2ã‚’G8pinã«è¨­å®š
 					__asm("nop");
-					SDI2R = 1;		//SDI2‚ğG7pin‚Éİ’è
+					SDI2R = 1;		//SDI2ã‚’G7pinã«è¨­å®š
 					__asm("nop");
 					CFGCONbits.IOLOCK = 1;
 
 				}
 			public://PIN
-				//=========================== ƒfƒoƒCƒXƒJ[ƒlƒ‹ =========================
+				//=========================== ãƒ‡ãƒã‚¤ã‚¹ã‚«ãƒ¼ãƒãƒ« =========================
 				typedef xc32::output_pin<xc32::sfr::portE::pin3> opinDevicePower;
 
 				//============================5V DC/DC=============
@@ -155,13 +155,13 @@ AD1CAL5 = 0x02028002;
 				typedef xc32::output_pin<xc32::sfr::portB::pin2> opinADC1to4Power;
 				
 				//==============================CAMERA======================
-				/*ƒJƒƒ‰‚Í4‘ä‚Â‚È‚°‚éD2ƒrƒbƒg‚ÅƒJƒƒ‰‚ğ‘I‚Ô
+				/*ã‚«ãƒ¡ãƒ©ã¯4å°ã¤ãªã’ã‚‹ï¼2ãƒ“ãƒƒãƒˆã§ã‚«ãƒ¡ãƒ©ã‚’é¸ã¶
 				S1 S0 CAMERA ch
 				0	0	#0
 				0	1	#1
-				1	0	#2	ƒRƒlƒNƒ^‚Ü‚¾‚È‚µ(2013/12/15)
-				1	1	#3	ƒRƒlƒNƒ^‚Ü‚¾‚È‚µ(2013/12/15)
-				“dŒ¹OFF‚É‚·‚é‚É‚ÍS0,S1‚ğinputİ’è‚É‚·‚é‚©‚Â‚È‚¢‚Å‚¢‚È‚¢ch‚É‚·‚é(‚½‚Æ‚¦‚ÎCS1=S0=1)
+				1	0	#2	ã‚³ãƒã‚¯ã‚¿ã¾ã ãªã—(2013/12/15)
+				1	1	#3	ã‚³ãƒã‚¯ã‚¿ã¾ã ãªã—(2013/12/15)
+				é›»æºOFFã«ã™ã‚‹ã«ã¯S0,S1ã‚’inputè¨­å®šã«ã™ã‚‹ã‹ã¤ãªã„ã§ã„ãªã„chã«ã™ã‚‹(ãŸã¨ãˆã°ï¼ŒS1=S0=1)
 				*/
 				//#define _device_PIN_CAM_PW			PORTAbits.RA1		//PowerSwitch for Camera	OUT
 				//#define _device_PIN_CAM_PW_set(val)			_device_PIN_CAM_PW=itob(val!=0);__asm__("nop")
@@ -217,7 +217,7 @@ AD1CAL5 = 0x02028002;
 				typedef xc32::input_pin<xc32::sfr::portD::pin3> ipinRF1_RX;
 
 				//==============================Servo,Motor=========================
-				//ƒ‚[ƒ^—p‚ÌƒŒƒxƒ‹•ÏŠ·‰ñ˜H@EnableM†‚ğ”p~D‚»‚Ì‘ã‚èC“dŒ¹‚»‚Ì‚à‚Ì‚ÌON/OFF‚ğs‚¤D
+				//ãƒ¢ãƒ¼ã‚¿ç”¨ã®ãƒ¬ãƒ™ãƒ«å¤‰æ›å›è·¯ã€€Enableä¿¡å·ã‚’å»ƒæ­¢ï¼ãã®ä»£ã‚Šï¼Œé›»æºãã®ã‚‚ã®ã®ON/OFFã‚’è¡Œã†ï¼
 				//#define _device_PIN_SERVO_PW		PORTFbits.RF8		//PowerSwitch for Servo
 				//#define _device_PIN_SERVO_PW_set(val) _device_PIN_SERVO_PW=itob(val!=0);__asm__("nop")
 				typedef xc32::output_pin<xc32::sfr::portA::pin5> opinMotorLA;
@@ -236,7 +236,7 @@ AD1CAL5 = 0x02028002;
 				typedef xc32::input_pin<xc32::sfr::portE::pin9> ipinGPS1_RX;
 				typedef xc32::output_pin<xc32::sfr::portE::pin8> opinGPS1_TX;
 
-				//===========================ƒwƒbƒhƒ‰ƒCƒg=======================
+				//===========================ãƒ˜ãƒƒãƒ‰ãƒ©ã‚¤ãƒˆ=======================
 				typedef xc32::output_pin<xc32::sfr::portG::pin13> opinHeadLightPower;
 
 				//===========================SPI============================
@@ -244,7 +244,7 @@ AD1CAL5 = 0x02028002;
 				typedef xc32::input_pin<xc32::sfr::portG::pin7> ipinSPI2_SDI;
 				typedef xc32::output_pin<xc32::sfr::portG::pin8> opinSPI2_SDO;
 
-				//==============================SDƒJ[ƒh================================
+				//==============================SDã‚«ãƒ¼ãƒ‰================================
 				typedef xc32::output_pin<xc32::sfr::portG::pin12> opinSDPower;
 				typedef xc32::output_pin<xc32::sfr::portE::pin7> opinSD_SPISelect;
 

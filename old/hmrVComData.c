@@ -4,7 +4,7 @@
 #ifndef HMR_VCOMDATA_INC
 #	include"hmrVComData.h"
 #endif
-//ƒtƒH[ƒ}ƒbƒg
+//ãƒ•ã‚©ãƒ¼ãƒžãƒƒãƒˆ
 void vcom_data_format(vcom_data* Data) {
 	Data->Ch=0x0F;
 	Data->ID=vcom_data_id_NULL;
@@ -12,9 +12,9 @@ void vcom_data_format(vcom_data* Data) {
 	Data->Accessible=0;
 	cstring_format(&(Data->Data));
 }
-//ƒRƒ“ƒXƒgƒ‰ƒNƒgÏ‚Ý‚©‚Ç‚¤‚©(Å‰‚Éformat‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍA“®ì•s’è)
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ãƒˆæ¸ˆã¿ã‹ã©ã†ã‹(æœ€åˆã«formatã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€å‹•ä½œä¸å®š)
 hmLib_boolian vcom_data_is_construct(vcom_data* Data) { return Data->ID!=vcom_data_id_NULL; }
-//ƒRƒ“ƒXƒgƒ‰ƒNƒg
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ãƒˆ
 void vcom_data_construct(vcom_data* Data, hmLib_cstring* mStr, vcom_ch_t Ch, vcom_id_t ID, vcom_err_t Err, hmLib_u16Fp_v Accessible) {
 	Data->Accessible=Accessible;
 	Data->Ch=Ch;
@@ -22,7 +22,7 @@ void vcom_data_construct(vcom_data* Data, hmLib_cstring* mStr, vcom_ch_t Ch, vco
 	Data->ID=ID;
 	cstring_move(mStr, &(Data->Data));
 }
-//ƒfƒBƒXƒgƒ‰ƒNƒg(Å‰‚Éformat‚àconstruct‚à‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍA“®ì•s’è)
+//ãƒ‡ã‚£ã‚¹ãƒˆãƒ©ã‚¯ãƒˆ(æœ€åˆã«formatã‚‚constructã‚‚ã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€å‹•ä½œä¸å®š)
 void vcom_data_destruct(vcom_data* Data) {
 	if(vcom_data_is_construct(Data)==0)return;
 	Data->Accessible=0;
@@ -31,11 +31,11 @@ void vcom_data_destruct(vcom_data* Data) {
 	Data->ID=vcom_data_id_NULL;
 	cstring_destruct(&(Data->Data));
 }
-//eofƒf[ƒ^‚É‚·‚é
+//eofãƒ‡ãƒ¼ã‚¿ã«ã™ã‚‹
 void vcom_data_set_eof(vcom_data* Data) {
 	Data->ID=vcom_data_id_EOF;
 }
-//eofƒf[ƒ^‚©‚Ç‚¤‚©‚ð”»•Ê‚·‚é
+//eofãƒ‡ãƒ¼ã‚¿ã‹ã©ã†ã‹ã‚’åˆ¤åˆ¥ã™ã‚‹
 hmLib_boolian vcom_data_eof(vcom_data* Data) {
 	return Data->ID==vcom_data_id_EOF;
 }

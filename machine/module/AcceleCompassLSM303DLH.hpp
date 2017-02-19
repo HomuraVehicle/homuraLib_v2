@@ -151,10 +151,10 @@ namespace hmr{
 			class cAcceleCompassLSM303DLH_I2C{
 				typedef cAcceleCompassLSM303DLH_I2C<i2c_register_, shared_i2c_identifier> my_type;
 			private:
-				//LSM303DLHŒÅ—LƒAƒhƒŒƒX
+				//LSM303DLHå›ºæœ‰ã‚¢ãƒ‰ãƒ¬ã‚¹
 				static const unsigned char AcceleI2CAddress;
 				static const unsigned char CompassI2CAddress;
-				//GyroL3G4200D—pƒRƒ}ƒ“ƒh
+				//GyroL3G4200Dç”¨ã‚³ãƒãƒ³ãƒ‰
 				static const unsigned char i2ccmd_acl_reg_ctrl;
 				static const unsigned char i2ccmd_acl_reg_data;
 				static const unsigned char i2ccmd_acl_reg_status;
@@ -168,22 +168,22 @@ namespace hmr{
 				shared_i2c_client I2C;
 				xc::unique_lock<shared_i2c_client> LockI2c;
 			private:
-				//Å‘åÄ‘—‰ñ”
+				//æœ€å¤§å†é€å›æ•°
 				unsigned int MaxTryNum;
 
-				//‹¤’Êƒf[ƒ^Œ^
+				//å…±é€šãƒ‡ãƒ¼ã‚¿å‹
 				typedef hmLib::coordinates3D::position position;
 
-				//AcceleŠÖŒW
+				//Acceleé–¢ä¿‚
 				typedef acceleLSM303DLH::status acl_status;
 				typedef acceleLSM303DLH::raw_data acl_raw_data;
-				//ƒf[ƒ^‚Ìƒtƒ‹ƒXƒP[ƒ‹
+				//ãƒ‡ãƒ¼ã‚¿ã®ãƒ•ãƒ«ã‚¹ã‚±ãƒ¼ãƒ«
 				acceleLSM303DLH::fullscale::type AcceleFullScale;
 
-				//CompassŠÖŒW
+				//Compassé–¢ä¿‚
 				typedef compassLSM303DLH::status cmp_status;
 				typedef compassLSM303DLH::raw_data cmp_raw_data;
-				//ƒf[ƒ^‚Ìƒtƒ‹ƒXƒP[ƒ‹
+				//ãƒ‡ãƒ¼ã‚¿ã®ãƒ•ãƒ«ã‚¹ã‚±ãƒ¼ãƒ«
 				compassLSM303DLH::fullscale::type CompassFullScale;
 			public:
 				cAcceleCompassLSM303DLH_I2C()
@@ -219,24 +219,24 @@ namespace hmr{
 					hmr_assert(is_lock(), acceleLSM303DLH::non_locked_exception());
 					for (unsigned int TryCnt = 0; TryCnt < MaxTryNum; ++TryCnt){
 						if (I2C.start(AcceleI2CAddress, 0))continue;
-						//CTRL_REGƒŒƒWƒXƒ^‚Ö‚Ì‘‚«‚İ—v‹(•¡”ƒoƒCƒg)
+						//CTRL_REGãƒ¬ã‚¸ã‚¹ã‚¿ã¸ã®æ›¸ãè¾¼ã¿è¦æ±‚(è¤‡æ•°ãƒã‚¤ãƒˆ)
 						if (I2C.write(i2ccmd_acl_reg_ctrl | i2ccmd_regmode_multi))continue;
-						//CTRL_REG1‚Ì‰Šú‰» Normal 10Hz
+						//CTRL_REG1ã®åˆæœŸåŒ– Normal 10Hz
 						if (I2C.write((Power_ ? 0x27 : 0x00) | (static_cast<uint8>(SamplingRate_ << 3) & 0x18)))continue;
-						//CTRL_REG2‚Ì‰Šú‰» default
+						//CTRL_REG2ã®åˆæœŸåŒ– default
 						if (I2C.write(0x00))continue;
-						//CTRL_REG3‚Ì‰Šú‰» default
+						//CTRL_REG3ã®åˆæœŸåŒ– default
 						if (I2C.write(0x00))continue;
-						//CTRL_REG4‚Ì‰Šú‰» default
+						//CTRL_REG4ã®åˆæœŸåŒ– default
 						if (I2C.write(0x30&static_cast<uint8>(FullScale_<<4)))continue;
-						//CTRL_REG5‚Ì‰Šú‰» default
+						//CTRL_REG5ã®åˆæœŸåŒ– default
 						if (I2C.write(0x00))continue;
-						//CTRL_REG6‚Ì‰Šú‰» default
+						//CTRL_REG6ã®åˆæœŸåŒ– default
 						if (I2C.write(0x00))continue;
 
 						AcceleFullScale = FullScale_;
 
-						//i2c1I—¹
+						//i2c1çµ‚äº†
 						I2C.stop();
 						return;
 					}
@@ -244,7 +244,7 @@ namespace hmr{
 				acl_status accele_status(){
 					hmr_assert(is_lock(), acceleLSM303DLH::non_locked_exception());
 
-					//FIFOSRCæ“¾—v¿
+					//FIFOSRCå–å¾—è¦è«‹
 					for (unsigned int TryCnt = 0; TryCnt < MaxTryNum; ++TryCnt){
 						if (I2C.start(AcceleI2CAddress, 0))continue;
 						if (I2C.write(i2ccmd_acl_reg_status | i2ccmd_regmode_single))continue;
@@ -262,9 +262,9 @@ namespace hmr{
 					//======== ACC
 					for(unsigned int TryCnt = 0; TryCnt <MaxTryNum; ++TryCnt){
 						if(I2C.start(AcceleI2CAddress, 0))continue;
-						//x²‰Á‘¬“xLowByte—v‹
+						//xè»¸åŠ é€Ÿåº¦LowByteè¦æ±‚
 						if(I2C.write(i2ccmd_acl_reg_data | i2ccmd_regmode_multi))continue;
-						//“Ç‚İæ‚è—p‚ÉÄ‹N“®
+						//èª­ã¿å–ã‚Šç”¨ã«å†èµ·å‹•
 						if(I2C.restart(AcceleI2CAddress, 1))continue;
 
 						acl_raw_data Data;
@@ -295,16 +295,16 @@ namespace hmr{
 					//Magne#1
 					for (unsigned int TryCnt = 0; TryCnt <MaxTryNum; ++TryCnt){
 						if (I2C.start(CompassI2CAddress, 0))continue;
-						//CTRL_REGƒŒƒWƒXƒ^‚Ö‚Ì‘‚«‚İ—v‹(•¡”ƒoƒCƒg)
+						//CTRL_REGãƒ¬ã‚¸ã‚¹ã‚¿ã¸ã®æ›¸ãè¾¼ã¿è¦æ±‚(è¤‡æ•°ãƒã‚¤ãƒˆ)
 						if (I2C.write(i2ccmd_cmp_reg_ctrl | i2ccmd_regmode_multi))continue;
-						//CRA_REG_M‚ğ‰Šú‰»
+						//CRA_REG_Mã‚’åˆæœŸåŒ–
 						if (I2C.write(0x1C & static_cast<uint8>(SamplinRate_ << 2)))continue;
-						//CRB_REG_M‚ğ‰Šú‰»@1.3 Gauss
+						//CRB_REG_Mã‚’åˆæœŸåŒ–ã€€1.3 Gauss
 						if (I2C.write(static_cast<uint8>(FullScale_ << 5)&0xE0))continue;
-						//MR_REG_M‚ğ‰Šú‰»@continuous
+						//MR_REG_Mã‚’åˆæœŸåŒ–ã€€continuous
 						if (I2C.write(0x00))continue;
 
-						//i2c1I—¹
+						//i2c1çµ‚äº†
 						I2C.stop();
 						return;
 					}
@@ -312,7 +312,7 @@ namespace hmr{
 				cmp_status compass_status(){
 					hmr_assert(is_lock(), compassLSM303DLH::non_locked_exception());
 
-					//FIFOSRCæ“¾—v¿
+					//FIFOSRCå–å¾—è¦è«‹
 					for (unsigned int TryCnt = 0; TryCnt < MaxTryNum; ++TryCnt){
 						if (I2C.start(CompassI2CAddress, 0))continue;
 						if (I2C.write(i2ccmd_cmp_reg_status | i2ccmd_regmode_single))continue;
@@ -331,9 +331,9 @@ namespace hmr{
 					//======== ACC
 					for (unsigned int TryCnt = 0; TryCnt <MaxTryNum; ++TryCnt){
 						if (I2C.start(CompassI2CAddress, 0))continue;
-						//x²‰Á‘¬“xLowByte—v‹
+						//xè»¸åŠ é€Ÿåº¦LowByteè¦æ±‚
 						if (I2C.write(i2ccmd_cmp_reg_data | i2ccmd_regmode_multi))continue;
-						//“Ç‚İæ‚è—p‚ÉÄ‹N“®
+						//èª­ã¿å–ã‚Šç”¨ã«å†èµ·å‹•
 						if (I2C.restart(CompassI2CAddress, 1))continue;
 
 						cmp_raw_data Data;
@@ -360,12 +360,12 @@ namespace hmr{
 				}
 				position compass_read(){ return compass_read_raw().to_vector(); }
 			};
-			//LSM303DLHŒÅ—LƒAƒhƒŒƒX
+			//LSM303DLHå›ºæœ‰ã‚¢ãƒ‰ãƒ¬ã‚¹
 			template<typename i2c_register_, typename shared_i2c_identifier>
 			const unsigned char cAcceleCompassLSM303DLH_I2C<i2c_register_, shared_i2c_identifier>::AcceleI2CAddress = 0x19;
 			template<typename i2c_register_, typename shared_i2c_identifier>
 			const unsigned char cAcceleCompassLSM303DLH_I2C<i2c_register_, shared_i2c_identifier>::CompassI2CAddress = 0x1E;
-			//LSM303DLH—pƒRƒ}ƒ“ƒh
+			//LSM303DLHç”¨ã‚³ãƒãƒ³ãƒ‰
 			template<typename i2c_register_, typename shared_i2c_identifier>
 			const unsigned char cAcceleCompassLSM303DLH_I2C<i2c_register_, shared_i2c_identifier>::i2ccmd_acl_reg_ctrl = 0x20;
 			template<typename i2c_register_, typename shared_i2c_identifier>
@@ -420,7 +420,7 @@ namespace hmr{
 					lock_guard Lock(I2C);
 					if (!Lock.owns_lock())return true;
 
-					//ˆê’Uƒpƒ[ƒIƒt
+					//ä¸€æ—¦ãƒ‘ãƒ¯ãƒ¼ã‚ªãƒ•
 					I2C.accele_config(false, acceleLSM303DLH::sampling_rate::_100Hz, acceleLSM303DLH::fullscale::_2g);
 
 					pDelay->exclusive_delay_ms(500);

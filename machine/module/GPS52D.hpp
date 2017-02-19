@@ -17,18 +17,18 @@ namespace hmr {
 			public:
 				typedef xc::function<void(gps::data)> observer;
 			private:
-				//UART’ÊM
+				//UARTé€šä¿¡
 				interrupt_uart InterruptUart;
 				xc::unique_lock<interrupt_uart> InterruptUartLock;
 
-				//æ“¾‚µ‚½GPSƒf[ƒ^
+				//å–å¾—ã—ãŸGPSãƒ‡ãƒ¼ã‚¿
 				gps::data Data;
 				void write(const gps::data& Data_) { Data = Data_; }
 
-				//ƒf[ƒ^óMƒIƒuƒU[ƒo
+				//ãƒ‡ãƒ¼ã‚¿å—ä¿¡ã‚ªãƒ–ã‚¶ãƒ¼ãƒ
 				observer Observer;
 			private:
-				//óM—pŠ„‚è‚İˆ—
+				//å—ä¿¡ç”¨å‰²ã‚Šè¾¼ã¿å‡¦ç†
 				struct recv_interrupt :public xc32::interrupt::function {
 				private:
 					my_type& ref;
@@ -60,9 +60,9 @@ namespace hmr {
 					}
 					bool is_active()const{ return IsActive; }
 				public:
-					//$GPGGAŠJnƒR[ƒh‚ğŒ³‚ÉA•K—v•”•ª‚Ìƒf[ƒ^‚Ì‚İ“Ç‚İo‚·
+					//$GPGGAé–‹å§‹ã‚³ãƒ¼ãƒ‰ã‚’å…ƒã«ã€å¿…è¦éƒ¨åˆ†ã®ãƒ‡ãƒ¼ã‚¿ã®ã¿èª­ã¿å‡ºã™
 					virtual void operator()(void) {
-						//óM
+						//å—ä¿¡
 						unsigned char c = ref.InterruptUart.recv_data();
 
 						if (Cnt<7) {
@@ -88,10 +88,10 @@ namespace hmr {
 						}
 					}
 				}RecvInterrupt;
-				//‘—M—pŠ„‚è‚İˆ—
+				//é€ä¿¡ç”¨å‰²ã‚Šè¾¼ã¿å‡¦ç†
 				struct send_interrupt : public xc32::interrupt::function {
 				public:
-					//‘—MŠ„‚è‚İ‚Í‹óiƒRƒ}ƒ“ƒh‚ğGPSƒ‚ƒWƒ…[ƒ‹‚É‘—‚ç‚È‚¢‚½‚ßj
+					//é€ä¿¡å‰²ã‚Šè¾¼ã¿ã¯ç©ºï¼ˆã‚³ãƒãƒ³ãƒ‰ã‚’GPSãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã«é€ã‚‰ãªã„ãŸã‚ï¼‰
 					virtual void operator()(void) {}
 				}SendInterrupt;
 			public:
@@ -123,11 +123,11 @@ namespace hmr {
 					InterruptUartLock.unlock();
 				}
 			public:
-				//—LŒø‚ÈGPSƒf[ƒ^‚ª‘¶İ‚·‚é‚©
+				//æœ‰åŠ¹ãªGPSãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã™ã‚‹ã‹
 				bool can_read()const {
 					return Data.is_valid();
 				}
-				//æ“¾‚µ‚½GPSƒf[ƒ^‚ğ“Ç‚İo‚·
+				//å–å¾—ã—ãŸGPSãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã™
 				gps::data read(){
 					gps::data tmp = Data;
 					Data.invalid();
@@ -142,18 +142,18 @@ namespace hmr {
 				typedef cGPS52D<uart_register,power_pin> my_type;
 
 			private:
-				//GPSƒ‚ƒWƒ…[ƒ‹ŠÇ—
+				//GPSãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ç®¡ç†
 				cGPS52D_Uart<uart_register> GPS52DUart;
 				xc::unique_lock<cGPS52D_Uart<uart_register>> GPS52DUartLock;
-				//“dŒ¹ŠÇ—
+				//é›»æºç®¡ç†
 				power_pin PowerPin;
 				xc::lock_guard<power_pin> PowerPinLock;
 			public: 
-				//—LŒø‚ÈGPSƒf[ƒ^‚ª‘¶İ‚·‚é‚©
+				//æœ‰åŠ¹ãªGPSãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã™ã‚‹ã‹
 				bool can_read()const {
 					return GPS52DUart.can_read();
 				}
-				//æ“¾‚µ‚½GPSƒf[ƒ^‚ğ“Ç‚İo‚·
+				//å–å¾—ã—ãŸGPSãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã™
 				gps::data read(){
 					return GPS52DUart.read();
 				}

@@ -2,10 +2,10 @@
 #define HMR_RAWDATA_INC 100
 #
 /*
-=== ���� ===
-�{���́A�l������K�v�̂���G���f�B�A���̈Ⴂ�𖳎����Ă���B
-�ΏۂƂ��Ă���f�o�C�X�i�R���p�C���j�ԂŁA�G���f�B�A���������ł��邱�Ƃ��m�F���Ďg�����ƁB
-�܂��AByteNum��sizeof�Ŏ擾����Ɗ����ƂɈႤ�ꍇ������i�A���C�����g�A�p�f�B���O���Ō����j�̂ŁAsizeof���g���Ă͂Ȃ�Ȃ��B
+=== 注意 ===
+本来は、考慮する必要のあるエンディアンの違いを無視している。
+対象としているデバイス（コンパイラ）間で、エンディアンが同じであることを確認して使うこと。
+また、ByteNumもsizeofで取得すると環境ごとに違う場合がある（アライメント、パディング等で検索）ので、sizeofを使ってはならない。
 */
 namespace hmr {
 	template<typename output_iterator,typename T>

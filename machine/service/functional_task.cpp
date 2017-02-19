@@ -8,27 +8,27 @@ namespace hmr {
 		namespace service {
 			namespace functask {
 				namespace {
-					//===ƒ^ƒXƒNƒoƒbƒtƒ@—pŠÖ”===
+					//===ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ç”¨é–¢æ•°===
 					void buf_initialize(taskmaster* TaskMaster);
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚ÌƒTƒCƒY‚ğæ“¾‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚ºã‚’å–å¾—ã™ã‚‹
 //					uint8 buf_size(taskmaster* TaskMaster);
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚ª‹ó‚©Šm”F‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ãŒç©ºã‹ç¢ºèªã™ã‚‹
 //					bool buf_empty(taskmaster* TaskMaster);
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚ªˆê”t‚©Šm”F‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ãŒä¸€æ¯ã‹ç¢ºèªã™ã‚‹
 					bool buf_full(taskmaster* TaskMaster);
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚Ìæ“ªƒAƒhƒŒƒX‚ğæ“¾‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—ã™ã‚‹
 					task* buf_begin(taskmaster* TaskMaster);
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚Ì––”öƒAƒhƒŒƒX‚ğæ“¾‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã®æœ«å°¾ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—ã™ã‚‹
 					task* buf_end(taskmaster* TaskMaster);
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚©‚çAƒ^ƒXƒN‚ğ’T‚µ‚Ä‚­‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰ã€ã‚¿ã‚¹ã‚¯ã‚’æ¢ã—ã¦ãã‚‹
 					task* buf_find(taskmaster* TaskMaster, function Fp);
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚É—v‘f‚ğ’Ç‰Á‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã«è¦ç´ ã‚’è¿½åŠ ã™ã‚‹
 					bool buf_insert(taskmaster* TaskMaster, function Fp, sint16 Interval, inform TaskInformStopFp);
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚Ì—v‘f‚ğíœ‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã®è¦ç´ ã‚’å‰Šé™¤ã™ã‚‹
 					bool buf_erase(taskmaster* TaskMaster, task* itr);
 
 
-					//===ƒ^ƒXƒNƒoƒbƒtƒ@—pŠÖ”===
+					//===ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ç”¨é–¢æ•°===
 					void buf_initialize(taskmaster* TaskMaster) {
 						if(TaskMaster==0)return;
 						task* itr=buf_begin(TaskMaster);
@@ -39,38 +39,38 @@ namespace hmr {
 							++itr;
 						}
 					}
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚ÌƒTƒCƒY‚ğæ“¾‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚ºã‚’å–å¾—ã™ã‚‹
 //					uint8 buf_size(taskmaster* TaskMaster) {
 //						if(TaskMaster==0)return 0;
 //						return TaskMaster->Size;
 //					}
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚ª‹ó‚©Šm”F‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ãŒç©ºã‹ç¢ºèªã™ã‚‹
 //					bool buf_empty(taskmaster* TaskMaster) {
 //						if(TaskMaster==0)return 0;
 //						return TaskMaster->Size==0;
 //					}
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚ªˆê”t‚©Šm”F‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ãŒä¸€æ¯ã‹ç¢ºèªã™ã‚‹
 					bool buf_full(taskmaster* TaskMaster) {
 						if(TaskMaster==0)return 1;
 						return TaskMaster->Size==TaskMaster->MaxSize;
 					}
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚Ìæ“ªƒAƒhƒŒƒX‚ğæ“¾‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—ã™ã‚‹
 					task* buf_begin(taskmaster* TaskMaster) {
 						if(TaskMaster==0)return 0;
 						return TaskMaster->Buf;
 					}
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚Ì––”öƒAƒhƒŒƒX‚ğæ“¾‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã®æœ«å°¾ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—ã™ã‚‹
 					task* buf_end(taskmaster* TaskMaster) {
 						if(TaskMaster==0)return 0;
 						return TaskMaster->Buf+TaskMaster->Size;
 					}
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚©‚çAƒ^ƒXƒN‚ğ’T‚µ‚Ä‚­‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰ã€ã‚¿ã‚¹ã‚¯ã‚’æ¢ã—ã¦ãã‚‹
 					task* buf_find(taskmaster* TaskMaster, function Fp) {
 						if(TaskMaster==0)return 0;
 						if(Fp==0)return 0;
 						task* itr;
 
-						//I’[‚Ü‚ÅŠm”F‚µ‚ÄA“¯ˆêƒ^ƒXƒN‚Ì—L–³‚ğŠm”F‚·‚é
+						//çµ‚ç«¯ã¾ã§ç¢ºèªã—ã¦ã€åŒä¸€ã‚¿ã‚¹ã‚¯ã®æœ‰ç„¡ã‚’ç¢ºèªã™ã‚‹
 						itr=buf_begin(TaskMaster);
 						while(itr!=buf_end(TaskMaster)) {
 							if(itr->Fp==Fp)break;
@@ -80,31 +80,31 @@ namespace hmr {
 						if(itr==buf_end(TaskMaster))return 0;
 						return itr;
 					}
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚É—v‘f‚ğ’Ç‰Á‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã«è¦ç´ ã‚’è¿½åŠ ã™ã‚‹
 					bool buf_insert(taskmaster* TaskMaster, function Fp, sint16 Interval, inform TaskInformStopFp) {
 						if(TaskMaster==0)return 1;
 						if(Fp==0)return 1;
-						//taskƒoƒbƒtƒ@‚ª‚¢‚Á‚Ï‚¢‚È‚çƒGƒ‰[‚ğ•Ô‚·
+						//taskãƒãƒƒãƒ•ã‚¡ãŒã„ã£ã±ã„ãªã‚‰ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™
 						if(buf_full(TaskMaster))return 1;
 
-						//“o˜^“à—e‚ğ––”ö‚É‘‚«‚İAƒTƒCƒY‚ğ‘‚â‚·
+						//ç™»éŒ²å†…å®¹ã‚’æœ«å°¾ã«æ›¸ãè¾¼ã¿ã€ã‚µã‚¤ã‚ºã‚’å¢—ã‚„ã™
 						TaskMaster->Buf[TaskMaster->Size].Fp=Fp;
 						TaskMaster->Buf[TaskMaster->Size].Interval=Interval;
 						TaskMaster->Buf[TaskMaster->Size].InformStop=TaskInformStopFp;
 						++TaskMaster->Size;
 
-						//task‚ª‰‚ß‚Ä“o˜^‚³‚ê‚½ê‡‚ÍAinformŠÖ”‚ğŒÄ‚Ño‚·
+						//taskãŒåˆã‚ã¦ç™»éŒ²ã•ã‚ŒãŸå ´åˆã¯ã€informé–¢æ•°ã‚’å‘¼ã³å‡ºã™
 						if(TaskMaster->Size==1 && TaskMaster->Fp_informStart)TaskMaster->Fp_informStart();
 
 						return 0;
 					}
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚Ì—v‘f‚ğíœ‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã®è¦ç´ ã‚’å‰Šé™¤ã™ã‚‹
 					bool buf_erase(taskmaster* TaskMaster, task* itr) {
 						task* pre=0;
 						if(TaskMaster==0 || itr==0)return 1;
 						if(itr<buf_begin(TaskMaster) || buf_end(TaskMaster)<=itr)return 1;
 
-						//w’èitrˆÈŒã‚Ì
+						//æŒ‡å®šiträ»¥å¾Œã®
 						while(1) {
 							pre=itr++;
 							if(itr==buf_end(TaskMaster))break;
@@ -122,8 +122,8 @@ namespace hmr {
 						return 0;
 					}
 				}
-				//===ƒ^ƒXƒN—pŒöŠJŠÖ”===
-				//ƒ^ƒXƒNƒVƒXƒeƒ€ƒtƒH[ƒ}ƒbƒg
+				//===ã‚¿ã‚¹ã‚¯ç”¨å…¬é–‹é–¢æ•°===
+				//ã‚¿ã‚¹ã‚¯ã‚·ã‚¹ãƒ†ãƒ ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 				void format(taskmaster* TaskMaster) {
 					if(TaskMaster==0)return;
 					TaskMaster->Buf=0;
@@ -134,12 +134,12 @@ namespace hmr {
 					TaskMaster->MaxSize=0;
 					TaskMaster->Size=0;
 				}
-				//ƒ^ƒXƒNƒVƒXƒeƒ€‚ª‰Šú‰»‚³‚ê‚Ä‚¢‚é‚©
+				//ã‚¿ã‚¹ã‚¯ã‚·ã‚¹ãƒ†ãƒ ãŒåˆæœŸåŒ–ã•ã‚Œã¦ã„ã‚‹ã‹
 				bool is_constructed(taskmaster* TaskMaster) {
 					if(TaskMaster==0)return 0;
 					return TaskMaster->Buf!=0;
 				}
-				//ƒ^ƒXƒNƒVƒXƒeƒ€‰Šú‰»ŠÖ”
+				//ã‚¿ã‚¹ã‚¯ã‚·ã‚¹ãƒ†ãƒ åˆæœŸåŒ–é–¢æ•°
 				void construct_dynamic(taskmaster* TaskMaster, uint8 MaxSize) {
 					if(TaskMaster==0)return;
 					TaskMaster->Buf=(task*)std::malloc(sizeof(task)*MaxSize);
@@ -151,7 +151,7 @@ namespace hmr {
 					TaskMaster->Size=0;
 					buf_initialize(TaskMaster);
 				}
-				//ƒ^ƒXƒNƒVƒXƒeƒ€‰Šú‰»ŠÖ”
+				//ã‚¿ã‚¹ã‚¯ã‚·ã‚¹ãƒ†ãƒ åˆæœŸåŒ–é–¢æ•°
 				void construct_static(taskmaster* TaskMaster, task* Begin, task* End) {
 					if(TaskMaster==0 || Begin==0 || End==0)return;
 					TaskMaster->Buf=Begin;
@@ -163,7 +163,7 @@ namespace hmr {
 					TaskMaster->Size=0;
 					buf_initialize(TaskMaster);
 				}
-				//ƒ^ƒXƒNƒVƒXƒeƒ€I’[‰»ŠÖ”	
+				//ã‚¿ã‚¹ã‚¯ã‚·ã‚¹ãƒ†ãƒ çµ‚ç«¯åŒ–é–¢æ•°	
 				void destruct(taskmaster* TaskMaster) {
 					task* itr=0;
 					if(TaskMaster==0)return;
@@ -182,116 +182,116 @@ namespace hmr {
 					TaskMaster->MaxSize=0;;
 					TaskMaster->Size=0;
 				}
-				//ƒ^ƒXƒN‚É“o˜^‚Å‚«‚éŠm”F‚·‚é
+				//ã‚¿ã‚¹ã‚¯ã«ç™»éŒ²ã§ãã‚‹ç¢ºèªã™ã‚‹
 				bool can_start(taskmaster* TaskMaster) {
 					if(TaskMaster==0)return 0;
 					return !buf_full(TaskMaster);
 				}
-				//ƒ^ƒXƒN‚ğ“o˜^(“ñd“o˜^‚Í‰ñ”ğ)
+				//ã‚¿ã‚¹ã‚¯ã‚’ç™»éŒ²(äºŒé‡ç™»éŒ²ã¯å›é¿)
 				bool start(taskmaster* TaskMaster, sint16 Interval, function TaskFp, inform TaskInformStopFp) {
 					task* itr=0;
 					if(TaskMaster==0 || TaskFp==0)return 1;
 
-					//ƒ^ƒXƒN‚ğ’T‚µ‚És‚­
+					//ã‚¿ã‚¹ã‚¯ã‚’æ¢ã—ã«è¡Œã
 					itr=buf_find(TaskMaster, TaskFp);
 
-					//V‹K‚Ìê‡
+					//æ–°è¦ã®å ´åˆ
 					if(itr==buf_end(TaskMaster)) {
-						//w’èó‘Ô‚ª•‰‚Ì’l‚È‚çAƒGƒ‰[‚ğ–ß‚·
+						//æŒ‡å®šçŠ¶æ…‹ãŒè² ã®å€¤ãªã‚‰ã€ã‚¨ãƒ©ãƒ¼ã‚’æˆ»ã™
 						if(Interval<0)return 1;
 
-						//“o˜^‚Å‚«‚È‚¢ê‡‚ÍAƒGƒ‰[‚ğ–ß‚·
+						//ç™»éŒ²ã§ããªã„å ´åˆã¯ã€ã‚¨ãƒ©ãƒ¼ã‚’æˆ»ã™
 						if(buf_full(TaskMaster))return 1;
 
-						//ƒ^ƒXƒN‚ğ“o˜^
+						//ã‚¿ã‚¹ã‚¯ã‚’ç™»éŒ²
 						return buf_insert(TaskMaster, TaskFp, Interval, TaskInformStopFp);
-					}//Šù‘¶‚Ìê‡
+					}//æ—¢å­˜ã®å ´åˆ
 					else {
-						//’â~—v¿‚È‚çAíœ‚·‚é
+						//åœæ­¢è¦è«‹ãªã‚‰ã€å‰Šé™¤ã™ã‚‹
 						if(Interval<0)return buf_erase(TaskMaster, itr);
 
-						//“o˜^C³‚È‚çAw’èŠÔ‚ğ‘ã“ü‚·‚é
+						//ç™»éŒ²ä¿®æ­£ãªã‚‰ã€æŒ‡å®šæ™‚é–“ã‚’ä»£å…¥ã™ã‚‹
 						itr->Interval=(uint16)(Interval);
 						itr->Fp=TaskFp;
 						itr->InformStop=TaskInformStopFp;
 						return 0;
 					}
 				}
-				//ƒ^ƒXƒN‚ğ“o˜^i“ñd“o˜^‚Å‚«‚Ä‚µ‚Ü‚¤‚Ì‚ÅAŠëŒ¯j
+				//ã‚¿ã‚¹ã‚¯ã‚’ç™»éŒ²ï¼ˆäºŒé‡ç™»éŒ²ã§ãã¦ã—ã¾ã†ã®ã§ã€å±é™ºï¼‰
 				bool quick_start(taskmaster* TaskMaster, sint16 Interval, function TaskFp, inform TaskInformStopFp) {
 					if(TaskMaster==0 || TaskFp==0)return 1;
-					//ƒ^ƒXƒN‚Ìw’èŠÔ‚ª‚¨‚©‚µ‚¢ê‡‚ÍƒGƒ‰[‚ğ–ß‚·
+					//ã‚¿ã‚¹ã‚¯ã®æŒ‡å®šæ™‚é–“ãŒãŠã‹ã—ã„å ´åˆã¯ã‚¨ãƒ©ãƒ¼ã‚’æˆ»ã™
 					if(Interval<=0)return 1;
 
-					//“o˜^‚Å‚«‚È‚¢ê‡‚ÍƒGƒ‰[‚ğ–ß‚·
+					//ç™»éŒ²ã§ããªã„å ´åˆã¯ã‚¨ãƒ©ãƒ¼ã‚’æˆ»ã™
 					if(!can_start(TaskMaster))return 1;
 
-					//ƒ^ƒXƒN‚ğ’Ç‰Á
+					//ã‚¿ã‚¹ã‚¯ã‚’è¿½åŠ 
 					buf_insert(TaskMaster, TaskFp, (uint16)Interval, TaskInformStopFp);
 
 					return 0;
 				}
-				//ƒ^ƒXƒN‚ğİ’è•ÏX/íœ
+				//ã‚¿ã‚¹ã‚¯ã‚’è¨­å®šå¤‰æ›´/å‰Šé™¤
 				bool restart(taskmaster* TaskMaster, function TaskFp, sint16 Interval) {
 					task* itr=0;
 					if(TaskMaster==0 || TaskFp==0)return 1;
 
-					//ƒ^ƒXƒN‚ğ’T‚µ‚És‚­
+					//ã‚¿ã‚¹ã‚¯ã‚’æ¢ã—ã«è¡Œã
 					itr=buf_find(TaskMaster, TaskFp);
 
-					//V‹K‚Ìê‡AƒGƒ‰[‚ğ•Ô‚·
+					//æ–°è¦ã®å ´åˆã€ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™
 					if(itr==buf_end(TaskMaster))return 1;
 
-					//’â~—v¿‚È‚çAíœ‚·‚é
+					//åœæ­¢è¦è«‹ãªã‚‰ã€å‰Šé™¤ã™ã‚‹
 					if(Interval<0) {
 						buf_erase(TaskMaster, itr);
 					}
 
-					//“o˜^C³‚È‚çAw’èŠÔ‚ğ‘ã“ü‚·‚é
+					//ç™»éŒ²ä¿®æ­£ãªã‚‰ã€æŒ‡å®šæ™‚é–“ã‚’ä»£å…¥ã™ã‚‹
 					itr->Interval=(uint16)(Interval);
 					return 0;
 				}
-				//ƒ^ƒXƒN‚ğŠJ•ú
+				//ã‚¿ã‚¹ã‚¯ã‚’é–‹æ”¾
 				bool stop(taskmaster* TaskMaster, function TaskFp) {
 					if(TaskMaster==0 || TaskFp==0)return 1;
 					return restart(TaskMaster, TaskFp, -1);
 				}
-				//ƒ^ƒXƒN‚ÌÀs
+				//ã‚¿ã‚¹ã‚¯ã®å®Ÿè¡Œ
 				void interrupt_function(taskmaster* TaskMaster, sint16 Interval) {
 					task* itr=0;
 					uint16 NewCounter;
 					if(TaskMaster==0)return;
 
-					//V‚½‚ÈƒJƒEƒ“ƒ^[ŠÔ‚ğŒvZ‚·‚é
+					//æ–°ãŸãªã‚«ã‚¦ãƒ³ã‚¿ãƒ¼æ™‚é–“ã‚’è¨ˆç®—ã™ã‚‹
 					NewCounter=((uint16)(TaskMaster->Counter)+(uint16)(Interval))%0x8000;
 
-					//ƒ^ƒXƒNƒoƒbƒtƒ@‚ğ‡‚ÉŠm”F‚·‚é
+					//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã‚’é †ã«ç¢ºèªã™ã‚‹
 					itr=buf_begin(TaskMaster);
 					while(itr<buf_end(TaskMaster)) {
-						//‘O‰ñ‚ÌƒJƒEƒ“ƒ^[‚Æ¡‰ñ‚ÌƒJƒEƒ“ƒ^[‚ÌŠÔ‚ÉInterval‚ğŒ×‚¢‚Å‚¢‚ê‚ÎAÀs
+						//å‰å›ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã¨ä»Šå›ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®é–“ã«Intervalã‚’è·¨ã„ã§ã„ã‚Œã°ã€å®Ÿè¡Œ
 						if(itr->Interval>0 && TaskMaster->Counter/itr->Interval != NewCounter/itr->Interval) {
-							//ƒ^ƒXƒN‚ğÀs
+							//ã‚¿ã‚¹ã‚¯ã‚’å®Ÿè¡Œ
 							Interval=itr->Fp(itr->Interval);
-							//I—¹—v‹‚ª‚ ‚Á‚½ê‡
+							//çµ‚äº†è¦æ±‚ãŒã‚ã£ãŸå ´åˆ
 							if(Interval<0) {
 								buf_erase(TaskMaster, itr);
 								continue;
 							}
-							//—v‹’Ê‚è‚ÌƒCƒ“ƒ^[ƒoƒ‹‚ÉƒZƒbƒg‚µ‚È‚¨‚·
+							//è¦æ±‚é€šã‚Šã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«ã«ã‚»ãƒƒãƒˆã—ãªãŠã™
 							itr->Interval=Interval;
 						}
 						++itr;
 					}
 
-					//ƒJƒEƒ“ƒ^[‚ğV‚µ‚­‚µ‚Ä‚¨‚­
+					//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’æ–°ã—ãã—ã¦ãŠã
 					TaskMaster->Counter=NewCounter;
 				}
-				//ƒ^ƒXƒNƒVƒXƒeƒ€‚Ì“o˜^‚ªƒ[ƒ‚Å‚È‚­‚È‚Á‚½ê‡‚É’Ê’m
+				//ã‚¿ã‚¹ã‚¯ã‚·ã‚¹ãƒ†ãƒ ã®ç™»éŒ²ãŒã‚¼ãƒ­ã§ãªããªã£ãŸå ´åˆã«é€šçŸ¥
 				void resgist_informStart(taskmaster* TaskMaster, vFp_v Fp_) {
 					if(TaskMaster==0 || Fp_==0)return;
 					TaskMaster->Fp_informStart=Fp_;
 				}
-				//ƒ^ƒXƒNƒVƒXƒeƒ€‚©‚ç‚·‚×‚Ä‚Ì“o˜^‚ªÁ‚¦‚½‚Æê‡‚É’Ê’m
+				//ã‚¿ã‚¹ã‚¯ã‚·ã‚¹ãƒ†ãƒ ã‹ã‚‰ã™ã¹ã¦ã®ç™»éŒ²ãŒæ¶ˆãˆãŸã¨å ´åˆã«é€šçŸ¥
 				void resgist_informStop(taskmaster* TaskMaster, vFp_v Fp_) {
 					if(TaskMaster==0 || Fp_==0)return;
 					TaskMaster->Fp_informStop=Fp_;

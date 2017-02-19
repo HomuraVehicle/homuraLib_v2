@@ -2,11 +2,11 @@
 #define HMR_MESSAGE_IOARRAY_INC 100
 #
 /*
-io_interface‚Ì”z—ñ‚ðŽ‚¿AID‚É‚æ‚Á‚ÄƒAƒNƒZƒX‰Â”\‚Èmapƒ`ƒbƒN‚È”z—ñ
+io_interfaceã®é…åˆ—ã‚’æŒã¡ã€IDã«ã‚ˆã£ã¦ã‚¢ã‚¯ã‚»ã‚¹å¯èƒ½ãªmapãƒãƒƒã‚¯ãªé…åˆ—
 
 === message::io_reference_array ===
 v1_00/140412 hmIto
-	”÷C³‚ðI—¹@‚Æ‚è‚ ‚¦‚¸AŠ®¬
+	å¾®ä¿®æ­£ã‚’çµ‚äº†ã€€ã¨ã‚Šã‚ãˆãšã€å®Œæˆ
 */
 #include<vector>
 #include<memory>

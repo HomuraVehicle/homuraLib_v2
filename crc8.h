@@ -3,45 +3,45 @@
 #
 /*
 ---CRC8---
-„‰ñç’·«ŒŸ¸ACRC8‚ÌƒoƒCƒg¶¬‹@”\‚ğ’ñ‹Ÿ‚·‚éƒ‰ƒCƒuƒ‰ƒŠ
+å·¡å›å†—é•·æ€§æ¤œæŸ»ã€CRC8ã®ãƒã‚¤ãƒˆç”Ÿæˆæ©Ÿèƒ½ã‚’æä¾›ã™ã‚‹ãƒ©ã‚¤ãƒ–ãƒ©ãƒª
 
 crc8_bitshift_putc/puts
-	ƒrƒbƒgƒVƒtƒgŒ^crc8‰‰ZŠÖ”
-	‘¬“x‚Í’x‚¢‚ªAƒƒ‚ƒŠ‚ğÁ”ï‚µ‚È‚¢
+	ãƒ“ãƒƒãƒˆã‚·ãƒ•ãƒˆå‹crc8æ¼”ç®—é–¢æ•°
+	é€Ÿåº¦ã¯é…ã„ãŒã€ãƒ¡ãƒ¢ãƒªã‚’æ¶ˆè²»ã—ãªã„
 crc8_table_putc/puts
-	ƒe[ƒuƒ‹Œ^crc8‰‰ZŠÖ”
-	‚‘¬‚¾‚ªAƒe[ƒuƒ‹—pƒƒ‚ƒŠ256byte‚ğÁ”ï‚·‚é
-	initialize/finalize‚ª•K—v‚Æ‚È‚é
-	is_validŠÖ”‚Åƒe[ƒuƒ‹‚ª—LŒø‚©‚ğŠm”F‚Å‚«‚é
+	ãƒ†ãƒ¼ãƒ–ãƒ«å‹crc8æ¼”ç®—é–¢æ•°
+	é«˜é€Ÿã ãŒã€ãƒ†ãƒ¼ãƒ–ãƒ«ç”¨ãƒ¡ãƒ¢ãƒª256byteã‚’æ¶ˆè²»ã™ã‚‹
+	initialize/finalizeãŒå¿…è¦ã¨ãªã‚‹
+	is_validé–¢æ•°ã§ãƒ†ãƒ¼ãƒ–ãƒ«ãŒæœ‰åŠ¹ã‹ã‚’ç¢ºèªã§ãã‚‹
 crc8_putc/puts
-	ƒe[ƒuƒ‹‚ªg—p‰Â”\‚È‚çƒe[ƒuƒ‹Œ^A‚»‚¤‚Å‚È‚¯‚ê‚ÎƒrƒbƒgƒVƒtƒgŒ^‚ğ—p‚¢‚Äcrc8‰‰Z‚ğs‚¤
+	ãƒ†ãƒ¼ãƒ–ãƒ«ãŒä½¿ç”¨å¯èƒ½ãªã‚‰ãƒ†ãƒ¼ãƒ–ãƒ«å‹ã€ãã†ã§ãªã‘ã‚Œã°ãƒ“ãƒƒãƒˆã‚·ãƒ•ãƒˆå‹ã‚’ç”¨ã„ã¦crc8æ¼”ç®—ã‚’è¡Œã†
 
 ===crc8===
 v1_00/140115 hmIto
-	ì¬
+	ä½œæˆ
 */
 #ifdef __cplusplus
 extern "C"{
 #endif
-	//ƒrƒbƒgƒVƒtƒg‚É‚æ‚éCRC8‚Ì’PƒoƒCƒgŒvZ
+	//ãƒ“ãƒƒãƒˆã‚·ãƒ•ãƒˆã«ã‚ˆã‚‹CRC8ã®å˜ãƒã‚¤ãƒˆè¨ˆç®—
 	unsigned char crc8_bitshift_putc(unsigned char crc8, unsigned char data);
-	//ƒrƒbƒgƒVƒtƒg‚É‚æ‚éCRC8‚Ì•¡”ƒoƒCƒgŒvZ
+	//ãƒ“ãƒƒãƒˆã‚·ãƒ•ãƒˆã«ã‚ˆã‚‹CRC8ã®è¤‡æ•°ãƒã‚¤ãƒˆè¨ˆç®—
 	unsigned char crc8_bitshift_puts(unsigned char crc8, const void *buff, unsigned int size);
-	//CRC8ƒe[ƒuƒ‹‚É‚æ‚éCRC8‚Ì’PƒoƒCƒgŒvZ
+	//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã«ã‚ˆã‚‹CRC8ã®å˜ãƒã‚¤ãƒˆè¨ˆç®—
 	unsigned char crc8_table_putc(unsigned char crc8, unsigned char data);
-	//CRC8ƒe[ƒuƒ‹‚É‚æ‚éCRC8‚Ì•¡”ƒoƒCƒgŒvZ
+	//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã«ã‚ˆã‚‹CRC8ã®è¤‡æ•°ãƒã‚¤ãƒˆè¨ˆç®—
 	unsigned char crc8_table_puts(unsigned char crc8, const void *buff, unsigned int size);
-	//CRC8‚Ì’PƒoƒCƒgŒvZ
+	//CRC8ã®å˜ãƒã‚¤ãƒˆè¨ˆç®—
 	unsigned char crc8_putc(unsigned char crc8, unsigned char data);
-	//CRC8‚Ì•¡”ƒoƒCƒgŒvZ
+	//CRC8ã®è¤‡æ•°ãƒã‚¤ãƒˆè¨ˆç®—
 	unsigned char crc8_puts(unsigned char crc8, const void *buff, unsigned int size);
-	//CRC8ƒe[ƒuƒ‹—LŒø«Šm”F
+	//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«æœ‰åŠ¹æ€§ç¢ºèª
 	unsigned char crc8_table_is_valid();
-	//CRC8ƒe[ƒuƒ‹‚Ì‰Šú‰»
+	//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã®åˆæœŸåŒ–
 	void crc8_table_initialize();
-	//CRC8ƒe[ƒuƒ‹‚Ìƒƒ‚ƒŠŠ„‚è“–‚Ä‰Šú‰»
+	//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ¡ãƒ¢ãƒªå‰²ã‚Šå½“ã¦åˆæœŸåŒ–
 	void crc8_table_placement_initialize(unsigned char Table[256]);
-	//CRC8ƒe[ƒuƒ‹‚ÌI’[‰»
+	//CRC8ãƒ†ãƒ¼ãƒ–ãƒ«ã®çµ‚ç«¯åŒ–
 	void crc8_table_finalize();
 #ifdef __cplusplus
 }

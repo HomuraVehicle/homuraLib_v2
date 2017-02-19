@@ -4,42 +4,42 @@
 /*
 ===hmrVIC1===
 Homura Interactive Communication
-ˆê’èƒoƒCƒg’·‚²‚Æ‚Éƒ`ƒFƒbƒNƒTƒ€‚É‚æ‚éƒf[ƒ^”²‚¯ŒŸØ•Ä‘—‚ğs‚¤’ÊMŒ`®
-ƒ`ƒFƒbƒNƒTƒ€‚ÌŠm”F‚Ì‚½‚ß‚É‚â‚èæ‚è‚ğ‰½“x‚às‚¤Œ`®‚Ì‚½‚ßA‘—óM‚ÌØ‚è‘Ö‚¦‚ª’x‚¢ê‡‚Í’ÊM‚ª’x‚­‚È‚éB
+ä¸€å®šãƒã‚¤ãƒˆé•·ã”ã¨ã«ãƒã‚§ãƒƒã‚¯ã‚µãƒ ã«ã‚ˆã‚‹ãƒ‡ãƒ¼ã‚¿æŠœã‘æ¤œè¨¼ï¼†å†é€ã‚’è¡Œã†é€šä¿¡å½¢å¼
+ãƒã‚§ãƒƒã‚¯ã‚µãƒ ã®ç¢ºèªã®ãŸã‚ã«ã‚„ã‚Šå–ã‚Šã‚’ä½•åº¦ã‚‚è¡Œã†å½¢å¼ã®ãŸã‚ã€é€å—ä¿¡ã®åˆ‡ã‚Šæ›¿ãˆãŒé…ã„å ´åˆã¯é€šä¿¡ãŒé…ããªã‚‹ã€‚
 
 --- command ---
-E‘—M‘¤
-Start	‘—M‘¤‚Æ‚µ‚Ä‚¦‰ñ‚é‚±‚Æ‚ğ’Ê’m
-Stop	‘—M‘¤‚ğI‚¦‚é‚±‚Æ‚ğ’Ê’m
-Data	ƒf[ƒ^‚ğ‘—M
-Esc		‚±‚±‚Ü‚Å‚Ì‘—M“à—e‚ğˆê“xƒLƒƒƒ“ƒZƒ‹‚·‚é‚±‚Æ‚ğ’Ê’m
-What	óM‘¤‚Æ‚È‚ê‚é‚±‚Æ‚ğ’Ê’m
-Err		ƒGƒ‰[‚ª¶‚¶‚½‚½‚ß‘—óMŠÖŒW‚ğI—¹‚·‚é‚±‚Æ‚ğ’Ê’m
-EóM‘¤
+ãƒ»é€ä¿¡å´
+Start	é€ä¿¡å´ã¨ã—ã¦ãˆå›ã‚‹ã“ã¨ã‚’é€šçŸ¥
+Stop	é€ä¿¡å´ã‚’çµ‚ãˆã‚‹ã“ã¨ã‚’é€šçŸ¥
+Data	ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡
+Esc		ã“ã“ã¾ã§ã®é€ä¿¡å†…å®¹ã‚’ä¸€åº¦ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã“ã¨ã‚’é€šçŸ¥
+What	å—ä¿¡å´ã¨ãªã‚Œã‚‹ã“ã¨ã‚’é€šçŸ¥
+Err		ã‚¨ãƒ©ãƒ¼ãŒç”Ÿã˜ãŸãŸã‚é€å—ä¿¡é–¢ä¿‚ã‚’çµ‚äº†ã™ã‚‹ã“ã¨ã‚’é€šçŸ¥
+ãƒ»å—ä¿¡å´
 Ack
 Nack
 
 --- protocol ---
-‘—MƒtƒH[ƒ}ƒbƒg
+é€ä¿¡ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 
-Eƒf[ƒ^‘—M
+ãƒ»ãƒ‡ãƒ¼ã‚¿é€ä¿¡æ™‚
 Data[1-Max], CheckSum, CH/TCH, CMD=Data, _cr, _lf
 
-E‚»‚Ì‘¼‚ÌƒRƒ}ƒ“ƒh‘—M
+ãƒ»ãã®ä»–ã®ã‚³ãƒãƒ³ãƒ‰é€ä¿¡æ™‚
 CH/TCH,CMD,_cr,_lf
 CH/TCH:CH=4bit+TCH4bit
 
 
 === hmrVIC1 ===
 v2_00/140413 hmIto
-	C++‰»
+	C++åŒ–
 v1_02/140302 hmIto
-	ƒ^ƒCƒ€ƒAƒEƒg‰ñ”‚ÉãŒÀ‚ğİ‚¯AƒI[ƒo[‚µ‚½ê‡‚Í‘Š‰‚Ì‘[’u‚ğ‚Æ‚é‚æ‚¤‚ÉC³
-	—á‚¦‚ÎA‘¶İ‚µ‚È‚¢‘Šèˆ¶‚ÌStart‚ğ–³ŒÀ‚ÉŒJ‚è•Ô‚µ‚Ä‚µ‚Ü‚¤–â‘è‚ğ‰ğŒˆ
+	ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆå›æ•°ã«ä¸Šé™ã‚’è¨­ã‘ã€ã‚ªãƒ¼ãƒãƒ¼ã—ãŸå ´åˆã¯ç›¸å¿œã®æªç½®ã‚’ã¨ã‚‹ã‚ˆã†ã«ä¿®æ­£
+	ä¾‹ãˆã°ã€å­˜åœ¨ã—ãªã„ç›¸æ‰‹å®›ã®Startã‚’ç„¡é™ã«ç¹°ã‚Šè¿”ã—ã¦ã—ã¾ã†å•é¡Œã‚’è§£æ±º
 v1_01/140115 hmIto
-	ƒ`ƒFƒbƒNƒTƒ€‚Écrc8‚ğÌ—p
+	ãƒã‚§ãƒƒã‚¯ã‚µãƒ ã«crc8ã‚’æ¡ç”¨
 v1_00/131224 hmIto
-	ƒŠƒŠ[ƒX
+	ãƒªãƒªãƒ¼ã‚¹
 */
 
 #define MaxTimeOutNum 5
@@ -52,7 +52,7 @@ v1_00/131224 hmIto
 #include"client.hpp"
 namespace hmr {
 	namespace code {
-		//vic1\‘¢‘Ì‚ÌéŒ¾
+		//vic1æ§‹é€ ä½“ã®å®£è¨€
 		class vic1 :public gate{
 		public:
 			enum error {
@@ -84,32 +84,32 @@ namespace hmr {
 				cmd_NULL=0xFF
 			};
 		private:
-			//‘—Må¯•ÊCH (0x00-0x08)
+			//é€ä¿¡ä¸»è­˜åˆ¥CH (0x00-0x08)
 			unsigned char Ch;
-			//‘—Mæ¯•ÊCH (0x00-0x08)
+			//é€ä¿¡å…ˆè­˜åˆ¥CH (0x00-0x08)
 			unsigned char TergetCh;
-			//—\–ñÏ‚İ‘—Mæ¯•ÊCH (0x00-0x08)
+			//äºˆç´„æ¸ˆã¿é€ä¿¡å…ˆè­˜åˆ¥CH (0x00-0x08)
 			unsigned char NextTergetCh;
-			//ƒ‚[ƒh
+			//ãƒ¢ãƒ¼ãƒ‰
 			unsigned char Mode;
-			//Œ»İ•ÔM‘Ò‚¿’†‚Ì‘—MƒRƒ}ƒ“ƒh
+			//ç¾åœ¨è¿”ä¿¡å¾…ã¡ä¸­ã®é€ä¿¡ã‚³ãƒãƒ³ãƒ‰
 			unsigned char ActiveCmd;
-			//‘—M’†ƒRƒ}ƒ“ƒh
+			//é€ä¿¡ä¸­ã‚³ãƒãƒ³ãƒ‰
 			unsigned char Send;
-			//‘—MƒJƒEƒ“ƒ^
+			//é€ä¿¡ã‚«ã‚¦ãƒ³ã‚¿
 			unsigned char SendCnt;
-			//óM’†ƒRƒ}ƒ“ƒh
+			//å—ä¿¡ä¸­ã‚³ãƒãƒ³ãƒ‰
 			unsigned char Recv;
-			//óMƒJƒEƒ“ƒ^
+			//å—ä¿¡ã‚«ã‚¦ãƒ³ã‚¿
 			unsigned char RecvCnt;
-			//óM’†‚ÌCh
+			//å—ä¿¡ä¸­ã®Ch
 			unsigned char RecvCh;
 
-			//‘—óM”­¶ƒGƒ‰[ƒƒO
+			//é€å—ä¿¡æ™‚ç™ºç”Ÿã‚¨ãƒ©ãƒ¼ãƒ­ã‚°
 			unsigned char Err;
-			//ƒf[ƒ^‘—óM‚ª¸”s‚µ‚Ä‚¢‚È‚¢‚©
+			//ãƒ‡ãƒ¼ã‚¿é€å—ä¿¡ãŒå¤±æ•—ã—ã¦ã„ãªã„ã‹
 			unsigned char Fail;
-			//ƒ^ƒCƒ€ƒAƒEƒg‰ñ”ƒJƒEƒ“ƒ^[
+			//ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆå›æ•°ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
 			unsigned char TimeOutCnt;
 
 		public:
@@ -125,129 +125,129 @@ namespace hmr {
 			class buffer :public gate{
 			private:
 				vic1* VIC1;
-				//‘—óM—pƒCƒ“ƒ^[ƒtƒF[ƒX
+				//é€å—ä¿¡ç”¨ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
 				client* pClient;
-				//‘—óM‹¤—Lƒoƒbƒtƒ@
+				//é€å—ä¿¡å…±æœ‰ãƒãƒƒãƒ•ã‚¡
 				unsigned char* Begin;
 				unsigned char* End;
-				//‘—óM‹¤—Lƒoƒbƒtƒ@‚ÌƒCƒeƒŒ[ƒ^
+				//é€å—ä¿¡å…±æœ‰ãƒãƒƒãƒ•ã‚¡ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
 				unsigned char* GateItr;
-				//VCom‘¤‚ÌƒCƒeƒŒ[ƒ^
+				//VComå´ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
 				unsigned char* VComItr;
 			public:
-				//ƒoƒbƒtƒ@‰Šú‰»
+				//ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ–
 				buffer(vic1* VIC1_, unsigned char* BufBegin, unsigned char* BufEnd);
-				//ƒoƒbƒtƒ@‰Šú‰»
+				//ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ–
 				buffer(vic1* VIC1_,client* pClient_, unsigned char* BufBegin, unsigned char* BufEnd);
-				//ƒoƒbƒtƒ@I’[‰»
+				//ãƒãƒƒãƒ•ã‚¡çµ‚ç«¯åŒ–
 				~buffer();
 			public:
 				bool open(client* pClient_);
 				bool close();
 			private:
-				//•â[‚Å‚«‚éŒÀ‚è•â[
+				//è£œå……ã§ãã‚‹é™ã‚Šè£œå……
 				void load();
 			public:
 				//========== vic1::buf ===========
-				//‚·‚Å‚É—˜—p‰Â”\‚É‚È‚Á‚Ä‚¢‚é‚©
+				//ã™ã§ã«åˆ©ç”¨å¯èƒ½ã«ãªã£ã¦ã„ã‚‹ã‹
 				virtual bool is_open();
-				//ƒoƒbƒtƒ@‚É‘‚«‚İ‰Â”\‚©
+				//ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã¿å¯èƒ½ã‹
 				virtual bool can_putc();
-				//ƒoƒbƒtƒ@‚Ö‘‚«‚İ
+				//ãƒãƒƒãƒ•ã‚¡ã¸æ›¸ãè¾¼ã¿
 				virtual void putc(unsigned char c);
-				//ƒoƒbƒtƒ@‚Ö‘‚«‚ñ‚¾ƒf[ƒ^‚ğˆ—
+				//ãƒãƒƒãƒ•ã‚¡ã¸æ›¸ãè¾¼ã‚“ã ãƒ‡ãƒ¼ã‚¿ã‚’å‡¦ç†
 				virtual void flush();
-				//ƒoƒbƒtƒ@‚©‚ç‚Ì“Ç‚İo‚µ‰Â”\‚©
+				//ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰ã®èª­ã¿å‡ºã—å¯èƒ½ã‹
 				virtual bool can_getc();
-				//ƒoƒbƒtƒ@‚©‚ç‚Ì“Ç‚İo‚µ
+				//ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰ã®èª­ã¿å‡ºã—
 				virtual unsigned char getc();
-				//ƒoƒbƒtƒ@‚Ö‚©‚ç‚Ì“Ç‚İo‚µ‚ª‹æØ‚èˆÊ’u‚É‚¢‚é‚©
+				//ãƒãƒƒãƒ•ã‚¡ã¸ã‹ã‚‰ã®èª­ã¿å‡ºã—ãŒåŒºåˆ‡ã‚Šä½ç½®ã«ã„ã‚‹ã‹
 				virtual bool flowing();
 			public:
 				//========== 
-				//ƒoƒbƒtƒ@‚Ö‚Ì“Ç‚İ‚İ‚ğ‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
+				//ãƒãƒƒãƒ•ã‚¡ã¸ã®èª­ã¿è¾¼ã¿ã‚’ãªã‹ã£ãŸã“ã¨ã«ã™ã‚‹
 				void cancel_get();
-				//ƒoƒbƒtƒ@‚Ì“à•”ƒf[ƒ^‚ğ‚·‚×‚Ä”jŠü‚µAvcom‚É‚àPacketI—¹‚ğ’Ê’m
+				//ãƒãƒƒãƒ•ã‚¡ã®å†…éƒ¨ãƒ‡ãƒ¼ã‚¿ã‚’ã™ã¹ã¦ç ´æ£„ã—ã€vcomã«ã‚‚Packetçµ‚äº†ã‚’é€šçŸ¥
 				void errorflush();
-				//ƒoƒbƒtƒ@‚Ö‚Ì‘‚«‚İ/“Ç‚İ‚İ‚ğI—¹‚µAƒoƒbƒtƒ@‚ğƒNƒŠƒA‚·‚é
+				//ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿/èª­ã¿è¾¼ã¿ã‚’çµ‚äº†ã—ã€ãƒãƒƒãƒ•ã‚¡ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 				void clear();
-				//vcom©‘Ì‚ªƒf[ƒ^‚ğ‚Á‚Ä‚¢‚é‚©
+				//vcomè‡ªä½“ãŒãƒ‡ãƒ¼ã‚¿ã‚’æŒã£ã¦ã„ã‚‹ã‹
 				bool vcom_can_getc();
-				//vcom©‘Ì‚ªflowing‚Í‚Ç‚¤‚È‚Á‚Ä‚¢‚é‚©
+				//vcomè‡ªä½“ãŒflowingã¯ã©ã†ãªã£ã¦ã„ã‚‹ã‹
 				bool vcom_flowing();
-				//vcom©‘Ì‚Éƒf[ƒ^æ“¾‚ğƒXƒLƒbƒv‚³‚¹‚é
+				//vcomè‡ªä½“ã«ãƒ‡ãƒ¼ã‚¿å–å¾—ã‚’ã‚¹ã‚­ãƒƒãƒ—ã•ã›ã‚‹
 				void vcom_skip_get();
-				//vcom©‘Ì‚ªflowing‚Í‚Ç‚¤‚È‚Á‚Ä‚¢‚é‚©
+				//vcomè‡ªä½“ãŒflowingã¯ã©ã†ãªã£ã¦ã„ã‚‹ã‹
 				unsigned char vcom_get_ch();
 			};
 			buffer Buffer;
 		public:
-			//vic1‚ğ‰Šú‰»‚·‚é
-			//	BufEnd - BufBegin - 1 ‚ªÅ‘åƒf[ƒ^ƒTƒCƒY’·‚Æ‚È‚é
-			//	Å‘åƒf[ƒ^ƒTƒCƒY’·‚Í’ÊM‚·‚é‚·‚×‚Ä‚ÌƒfƒoƒCƒXŠÔ‚Å“¯ˆê‚Å‚ ‚é•K—v‚ª‚ ‚é
-			//	timeoutŠÖ”‚ÌŒÄ‚Ño‚µƒ^ƒCƒ~ƒ“ƒO’Ê—pŠÖ”ŒQ‚ğˆø‚«“n‚·
+			//vic1ã‚’åˆæœŸåŒ–ã™ã‚‹
+			//	BufEnd - BufBegin - 1 ãŒæœ€å¤§ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºé•·ã¨ãªã‚‹
+			//	æœ€å¤§ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºé•·ã¯é€šä¿¡ã™ã‚‹ã™ã¹ã¦ã®ãƒ‡ãƒã‚¤ã‚¹é–“ã§åŒä¸€ã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚‹
+			//	timeouté–¢æ•°ã®å‘¼ã³å‡ºã—ã‚¿ã‚¤ãƒŸãƒ³ã‚°é€šå‘Šç”¨é–¢æ•°ç¾¤ã‚’å¼•ãæ¸¡ã™
 			vic1(client& rClient_
 				, const unsigned char Ch
 				, unsigned char* BufBegin
 				, unsigned char* BufEnd
 				, timeout_functions& timeout_);
-			//vic1‚ğ‰Šú‰»‚·‚é
-			//	BufEnd - BufBegin - 1 ‚ªÅ‘åƒf[ƒ^ƒTƒCƒY’·‚Æ‚È‚é
-			//	Å‘åƒf[ƒ^ƒTƒCƒY’·‚Í’ÊM‚·‚é‚·‚×‚Ä‚ÌƒfƒoƒCƒXŠÔ‚Å“¯ˆê‚Å‚ ‚é•K—v‚ª‚ ‚é
-			//	timeoutŠÖ”‚ÌŒÄ‚Ño‚µƒ^ƒCƒ~ƒ“ƒO’Ê—pŠÖ”ŒQ‚ğˆø‚«“n‚·
+			//vic1ã‚’åˆæœŸåŒ–ã™ã‚‹
+			//	BufEnd - BufBegin - 1 ãŒæœ€å¤§ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºé•·ã¨ãªã‚‹
+			//	æœ€å¤§ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºé•·ã¯é€šä¿¡ã™ã‚‹ã™ã¹ã¦ã®ãƒ‡ãƒã‚¤ã‚¹é–“ã§åŒä¸€ã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚‹
+			//	timeouté–¢æ•°ã®å‘¼ã³å‡ºã—ã‚¿ã‚¤ãƒŸãƒ³ã‚°é€šå‘Šç”¨é–¢æ•°ç¾¤ã‚’å¼•ãæ¸¡ã™
 			vic1(const unsigned char Ch
 				, unsigned char* BufBegin
 				, unsigned char* BufEnd
-				, timeout_functions& timeout_);			//vic1‚ğI’[‰»‚·‚é
+				, timeout_functions& timeout_);			//vic1ã‚’çµ‚ç«¯åŒ–ã™ã‚‹
 			~vic1();
 		public:
 			bool open(client& rClient_);
 			bool close();
 		private:
 			//========== vic1::gate ===========
-			//-------- Mode‘JˆÚ4ŠÖ” ----------------
-			//ƒRƒ}ƒ“ƒh‘—MŠ®—¹
+			//-------- Modeé·ç§»4é–¢æ•° ----------------
+			//ã‚³ãƒãƒ³ãƒ‰é€ä¿¡å®Œäº†æ™‚
 			void inform_send();
-			//©•ªˆ¶‚ÌƒRƒ}ƒ“ƒhóMŠ®—¹
+			//è‡ªåˆ†å®›ã®ã‚³ãƒãƒ³ãƒ‰å—ä¿¡å®Œäº†
 			void inform_recv();
-			//ƒf[ƒ^‚Ì—L–³‚ğŠm”F‚µ‚ÄAIDLE‚©‚çSTART‚Ö‘JˆÚ‚·‚éŠÖ”
+			//ãƒ‡ãƒ¼ã‚¿ã®æœ‰ç„¡ã‚’ç¢ºèªã—ã¦ã€IDLEã‹ã‚‰STARTã¸é·ç§»ã™ã‚‹é–¢æ•°
 			bool checkData();
 		public:
-			//timeout‚àƒ‚[ƒh‚ğˆê•”•Ï‚¦‚Ä‚¢‚é‚Å‚²‚´‚é
-			//	vic1‚ÌtimeoutƒRƒ}ƒ“ƒhÄ‘—ŠÖ”
+			//timeoutã‚‚ãƒ¢ãƒ¼ãƒ‰ã‚’ä¸€éƒ¨å¤‰ãˆã¦ã„ã‚‹ã§ã”ã–ã‚‹
+			//	vic1ã®timeoutã‚³ãƒãƒ³ãƒ‰å†é€é–¢æ•°
 			void timeout();
 		public:
 			//========== gate interface =================
-			//‚·‚Å‚É—˜—p‰Â”\‚É‚È‚Á‚Ä‚¢‚é‚©
+			//ã™ã§ã«åˆ©ç”¨å¯èƒ½ã«ãªã£ã¦ã„ã‚‹ã‹
 			virtual bool is_open();
-			//óMƒf[ƒ^‚ğ“Š‚°“ü‚ê‰Â”\‚©Šm”F 0:•s‰Â,1:‰Â
+			//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠ•ã’å…¥ã‚Œå¯èƒ½ã‹ç¢ºèª 0:ä¸å¯,1:å¯
 			virtual bool can_putc();
-			//óMƒf[ƒ^‚ğ“Š‚°“ü‚ê‚é
+			//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠ•ã’å…¥ã‚Œã‚‹
 			virtual void putc(unsigned char c_);
-			//óMƒf[ƒ^‚ğƒtƒ‰ƒbƒVƒ…‚·‚éigateŒİŠ·—pAVIC“à‚Å‚Ìˆ—‚Í‚È‚¢j
+			//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ï¼ˆgateäº’æ›ç”¨ã€VICå†…ã§ã®å‡¦ç†ã¯ãªã„ï¼‰
 			virtual void flush();
-			//‘—Mƒf[ƒ^‚ğŒÄ‚Ño‚µ‰Â”\‚©Šm”F 0:•s‰Â,1:‰Â
+			//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å‘¼ã³å‡ºã—å¯èƒ½ã‹ç¢ºèª 0:ä¸å¯,1:å¯
 			virtual bool can_getc();
-			//‘—Mƒf[ƒ^‚ğŒÄ‚Ño‚·
+			//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å‘¼ã³å‡ºã™
 			virtual unsigned char getc();
-			//‘—Mƒf[ƒ^‚ğ—¬‚ê‘±‚¯‚Ä‚¢‚é‚©Šm”FiVIC‚Ìê‡‚ÍAƒf[ƒ^ƒV[ƒPƒ“ƒX––”ö‚ª0A‚»‚êˆÈŠO‚Í1j
+			//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æµã‚Œç¶šã‘ã¦ã„ã‚‹ã‹ç¢ºèªï¼ˆVICã®å ´åˆã¯ã€ãƒ‡ãƒ¼ã‚¿ã‚·ãƒ¼ã‚±ãƒ³ã‚¹æœ«å°¾ãŒ0ã€ãã‚Œä»¥å¤–ã¯1ï¼‰
 			virtual bool flowing();
 		public:
 			//============ vic functions ================
-			//’ÊM‚ğ‹­§“I‚ÉI—¹‚³‚¹‚é
+			//é€šä¿¡ã‚’å¼·åˆ¶çš„ã«çµ‚äº†ã•ã›ã‚‹
 			void force_end();
-			//ƒGƒ‰[‚ğæ“¾‚·‚é
+			//ã‚¨ãƒ©ãƒ¼ã‚’å–å¾—ã™ã‚‹
 			unsigned char error() { return Err; }
-			//ƒGƒ‰[‚ğƒNƒŠƒA‚·‚é
+			//ã‚¨ãƒ©ãƒ¼ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 			void clear_error() { Err=error_NULL; }
 		private:
-			//óMƒf[ƒ^1byte–Ú”»•ÊŠÖ”
+			//å—ä¿¡ãƒ‡ãƒ¼ã‚¿1byteç›®åˆ¤åˆ¥é–¢æ•°
 			void putc_1byte(unsigned char c);
-			//óMƒf[ƒ^2byte–Ú”»•ÊŠÖ”
+			//å—ä¿¡ãƒ‡ãƒ¼ã‚¿2byteç›®åˆ¤åˆ¥é–¢æ•°
 			void putc_2byte(unsigned char c1, unsigned char c2);
-			//óMƒf[ƒ^3byte–Ú”»•ÊŠÖ”
+			//å—ä¿¡ãƒ‡ãƒ¼ã‚¿3byteç›®åˆ¤åˆ¥é–¢æ•°
 			void putc_3byte(unsigned char c1, unsigned char c2, unsigned char c3);
-			//óMƒf[ƒ^3byte–Ú”»•ÊŠÖ”
+			//å—ä¿¡ãƒ‡ãƒ¼ã‚¿3byteç›®åˆ¤åˆ¥é–¢æ•°
 			void putc_4byte(unsigned char c1, unsigned char c2, unsigned char c3, unsigned char c4);
 		};
 	}

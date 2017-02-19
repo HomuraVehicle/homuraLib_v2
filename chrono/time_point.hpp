@@ -11,18 +11,18 @@
 #define hmr_chrono_DAYSEC		86400ul
 namespace hmr {
 	namespace chrono {
-		//ƒ^ƒCƒ€ƒXƒ^ƒ“ƒv(ƒ~ƒŠ•b¸“x)Œ^
+		//ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—(ãƒŸãƒªç§’ç²¾åº¦)å‹
 		typedef uint16 msec_time_point;
-		//ƒ^ƒCƒ€ƒXƒ^ƒ“ƒvi•b¸“xjŒ^
+		//ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ï¼ˆç§’ç²¾åº¦ï¼‰å‹
 		typedef uint8 sec_time_point;
-		//ƒ^ƒCƒ€ƒXƒ^ƒ“ƒvi•ª•bjŒ^
+		//ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ï¼ˆæ™‚åˆ†ç§’ï¼‰å‹
 		typedef uint16 hds_time_point;
-		//ƒ^ƒCƒ€ƒXƒ^ƒ“ƒviUnixTimejŒ^
+		//ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ï¼ˆUnixTimeï¼‰å‹
 		typedef sint32 unix_time_point;
-		//ƒ^ƒCƒ€ƒXƒ^ƒ“ƒvitime_t+ƒ~ƒŠ•bj
+		//ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ï¼ˆtime_t+ãƒŸãƒªç§’ï¼‰
 		struct time_point {
 			unix_time_point Time;
-			msec_time_point MSec;	//0-999Fƒ~ƒŠ•b
+			msec_time_point MSec;	//0-999ï¼šãƒŸãƒªç§’
 			time_point() :Time(0), MSec(0) {}
 			time_point(unix_time_point Time_, msec_time_point MSec_) :Time(Time_), MSec(MSec_) {}
 		};

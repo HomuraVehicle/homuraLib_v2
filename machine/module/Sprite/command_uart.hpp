@@ -25,24 +25,24 @@ namespace hmr{
 					id_type id()const{ return ID; }
 					mode_type mode()const{ return Mode; }
 				};
-				//sprite::commands‚ğ‘—óM‚·‚éuart
-				//	timerŠÇ—, ledŠÇ—‚Í‚µ‚È‚¢‚Ì‚Å’ˆÓ
+				//sprite::commandsã‚’é€å—ä¿¡ã™ã‚‹uart
+				//	timerç®¡ç†, ledç®¡ç†ã¯ã—ãªã„ã®ã§æ³¨æ„
 				template<typename uart_register_>
 				class command_uart{
 				private:
 					typedef command_uart<uart_register_> my_type;
 				private:
-					//ƒJƒƒ‰‚Æ‚Ì’ÊM—pUart
+					//ã‚«ãƒ¡ãƒ©ã¨ã®é€šä¿¡ç”¨Uart
 					xc32::interrupt_uart<uart_register_> InterruptUart;
-					//InterruptUart—pLock
+					//InterruptUartç”¨Lock
 					xc::unique_lock<xc32::interrupt_uart<uart_register_>> InterruptUartLock;
-					//ƒRƒ}ƒ“ƒh‘—Mó‹µ@‘Ò‹@:0 ‘—M:1 óM:2
+					//ã‚³ãƒãƒ³ãƒ‰é€ä¿¡çŠ¶æ³ã€€å¾…æ©Ÿ:0 é€ä¿¡:1 å—ä¿¡:2
 					unsigned char Mode;
-					//ƒRƒ}ƒ“ƒhƒJƒEƒ“ƒ^[
+					//ã‚³ãƒãƒ³ãƒ‰ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
 					unsigned int Cnt;
-					//Œ»İ‚Ì’S“–ƒRƒ}ƒ“ƒh
+					//ç¾åœ¨ã®æ‹…å½“ã‚³ãƒãƒ³ãƒ‰
 					command Cmd;
-					//command‚Ì•ÔM
+					//commandã®è¿”ä¿¡
 					xc::promise<bool> Promise;
 				private:
 					struct tx_interrupt :public xc32::sfr::interrupt::function{
@@ -51,19 +51,19 @@ namespace hmr{
 					public:
 						tx_interrupt(my_type& Ref_) :Ref(Ref_){}
 						virtual void operator()(void){
-							//‘—Mˆ—
+							//é€ä¿¡å‡¦ç†
 							Ref.InterruptUart.send_data(Ref.Cmd.SendStr[Ref.Cnt++]);
-							//‘—MI—¹ˆ—
+							//é€ä¿¡çµ‚äº†å‡¦ç†
 							if (Ref.Cnt >= Ref.Cmd.SendSize){
-								//LED“_“”
+								//LEDç‚¹ç¯
 								//_spriteitf_led_set(1);
-								//ƒJƒEƒ“ƒ^[‚ğ0‚É–ß‚·
+								//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’0ã«æˆ»ã™
 								Ref.Cnt = 0;
-								//Š„‚İƒ‚[ƒh‚ğóM‚É•ÏX
+								//å‰²è¾¼ã¿ãƒ¢ãƒ¼ãƒ‰ã‚’å—ä¿¡ã«å¤‰æ›´
 								Ref.Mode = 2;
-								//‘—MŠ„‚è‚İ‹Ö~
+								//é€ä¿¡å‰²ã‚Šè¾¼ã¿ç¦æ­¢
 								Ref.InterruptUart.send_disable();
-								//óMŠ„‚è‚İ‹–‰Â
+								//å—ä¿¡å‰²ã‚Šè¾¼ã¿è¨±å¯
 								Ref.InterruptUart.recv_enable();
 							}
 						}
@@ -74,32 +74,32 @@ namespace hmr{
 					public:
 						rx_interrupt(my_type& Ref_) :Ref(Ref_){}
 						virtual void operator()(void){
-							//1•¶šóM
+							//1æ–‡å­—å—ä¿¡
 							unsigned char c = Ref.InterruptUart.recv_data();
 							++(Ref.Cnt);
 
-							//³‚µ‚­óMƒRƒ}ƒ“ƒhæ“ª‚ğ“Ç‚ñ‚Å‚¢‚È‚¯‚ê‚ÎA“Ç‚İÌ‚Ä
+							//æ­£ã—ãå—ä¿¡ã‚³ãƒãƒ³ãƒ‰å…ˆé ­ã‚’èª­ã‚“ã§ã„ãªã‘ã‚Œã°ã€èª­ã¿æ¨ã¦
 							if (Ref.Cnt == 1 && c != 0x76){
-								//ƒJƒEƒ“ƒg0‚É‚µ‚Ä“Ç‚ñ‚¾’l‚Í–³‹‚·‚é
+								//ã‚«ã‚¦ãƒ³ãƒˆ0ã«ã—ã¦èª­ã‚“ã å€¤ã¯ç„¡è¦–ã™ã‚‹
 								Ref.Cnt = 0;
 								return;
 							}
 
-							//óMŒÄo‚µŠÖ”
+							//å—ä¿¡æ™‚å‘¼å‡ºã—é–¢æ•°
 							if (Ref.Cmd.pRecvFunc){
-								//I—¹‚ª—v‹‚ªs‚í‚ê‚½ê‡ACnt‚ğ’¼‚¿‚ÉMax‚É•ÏX
+								//çµ‚äº†ãŒè¦æ±‚ãŒè¡Œã‚ã‚ŒãŸå ´åˆã€Cntã‚’ç›´ã¡ã«Maxã«å¤‰æ›´
 								if ((*Ref.Cmd.pRecvFunc)(c, Ref.Cnt - 1))Ref.Cnt = Ref.Cmd.RecvSize;
 							}
 
-							//óMI—¹ˆ—
+							//å—ä¿¡çµ‚äº†å‡¦ç†
 							if (Ref.Cnt >= Ref.Cmd.RecvSize){
-								//Š„‚İƒ‚[ƒh‚ğ’Êí‚É•ÏX
+								//å‰²è¾¼ã¿ãƒ¢ãƒ¼ãƒ‰ã‚’é€šå¸¸ã«å¤‰æ›´
 								Ref.Mode = 0;
-								//ƒJƒEƒ“ƒ^[‚ğ0‚É–ß‚·
+								//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’0ã«æˆ»ã™
 								Ref.Cnt = 0;
-								//óMŠ„‚è‚İ‹Ö~
+								//å—ä¿¡å‰²ã‚Šè¾¼ã¿ç¦æ­¢
 								Ref.InterruptUart.recv_disable();
-								//ƒRƒ}ƒ“ƒhI—¹’Ê’m
+								//ã‚³ãƒãƒ³ãƒ‰çµ‚äº†é€šçŸ¥
 								Ref.Promise.set_value(false);
 							}
 						}
@@ -132,7 +132,7 @@ namespace hmr{
 					}
 					bool is_lock()const{return InterruptUartLock;}
 				public:
-					//commandÀs ¸”s‚µ‚½‚çAtrue‚ğ•Ô‚·
+					//commandå®Ÿè¡Œ å¤±æ•—ã—ãŸã‚‰ã€trueã‚’è¿”ã™
 					xc::future<bool> async_command(const command& Command_){
 						if (is_command() || !Promise.can_get_future())xc::future<bool>();
 
@@ -151,13 +151,13 @@ namespace hmr{
 
 						return Promise.get_future();
 					}
-					//commandÀs’†‚©
+					//commandå®Ÿè¡Œä¸­ã‹
 					bool is_command()const{ return Mode > 0; }
-					//Œ»İ‚ÌƒRƒ}ƒ“ƒhæ“¾
+					//ç¾åœ¨ã®ã‚³ãƒãƒ³ãƒ‰å–å¾—
 					command_uart_status status()const{
 						return command_uart_status(static_cast<commands::id::type>(Cmd.ID),Mode);
 					}
-					//commandÀs‚ğƒLƒƒƒ“ƒZƒ‹
+					//commandå®Ÿè¡Œã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«
 					void cancel_command(){
 						InterruptUart.recv_disable();
 						InterruptUart.send_disable();

@@ -6,7 +6,7 @@ namespace hmr{
 	namespace task{
 		struct watchdog :public client_interface{
 		private:
-			//timeoutŒn
+			//timeoutç³»
 			unsigned int Count;
 			unsigned int Limit;
 		public:

@@ -16,7 +16,7 @@
 #define vcom1_sendmode_SIZE2	2
 #define vcom1_sendmode_DATA		3
 
-//vcom1‰Šú‰»
+//vcom1åˆæœŸåŒ–
 void vcom1_initialize(vcom1* pVCom1,
 	vcom1_bFp_v Fp_can_move_push,
 	vcom1_vFp_pdata Fp_move_push,
@@ -39,7 +39,7 @@ void vcom1_initialize(vcom1* pVCom1,
 	pVCom1->_fp_move_pop=Fp_move_pop;
 	pVCom1->_fp_cstring_construct=Fp_cstring_construct;
 }
-//vcom1I’[‰»
+//vcom1çµ‚ç«¯åŒ–
 void vcom1_finalize(vcom1* pVCom1) {
 	pVCom1->RecvCh=0x00;
 	pVCom1->RecvCnt=0;
@@ -59,47 +59,47 @@ void vcom1_finalize(vcom1* pVCom1) {
 }
 
 //======== gate interface =======
-//send‚Å‚«‚é‚©H
+//sendã§ãã‚‹ã‹ï¼Ÿ
 hmLib_boolian vcom1_can_getc(vcom1* pVCom) {
-	//Data‚ª‹ó‚Å‚È‚¢‚È‚çAI—¹
+	//DataãŒç©ºã§ãªã„ãªã‚‰ã€çµ‚äº†
 	if(vcom_data_is_construct(&(pVCom->SendData))) {
 		if(pVCom->SendMode==vcom1_sendmode_DATA && pVCom->SendData.Accessible!=0)return pVCom->SendData.Accessible() > pVCom->SendCnt;
 		else return 1;
 	}
-	//Data‚ð“Ç‚Ýo‚¹‚È‚¢‚È‚çI—¹
+	//Dataã‚’èª­ã¿å‡ºã›ãªã„ãªã‚‰çµ‚äº†
 	if(pVCom->_fp_can_move_pop()==0)return 0;
 
-	//Data“Ç‚Ýo‚µ
+	//Dataèª­ã¿å‡ºã—
 	pVCom->_fp_move_pop(&(pVCom->SendData));
 	pVCom->SendCnt=0;
 
-	//‹óƒf[ƒ^‚È‚ç‚Í‚¶‚­
+	//ç©ºãƒ‡ãƒ¼ã‚¿ãªã‚‰ã¯ã˜ã
 	if(!vcom_data_is_construct(&(pVCom->SendData)))return 0;
 
-	//eof‚È‚çAƒtƒ‰ƒO‚ð—§‚Ä‚ÄŽŸ‚ðŒ©‚És‚­
+	//eofãªã‚‰ã€ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã¦æ¬¡ã‚’è¦‹ã«è¡Œã
 	if(vcom_data_eof(&(pVCom->SendData))) {
 		vcom_data_destruct(&pVCom->SendData);
 		pVCom->SendEof=1;
 		return vcom1_can_getc(pVCom);
 	}
 
-	//Data“Ç‚Ýo‚µ‚É¬Œ÷‚·‚ê‚ÎAOK
+	//Dataèª­ã¿å‡ºã—ã«æˆåŠŸã™ã‚Œã°ã€OK
 	return 1;
 }
-//‘—M•¶Žš—ñ‚ð1byteŽæ“¾‚·‚é
+//é€ä¿¡æ–‡å­—åˆ—ã‚’1byteå–å¾—ã™ã‚‹
 unsigned char vcom1_getc(vcom1* pVCom) {
 	unsigned char c;
 
-	//EOFƒtƒ‰ƒO‚ðŠO‚·
+	//EOFãƒ•ãƒ©ã‚°ã‚’å¤–ã™
 	pVCom->SendEof=0;
 
-	//Data‚ª‹ó‚È‚çAI—¹
+	//DataãŒç©ºãªã‚‰ã€çµ‚äº†
 	if(vcom1_can_getc(pVCom)==0) {
 		pVCom->SendMode=vcom1_sendmode_ID;
 		return 0xC0;
 	}
 
-	//ID‘—Mƒ‚[ƒh
+	//IDé€ä¿¡ãƒ¢ãƒ¼ãƒ‰
 	switch(pVCom->SendMode) {
 	case vcom1_sendmode_ID:
 		pVCom->SendMode=vcom1_sendmode_SIZE1;
@@ -131,158 +131,158 @@ unsigned char vcom1_getc(vcom1* pVCom) {
 		return 0;
 	}
 }
-//‘—M•¶Žš—ñ‚ªeofˆÊ’u=PacI’[‚©‚Ç‚¤‚©‚ðŒŸ’m‚·‚é
+//é€ä¿¡æ–‡å­—åˆ—ãŒeofä½ç½®=Pacçµ‚ç«¯ã‹ã©ã†ã‹ã‚’æ¤œçŸ¥ã™ã‚‹
 hmLib_boolian vcom1_flowing(vcom1* pVCom) {
 	vcom1_can_getc(pVCom);
 	return pVCom->SendEof==0;
 }
-//recv‚Å‚«‚é‚©H(’P‚Éreturn 1)
+//recvã§ãã‚‹ã‹ï¼Ÿ(å˜ã«return 1)
 hmLib_boolian vcom1_can_putc(vcom1* pVCom) {
-	//ƒGƒ‰[ó‘Ô‚ÌŽž‚É‚ÍA‘åŠ½Œ}
+	//ã‚¨ãƒ©ãƒ¼çŠ¶æ…‹ã®æ™‚ã«ã¯ã€å¤§æ­“è¿Ž
 	if(pVCom->RecvMode==vcom1_recvmode_ERROR)return 1;
 
-	//ƒoƒbƒtƒ@‘¤‚ªŽóM‚Å‚«‚é‚È‚çOK
+	//ãƒãƒƒãƒ•ã‚¡å´ãŒå—ä¿¡ã§ãã‚‹ãªã‚‰OK
 	return pVCom->_fp_can_move_push();
 }
-//ŽóM•¶Žš—ñ‚ð1byte—^‚¦‚é
+//å—ä¿¡æ–‡å­—åˆ—ã‚’1byteä¸Žãˆã‚‹
 void vcom1_putc(vcom1* pVCom, unsigned char c) {
-	//ƒf[ƒ^idŽóMŽž
+	//ãƒ‡ãƒ¼ã‚¿idå—ä¿¡æ™‚
 	if(pVCom->RecvMode==vcom1_recvmode_ID) {
-		//NullID‚Í‚Â‚©‚¦‚È‚¢‚Ì‚Å–³Ž‹
+		//NullIDã¯ã¤ã‹ãˆãªã„ã®ã§ç„¡è¦–
 		if(c==vcom_data_id_NULL) {
-			//ˆÈŒã‚Ìƒf[ƒ^‚Íflush‚ª‚ ‚é‚Ü‚ÅM‚¶‚ç‚ê‚È‚¢‚Ì‚Åƒ‚[ƒh‚ðˆÚs
+			//ä»¥å¾Œã®ãƒ‡ãƒ¼ã‚¿ã¯flushãŒã‚ã‚‹ã¾ã§ä¿¡ã˜ã‚‰ã‚Œãªã„ã®ã§ãƒ¢ãƒ¼ãƒ‰ã‚’ç§»è¡Œ
 			pVCom->RecvMode=vcom1_recvmode_ERROR;
 			return;
 		}
 
-		//ƒf[ƒ^ID‚ðŽæ“¾
+		//ãƒ‡ãƒ¼ã‚¿IDã‚’å–å¾—
 		pVCom->RecvData.ID=c;
 		pVCom->RecvData.Ch=pVCom->RecvCh;
 		pVCom->RecvData.Err=vcom_data_error_NULL;
 		pVCom->RecvData.Accessible=0;
 
-		//ID‚ÉŠÖ‚·‚éƒGƒ‰[“o˜^
+		//IDã«é–¢ã™ã‚‹ã‚¨ãƒ©ãƒ¼ç™»éŒ²
 		if(!vcom_data_id_is_valid(c))pVCom->RecvData.Err|=vcom_data_error_UNKNOWN;
 
-		//Ch‚ÉŠÖ‚·‚éƒGƒ‰[“o˜^
+		//Chã«é–¢ã™ã‚‹ã‚¨ãƒ©ãƒ¼ç™»éŒ²
 		if(pVCom->RecvCh>7)pVCom->RecvData.Err|=vcom_data_error_STRANGER;
 
-		//ƒ‚[ƒh‚ðƒTƒCƒYŽóMƒ‚[ƒh(SIZE1)‚ÖˆÚs
+		//ãƒ¢ãƒ¼ãƒ‰ã‚’ã‚µã‚¤ã‚ºå—ä¿¡ãƒ¢ãƒ¼ãƒ‰(SIZE1)ã¸ç§»è¡Œ
 		pVCom->RecvMode=vcom1_recvmode_SIZE1;
-	}//ƒf[ƒ^ƒTƒCƒYŽóM‘Ò1
+	}//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºå—ä¿¡å¾…1
 	else if(pVCom->RecvMode==vcom1_recvmode_SIZE1) {
-		//ƒf[ƒ^ƒTƒCƒY‚ðŽæ“¾
+		//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºã‚’å–å¾—
 		pVCom->RecvCnt=(vcom_size_t)(c);
 
-		//ƒ‚[ƒh‚ðƒTƒCƒYŽóMƒ‚[ƒh(SIZE2)‚ÖˆÚs
+		//ãƒ¢ãƒ¼ãƒ‰ã‚’ã‚µã‚¤ã‚ºå—ä¿¡ãƒ¢ãƒ¼ãƒ‰(SIZE2)ã¸ç§»è¡Œ
 		pVCom->RecvMode=vcom1_recvmode_SIZE2;
-	}//ƒf[ƒ^ƒTƒCƒYŽóM‘Ò2
+	}//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºå—ä¿¡å¾…2
 	else if(pVCom->RecvMode==vcom1_recvmode_SIZE2) {
-		//ƒf[ƒ^ƒTƒCƒY‚ðŽæ“¾
+		//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºã‚’å–å¾—
 		pVCom->RecvCnt|=((vcom_size_t)(c)<<8);
 
-		//ƒf[ƒ^ƒTƒCƒY‚ª‹KŠiãŒÀ‚ðã‰ñ‚Á‚Ä‚¢‚½ê‡‚Í–³Ž‹
+		//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºãŒè¦æ ¼ä¸Šé™ã‚’ä¸Šå›žã£ã¦ã„ãŸå ´åˆã¯ç„¡è¦–
 		if(pVCom->RecvCnt>vcom_data_MAXSIZE) {
-			//ƒf[ƒ^‚ð‘—‚é
+			//ãƒ‡ãƒ¼ã‚¿ã‚’é€ã‚‹
 			if(pVCom->_fp_can_move_push()) {
-				//ƒGƒ‰[•t‚«‚Å‘—•t
+				//ã‚¨ãƒ©ãƒ¼ä»˜ãã§é€ä»˜
 				pVCom->RecvData.Err|=vcom_data_error_SIZEOVER;
 
 				pVCom->_fp_move_push(&(pVCom->RecvData));
 				vcom_data_format(&(pVCom->RecvData));
 			}
 
-			//ˆÈŒã‚Ìƒf[ƒ^‚Íflush‚ª‚ ‚é‚Ü‚ÅM‚¶‚ç‚ê‚È‚¢‚Ì‚Åƒ‚[ƒh‚ðˆÚs
+			//ä»¥å¾Œã®ãƒ‡ãƒ¼ã‚¿ã¯flushãŒã‚ã‚‹ã¾ã§ä¿¡ã˜ã‚‰ã‚Œãªã„ã®ã§ãƒ¢ãƒ¼ãƒ‰ã‚’ç§»è¡Œ
 			pVCom->RecvMode=vcom1_recvmode_ERROR;
 			return;
 		}
 
-		//ƒf[ƒ^ƒTƒCƒY‚ª0‚ÌŽž
+		//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºãŒ0ã®æ™‚
 		if(pVCom->RecvCnt==0) {
-			//ƒf[ƒ^‚ð‘—‚é
+			//ãƒ‡ãƒ¼ã‚¿ã‚’é€ã‚‹
 			if(pVCom->_fp_can_move_push()) {
 				pVCom->_fp_move_push(&(pVCom->RecvData));
 				vcom_data_format(&(pVCom->RecvData));
 			}
 
-			//ƒ‚[ƒh‚ðIDŽóMƒ‚[ƒh‚ÖˆÚs
+			//ãƒ¢ãƒ¼ãƒ‰ã‚’IDå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 			pVCom->RecvMode=vcom1_recvmode_ID;
 			return;
 		}
 
-		//ƒoƒbƒtƒ@‚ðŠm•Û
+		//ãƒãƒƒãƒ•ã‚¡ã‚’ç¢ºä¿
 		pVCom->_fp_cstring_construct(&(pVCom->RecvData.Data), pVCom->RecvCnt);
 
-		//ƒf[ƒ^ƒTƒCƒYŠm•Û‚ÉŽ¸”s‚µ‚½‚Æ‚«
+		//ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºç¢ºä¿ã«å¤±æ•—ã—ãŸã¨ã
 		if(cstring_size(&(pVCom->RecvData.Data)) != pVCom->RecvCnt) {
-			//Šm•ÛŽ¸”sƒGƒ‰[“o˜^
+			//ç¢ºä¿å¤±æ•—ã‚¨ãƒ©ãƒ¼ç™»éŒ²
 			pVCom->RecvData.Err|=vcom_data_error_FAILNEW;
-			//ˆÈŒãA‘‚«ž‚Ý‚Å‚«‚È‚¢‚Ì‚ÅAŽŸ‚Ìƒf[ƒ^‚ª‚ ‚é‚Ü‚Å–³Ž‹
+			//ä»¥å¾Œã€æ›¸ãè¾¼ã¿ã§ããªã„ã®ã§ã€æ¬¡ã®ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹ã¾ã§ç„¡è¦–
 			pVCom->RecvMode=vcom1_recvmode_IGNORE;
 			return;
 		}
 
-		//ƒ‚[ƒh‚ðPacŽóMƒ‚[ƒh‚ÖˆÚs
+		//ãƒ¢ãƒ¼ãƒ‰ã‚’Pacå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 		pVCom->RecvCnt=0;
 		pVCom->RecvMode=vcom1_recvmode_DATA;
-	}//ƒf[ƒ^ŽóM’†
+	}//ãƒ‡ãƒ¼ã‚¿å—ä¿¡ä¸­
 	else if(pVCom->RecvMode==vcom1_recvmode_DATA) {
-		//ƒf[ƒ^‘‚«ž‚Ý
+		//ãƒ‡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿
 		cstring_putc(&(pVCom->RecvData.Data), (pVCom->RecvCnt)++, c);
 
-		//‘‚«ž‚ÝƒTƒCƒYãŒÀ‚É’B‚µ‚½ê‡
+		//æ›¸ãè¾¼ã¿ã‚µã‚¤ã‚ºä¸Šé™ã«é”ã—ãŸå ´åˆ
 		if(pVCom->RecvCnt==cstring_size(&(pVCom->RecvData.Data))) {
-			//ƒf[ƒ^‚ð‘—‚é
+			//ãƒ‡ãƒ¼ã‚¿ã‚’é€ã‚‹
 			if(pVCom->_fp_can_move_push()) {
 				pVCom->_fp_move_push(&(pVCom->RecvData));
 				vcom_data_format(&(pVCom->RecvData));
-			}//‘—•t‚Å‚«‚È‚¢ê‡‚ÍA”jŠü‚·‚é
+			}//é€ä»˜ã§ããªã„å ´åˆã¯ã€ç ´æ£„ã™ã‚‹
 			else {
 				vcom_data_destruct(&(pVCom->RecvData));
 			}
 
-			//ƒ‚[ƒh‚ðIDŽóMƒ‚[ƒh‚ÖˆÚs
+			//ãƒ¢ãƒ¼ãƒ‰ã‚’IDå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 			pVCom->RecvMode=vcom1_recvmode_ID;
 			return;
 		}
-	}//ƒf[ƒ^–³Ž‹’†
+	}//ãƒ‡ãƒ¼ã‚¿ç„¡è¦–ä¸­
 	else if(pVCom->RecvMode==vcom1_recvmode_IGNORE) {
 		--(pVCom->RecvCnt);
 
-		//‘Sƒf[ƒ^ŽóM‚µI‚¦‚½‚Æ‚«
+		//å…¨ãƒ‡ãƒ¼ã‚¿å—ä¿¡ã—çµ‚ãˆãŸã¨ã
 		if(pVCom->RecvCnt==0) {
 			if(pVCom->_fp_can_move_push()) {
 				pVCom->_fp_move_push(&(pVCom->RecvData));
 				vcom_data_format(&(pVCom->RecvData));
-			}//‘—•t‚Å‚«‚È‚¢ê‡‚ÍA”jŠü‚·‚é
+			}//é€ä»˜ã§ããªã„å ´åˆã¯ã€ç ´æ£„ã™ã‚‹
 			else {
 				vcom_data_destruct(&(pVCom->RecvData));
 			}
 
-			//ƒ‚[ƒh‚ðIDŽóM‚ÉˆÚs
+			//ãƒ¢ãƒ¼ãƒ‰ã‚’IDå—ä¿¡ã«ç§»è¡Œ
 			pVCom->RecvMode=vcom1_recvmode_ID;
 			return;
 		}
 	}
 }
-//flush‚·‚é(eof‰»‚·‚é=Pac‚ð•Â‚¶‚é)
+//flushã™ã‚‹(eofåŒ–ã™ã‚‹=Pacã‚’é–‰ã˜ã‚‹)
 void vcom1_flush(vcom1* pVCom) {
-	//ŽóM’†‚Ìƒf[ƒ^‚ª‘¶Ý‚·‚éê‡
+	//å—ä¿¡ä¸­ã®ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã™ã‚‹å ´åˆ
 	if(pVCom->RecvMode==vcom1_recvmode_DATA || pVCom->RecvMode==vcom1_recvmode_IGNORE) {
-		//–¢ŽóMŠ®—¹ƒGƒ‰[“o˜^
+		//æœªå—ä¿¡å®Œäº†ã‚¨ãƒ©ãƒ¼ç™»éŒ²
 		pVCom->RecvData.Err|=vcom_data_error_UNDERFLOW;
 
-		//ƒf[ƒ^‘—•t
+		//ãƒ‡ãƒ¼ã‚¿é€ä»˜
 		if(pVCom->_fp_can_move_push()) {
 			pVCom->_fp_move_push(&(pVCom->RecvData));
 			vcom_data_format(&(pVCom->RecvData));
-		}//‘—•t‚Å‚«‚È‚¢ê‡‚ÍA”jŠü‚·‚é
+		}//é€ä»˜ã§ããªã„å ´åˆã¯ã€ç ´æ£„ã™ã‚‹
 		else {
 			vcom_data_destruct(&(pVCom->RecvData));
 		}
 	}
 
-	//ƒf[ƒ^––”ö‘—•t(’ˆÓFŽ¸”s‚·‚é‚ÆAPacTrmn‚ª“o˜^‚³‚ê‚È‚¢)
+	//ãƒ‡ãƒ¼ã‚¿æœ«å°¾é€ä»˜(æ³¨æ„ï¼šå¤±æ•—ã™ã‚‹ã¨ã€PacTrmnãŒç™»éŒ²ã•ã‚Œãªã„)
 	if(pVCom->_fp_can_move_push()) {
 		vcom_data_set_eof(&(pVCom->RecvData));
 
@@ -290,33 +290,33 @@ void vcom1_flush(vcom1* pVCom) {
 		vcom_data_format(&(pVCom->RecvData));
 	}
 
-	//ƒ‚[ƒh‚ðIDŽóM‚ÉˆÚs
+	//ãƒ¢ãƒ¼ãƒ‰ã‚’IDå—ä¿¡ã«ç§»è¡Œ
 	pVCom->RecvMode=vcom1_recvmode_ID;
 }
 
 //======= vcom functions ========
-//‘—Mæch‚ðŽæ“¾‚·‚é
+//é€ä¿¡å…ˆchã‚’å–å¾—ã™ã‚‹
 unsigned char vcom1_get_ch(vcom1* pVCom) {
 	if(vcom1_can_getc(pVCom)==0)return 0xDD;
 
 	return pVCom->SendData.Ch;
 }
-//‘—M‚ðƒLƒƒƒ“ƒZƒ‹‚·‚é
+//é€ä¿¡ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹
 void vcom1_cancel_get(vcom1* pVCom) {
 	pVCom->SendMode=vcom1_sendmode_ID;
 	pVCom->SendCnt=0;
 }
-//‘—M‚ðƒXƒLƒbƒv‚·‚é
+//é€ä¿¡ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹
 void vcom1_skip_get(vcom1* pVCom) {
 	pVCom->SendMode=vcom1_sendmode_ID;
 	pVCom->SendCnt=0;
 	vcom_data_destruct(&pVCom->SendData);
 }
-//ŽóM‚·‚éch‚ðŽæ“¾‚·‚é
+//å—ä¿¡ã™ã‚‹chã‚’å–å¾—ã™ã‚‹
 void vcom1_put_ch(vcom1* pVCom, unsigned char Ch) {
 	pVCom->RecvCh=Ch;
 }
-//ŽóM‚ðƒLƒƒƒ“ƒZƒ‹‚·‚é
+//å—ä¿¡ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹
 void vcom1_cancel_put(vcom1* pVCom) {
 	pVCom->RecvMode=vcom1_recvmode_ID;
 	pVCom->RecvCnt=0;

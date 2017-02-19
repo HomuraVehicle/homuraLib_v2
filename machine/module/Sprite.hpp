@@ -43,24 +43,24 @@ namespace hmr {
 					bool valid()const { return DataSize != 0; }
 				};
 			}
-			//ˆê˜A‚ÌƒRƒ}ƒ“ƒh‚ğƒV[ƒPƒ“ƒX‰»‚µ‚Äg‚¢‚â‚·‚­‚µ‚½ASprite—pUart
-			//	ƒ^ƒCƒ€ƒAƒEƒgA“dŒ¹ŠÇ—AƒI[ƒgƒŠƒZƒbƒg“™‚ÍŠÇ—‚µ‚Ä‚¢‚È‚¢‚Ì‚Å’ˆÓ
+			//ä¸€é€£ã®ã‚³ãƒãƒ³ãƒ‰ã‚’ã‚·ãƒ¼ã‚±ãƒ³ã‚¹åŒ–ã—ã¦ä½¿ã„ã‚„ã™ãã—ãŸã€Spriteç”¨Uart
+			//	ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆã€é›»æºç®¡ç†ã€ã‚ªãƒ¼ãƒˆãƒªã‚»ãƒƒãƒˆç­‰ã¯ç®¡ç†ã—ã¦ã„ãªã„ã®ã§æ³¨æ„
 			template<typename uart_register_>
 			class cSpriteUart {
 				friend class testSpriteUart;
 				typedef cSpriteUart<uart_register_> my_type;
 			private:
-				//Sprite—pUart
+				//Spriteç”¨Uart
 				sprite::command_uart<uart_register_> CommandUart;
 				xc::unique_lock<sprite::command_uart<uart_register_>> CommandUartLock;
 			public:
 				typedef sprite::command_uart_status status_type;
-				//Statusƒ`ƒFƒbƒNŠÖ”
+				//Statusãƒã‚§ãƒƒã‚¯é–¢æ•°
 				status_type status()const{ return CommandUart.status(); }
-				//Idle‚©‚Ç‚¤‚©Šm”FiIdle‚Å‚È‚¢‚ÆA–½—ßŒ`‚Ìƒƒ\ƒbƒh‚Í¸”s‚·‚éj
+				//Idleã‹ã©ã†ã‹ç¢ºèªï¼ˆIdleã§ãªã„ã¨ã€å‘½ä»¤å½¢ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯å¤±æ•—ã™ã‚‹ï¼‰
 				bool idle()const { return !CommandUart.is_command(); }
 
-				//======ƒGƒ‰[ŠÇ—======
+				//======ã‚¨ãƒ©ãƒ¼ç®¡ç†======
 			public:
 				struct error_category{
 					enum type{
@@ -93,18 +93,18 @@ namespace hmr {
 
 				//====== TakePicture ======
 			private:
-				//ƒJƒƒ‰‚Ì‰æ‘œƒTƒCƒY
+				//ã‚«ãƒ¡ãƒ©ã®ç”»åƒã‚µã‚¤ã‚º
 				sprite::commands::imagesize::type ImageSize;
-				//Ê^‚Ìƒf[ƒ^ƒTƒCƒY
+				//å†™çœŸã®ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
 				unsigned int DataSize;
-				//Ê^‚Ìƒf[ƒ^“Ç‚İ‚İƒJƒEƒ“ƒ^
+				//å†™çœŸã®ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ã‚«ã‚¦ãƒ³ã‚¿
 				unsigned int DataCnt;
 			private:
-				//=== TakePictureƒV[ƒPƒ“ƒX ===
-				//	setImageSize(ImageSize‚ğ•ÏX‚Ì‚İ) 
+				//=== TakePictureã‚·ãƒ¼ã‚±ãƒ³ã‚¹ ===
+				//	setImageSize(ImageSizeã‚’å¤‰æ›´æ™‚ã®ã¿) 
 				//	=> takePicture
 				//	=> getDataSize
-				//async_takePicture—pPromise
+				//async_takePictureç”¨Promise
 				struct sequence_takePicture{
 					friend class testSpriteUart;
 				public:
@@ -119,42 +119,42 @@ namespace hmr {
 				public:
 					sequence_takePicture(my_type& Ref_) :Ref(Ref_){}
 					my_future  get_future(sprite::commands::imagesize::type ImageSize_){
-						//Promise‚ªŒ»İ‚àg‚í‚ê‚½‚Ü‚Ü‚Ìê‡‚Í¸”s
+						//PromiseãŒç¾åœ¨ã‚‚ä½¿ã‚ã‚ŒãŸã¾ã¾ã®å ´åˆã¯å¤±æ•—
 						if(!Promise.can_get_future())return my_future();
 
-						//future”­s ”ñ“¯Šúˆ—ŠJn
+						//futureç™ºè¡Œ éåŒæœŸå‡¦ç†é–‹å§‹
 						my_future Future = Promise.get_future();
 
-						//ImageSize_‚ğƒ`ƒFƒbƒN ˆÙí’l‚È‚ç160_120‚Éİ’è
+						//ImageSize_ã‚’ãƒã‚§ãƒƒã‚¯ ç•°å¸¸å€¤ãªã‚‰160_120ã«è¨­å®š
 						if (ImageSize_ != sprite::commands::imagesize::size_640_480 && ImageSize_ != sprite::commands::imagesize::size_320_240){
 							ImageSize_ = sprite::commands::imagesize::size_160_120;
 						}
 
-						//Œ»İ‚ÌƒJƒƒ‰‚ÌImageSize‚Æ“¯ˆê‚È‚çtakePictureAˆá‚¦‚Î‚Ü‚¸getDataSize
+						//ç¾åœ¨ã®ã‚«ãƒ¡ãƒ©ã®ImageSizeã¨åŒä¸€ãªã‚‰takePictureã€é•ãˆã°ã¾ãšgetDataSize
 						if (Ref.ImageSize != ImageSize_){
-							//ImaseSize‚ªˆÙ‚È‚éê‡‚ÍAsetImageSize‚©‚ç
+							//ImaseSizeãŒç•°ãªã‚‹å ´åˆã¯ã€setImageSizeã‹ã‚‰
 							Ref.ImageSize = ImageSize_;
 
-							//setImageSize‚ğ”ñ“¯ŠúÀs & takePictureÀs‚ğ—\–ñ
+							//setImageSizeã‚’éåŒæœŸå®Ÿè¡Œ & takePictureå®Ÿè¡Œã‚’äºˆç´„
 							Canceler = Ref.CommandUart.async_command(sprite::commands::setImageSize(ImageSize_)).then(xc::ref(*this));
 							if(!Canceler){
 								Promise.set_value(error_type(error_category::FailRequestCommand, Ref.CommandUart.status()));
 							}
 						}
 						else{
-							//takePicture‚ğ”ñ“¯ŠúÀs & getDataSizeÀs‚ğ—\–ñ
+							//takePictureã‚’éåŒæœŸå®Ÿè¡Œ & getDataSizeå®Ÿè¡Œã‚’äºˆç´„
 							Canceler = Ref.CommandUart.async_command(sprite::commands::takePicture()).then(xc::ref(*this));
 							if(!Canceler){
 								Promise.set_value(error_type(error_category::FailRequestCommand, Ref.CommandUart.status()));
 							}
 						}
 
-						//future”­s
-						//	then_getDataSizeÀs‚É—šs
+						//futureç™ºè¡Œ
+						//	then_getDataSizeå®Ÿè¡Œæ™‚ã«å±¥è¡Œ
 						return Future;
 					}
 					void operator()(bool IsFail_){
-						//³‚µ‚­then‚ªŒÄ‚Î‚ê‚½‚Ì‚ÅA‚Ü‚¸Šo‚¦‚Ä‚¢‚½canceler‚ğÁ‹
+						//æ­£ã—ãthenãŒå‘¼ã°ã‚ŒãŸã®ã§ã€ã¾ãšè¦šãˆã¦ã„ãŸcancelerã‚’æ¶ˆå»
 						Canceler.clear();
 
 						if (IsFail_){
@@ -164,22 +164,22 @@ namespace hmr {
 
 						switch(Ref.CommandUart.status().id()) {
 						case sprite::commands::id::SetImageSize:
-							//takePicture‚ğ”ñ“¯ŠúÀs & getDataSizeÀs‚ğ—\–ñ
+							//takePictureã‚’éåŒæœŸå®Ÿè¡Œ & getDataSizeå®Ÿè¡Œã‚’äºˆç´„
 							Canceler = Ref.CommandUart.async_command(sprite::commands::takePicture()).then(xc::ref(*this));
 
 							if(!Canceler)Promise.set_value(error_type(error_category::FailRequestCommand, Ref.CommandUart.status()));
 							return;
 						case sprite::commands::id::TakePicture:
-							//getDataSize‚ğ”ñ“¯ŠúÀs & TakePictureƒV[ƒPƒ“ƒX‚ÌŒãn––Às‚ğ—\–ñ
+							//getDataSizeã‚’éåŒæœŸå®Ÿè¡Œ & TakePictureã‚·ãƒ¼ã‚±ãƒ³ã‚¹ã®å¾Œå§‹æœ«å®Ÿè¡Œã‚’äºˆç´„
 							Canceler = Ref.CommandUart.async_command(sprite::commands::getDataSize(Ans_getDataSize)).then(xc::ref(*this));
 
 							if(!Canceler)Promise.set_value(error_type(error_category::FailRequestCommand, Ref.CommandUart.status()));
 							return;
 						case sprite::commands::id::GetDataSize:
-							//Ans‚Ìƒf[ƒ^‚ğ‹L˜^‚µ‚Ä‚¨‚­
+							//Ansã®ãƒ‡ãƒ¼ã‚¿ã‚’è¨˜éŒ²ã—ã¦ãŠã
 							Ref.DataSize = Ans_getDataSize.Size;
 
-							//Promise—šs
+							//Promiseå±¥è¡Œ
 							Promise.set_value(sprite::picture_info(Ref.DataSize, Ref.ImageSize));
 							return;
 						default:
@@ -189,17 +189,17 @@ namespace hmr {
 
 					}
 					void cancel(){
-						//Œ»İ•Û‚µ‚Ä‚¢‚éê‡‚ÍAcancelˆ—Às
+						//ç¾åœ¨ä¿æŒã—ã¦ã„ã‚‹å ´åˆã¯ã€cancelå‡¦ç†å®Ÿè¡Œ
 						if(Canceler)Canceler();
 
-						//Œ»İget_future’†‚È‚çA–³Œø‰»
+						//ç¾åœ¨get_futureä¸­ãªã‚‰ã€ç„¡åŠ¹åŒ–
 						if(Promise.is_wait_value())Promise.set_value(error_type(error_category::Canceled, Ref.CommandUart.status()));
 					}
 				}Sequence_takePicture;
 			private:
-				//=== ReadPictureƒV[ƒPƒ“ƒX ===
+				//=== ReadPictureã‚·ãƒ¼ã‚±ãƒ³ã‚¹ ===
 				//	getData
-				//	=> stop_takePicture (ÅIƒf[ƒ^‚Ì‚İ)
+				//	=> stop_takePicture (æœ€çµ‚ãƒ‡ãƒ¼ã‚¿æ™‚ã®ã¿)
 				struct sequence_readPicture{
 					friend class testSpriteUart;
 				public:
@@ -211,7 +211,7 @@ namespace hmr {
 					my_promise Promise;
 					xc::future<bool>::canceler Canceler;
 					sprite::commands::ans_getData Ans_getData;
-					//‘‚«‚İƒoƒbƒtƒ@‚Ìæ“ªƒAƒhƒŒƒX
+					//æ›¸ãè¾¼ã¿ãƒãƒƒãƒ•ã‚¡ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
 					unsigned char* BufPtr;
 					unsigned int DataPos;
 					unsigned int DataSize;
@@ -220,41 +220,41 @@ namespace hmr {
 				public:
 					sequence_readPicture(my_type& Ref_) :Ref(Ref_){}
 					my_future get_future(unsigned char* BufPtr_, unsigned int BufSize_){
-						//ˆÈ‰º‚Ìê‡‚Í¸”s
-						//	Promise‚ªŒ»İ‚àg‚í‚ê‚½‚Ü‚Ü
+						//ä»¥ä¸‹ã®å ´åˆã¯å¤±æ•—
+						//	PromiseãŒç¾åœ¨ã‚‚ä½¿ã‚ã‚ŒãŸã¾ã¾
 						if(!Promise.can_get_future())return my_future();
 
-						//future”­s ”ñ“¯Šúˆ—ŠJn
+						//futureç™ºè¡Œ éåŒæœŸå‡¦ç†é–‹å§‹
 						my_future Future = Promise.get_future();
 
-						//ƒoƒbƒtƒ@æ“ªƒAƒhƒŒƒX‚ğ‹L˜^
+						//ãƒãƒƒãƒ•ã‚¡å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¨˜éŒ²
 						BufPtr = BufPtr_;
 
-						//cƒf[ƒ^”‚æ‚èƒoƒbƒtƒ@‚Ì‚Ù‚¤‚ª¬‚³‚¢‚Æ‚«
+						//æ®‹ãƒ‡ãƒ¼ã‚¿æ•°ã‚ˆã‚Šãƒãƒƒãƒ•ã‚¡ã®ã»ã†ãŒå°ã•ã„ã¨ã
 						if(BufSize_ < Ref.DataSize - Ref.DataCnt){
-							//8‚Ì”{”‚ÉŠÛ‚ß‚İ
+							//8ã®å€æ•°ã«ä¸¸ã‚è¾¼ã¿
 							BufSize_ -= BufSize_ % 8;
 						} else{
-							//cƒf[ƒ^‚ğ‘S•”“Ç‚Ş
+							//æ®‹ãƒ‡ãƒ¼ã‚¿ã‚’å…¨éƒ¨èª­ã‚€
 							BufSize_ = Ref.DataSize - Ref.DataCnt;
 						}
 
-						//ƒoƒbƒtƒ@‚Ö‚Ì‘‚«‚İ“o˜^
+						//ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿ç™»éŒ²
 						Ans_getData.Itr = BufPtr_;
 						Ans_getData.End = BufPtr_ + BufSize_;
 
-						//setImageSize‚ğ”ñ“¯ŠúÀs & takePictureÀs‚ğ—\–ñ
+						//setImageSizeã‚’éåŒæœŸå®Ÿè¡Œ & takePictureå®Ÿè¡Œã‚’äºˆç´„
 						Canceler = Ref.CommandUart.async_command(sprite::commands::getData(Ref.DataCnt, BufSize_, Ans_getData)).then(xc::ref(*this));
 						if(!Canceler){
 							Promise.set_value(error_type(error_category::FailRequestCommand, Ref.CommandUart.status()));
 							return Future;
 						}
 
-						//future”­s
+						//futureç™ºè¡Œ
 						return Future;
 					}
 					void operator()(bool IsFail_){
-						//³‚µ‚­then‚ªŒÄ‚Î‚ê‚½‚Ì‚ÅA‚Ü‚¸Šo‚¦‚Ä‚¢‚½canceler‚ğÁ‹
+						//æ­£ã—ãthenãŒå‘¼ã°ã‚ŒãŸã®ã§ã€ã¾ãšè¦šãˆã¦ã„ãŸcancelerã‚’æ¶ˆå»
 						Canceler.clear();
 
 						if(IsFail_){
@@ -267,16 +267,16 @@ namespace hmr {
 
 						switch(Ref.CommandUart.status().id()){
 						case sprite::commands::id::GetData:
-							//Œ»İˆÊ’u‚ğ‹L˜^
+							//ç¾åœ¨ä½ç½®ã‚’è¨˜éŒ²
 							DataPos = Ref.DataCnt;
 							DataSize = Ans_getData.Itr - BufPtr;
 
-							//Œ‹‰Ê‚ğ‹L˜^
+							//çµæœã‚’è¨˜éŒ²
 							Ref.DataCnt += DataSize;
 
-							//ƒf[ƒ^‚ªÅŒã‚È‚ç
+							//ãƒ‡ãƒ¼ã‚¿ãŒæœ€å¾Œãªã‚‰
 							if (Ref.DataCnt >= Ref.DataSize){
-								//end_takePicture‚ğ”ñ“¯ŠúÀs & ‚»‚ÌŒãn––Às‚ğ—\–ñ
+								//end_takePictureã‚’éåŒæœŸå®Ÿè¡Œ & ãã®å¾Œå§‹æœ«å®Ÿè¡Œã‚’äºˆç´„
 								Canceler = Ref.CommandUart.async_command(sprite::commands::stop_takePicture()).then(xc::ref(*this));
 
 								if(!Canceler)Promise.set_value(error_type(error_category::FailRequestCommand, Ref.CommandUart.status()));
@@ -284,14 +284,14 @@ namespace hmr {
 
 							}
 
-							//Promise—šs
+							//Promiseå±¥è¡Œ
 							Promise.set_value(sprite::picture_data(DataPos, DataSize, false));
 							return;
 						case sprite::commands::id::StopTakePicture:
 							Ref.DataCnt = 0;
 							Ref.DataSize = 0;
 
-							//Promise—šs
+							//Promiseå±¥è¡Œ
 							Promise.set_value(sprite::picture_data(DataPos, DataSize, true));
 							return;
 						default:
@@ -302,17 +302,17 @@ namespace hmr {
 						}
 					}
 					void cancel(){
-						//Œ»İ•Û‚µ‚Ä‚¢‚éê‡‚ÍAcancelˆ—Às
+						//ç¾åœ¨ä¿æŒã—ã¦ã„ã‚‹å ´åˆã¯ã€cancelå‡¦ç†å®Ÿè¡Œ
 						if (Canceler)Canceler();
 
-						//Œ»İget_future’†‚È‚çA–³Œø‰»
+						//ç¾åœ¨get_futureä¸­ãªã‚‰ã€ç„¡åŠ¹åŒ–
 						if (Promise.is_wait_value()){
 							Promise.set_value(error_type(error_category::Canceled, Ref.CommandUart.status()));
 						}
 					}
 				}Sequence_readPicture;
 			private:
-				//=== Command Reset ƒV[ƒPƒ“ƒX ===
+				//=== Command Reset ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ ===
 				//	command_reset
 				struct sequence_command_reset{
 					friend class testSpriteUart;
@@ -327,20 +327,20 @@ namespace hmr {
 				public:
 					sequence_command_reset(my_type& Ref_) :Ref(Ref_){}
 					my_future get_future(){
-						//Promise‚ªŒ»İ‚àg‚í‚ê‚½‚Ü‚Ü‚Ìê‡‚Í¸”s
+						//PromiseãŒç¾åœ¨ã‚‚ä½¿ã‚ã‚ŒãŸã¾ã¾ã®å ´åˆã¯å¤±æ•—
 						if(!Promise.can_get_future())return my_future();
 
-						//future”­s ”ñ“¯Šúˆ—ŠJn
+						//futureç™ºè¡Œ éåŒæœŸå‡¦ç†é–‹å§‹
 						my_future Future = Promise.get_future();
 
-						//setImageSize‚ğ”ñ“¯ŠúÀs & takePictureÀs‚ğ—\–ñ
+						//setImageSizeã‚’éåŒæœŸå®Ÿè¡Œ & takePictureå®Ÿè¡Œã‚’äºˆç´„
 						Canceler = Ref.CommandUart.async_command(sprite::commands::resetCamera()).then(xc::ref(*this));
 						if(!Canceler)Promise.set_value(error_type(error_category::FailRequestCommand, Ref.CommandUart.status()));
 
 						return Future;
 					}
 					void operator()(bool IsFail_){
-						//³‚µ‚­then‚ªŒÄ‚Î‚ê‚½‚Ì‚ÅA‚Ü‚¸Šo‚¦‚Ä‚¢‚½canceler‚ğÁ‹
+						//æ­£ã—ãthenãŒå‘¼ã°ã‚ŒãŸã®ã§ã€ã¾ãšè¦šãˆã¦ã„ãŸcancelerã‚’æ¶ˆå»
 						Canceler.clear();
 
 						if(IsFail_){
@@ -348,14 +348,14 @@ namespace hmr {
 							return;
 						}
 
-						//Promise—šs
+						//Promiseå±¥è¡Œ
 						Promise.set_value(ans_type());
 					}
 					void cancel(){
-						//Œ»İ•Û‚µ‚Ä‚¢‚éê‡‚ÍAcancelˆ—Às
+						//ç¾åœ¨ä¿æŒã—ã¦ã„ã‚‹å ´åˆã¯ã€cancelå‡¦ç†å®Ÿè¡Œ
 						if (Canceler)Canceler();
 
-						//Œ»İget_future’†‚È‚çA–³Œø‰»
+						//ç¾åœ¨get_futureä¸­ãªã‚‰ã€ç„¡åŠ¹åŒ–
 						if(Promise.is_wait_value())Promise.set_value(error_type(error_category::Canceled, Ref.CommandUart.status()));
 					}
 				}Sequence_command_reset;
@@ -375,32 +375,32 @@ namespace hmr {
 					if (is_lock())return false;
 					if (CommandUartLock.lock())return true;
 
-					//ƒJƒƒ‰‚Ì‰æ‘œƒTƒCƒY
+					//ã‚«ãƒ¡ãƒ©ã®ç”»åƒã‚µã‚¤ã‚º
 					ImageSize=sprite::commands::imagesize::size_160_120;
-					//Ê^‚Ìƒf[ƒ^ƒTƒCƒY
+					//å†™çœŸã®ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
 					DataSize = 0;
-					//Ê^‚Ìƒf[ƒ^“Ç‚İ‚İƒJƒEƒ“ƒ^
+					//å†™çœŸã®ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ã‚«ã‚¦ãƒ³ã‚¿
 					DataCnt = 0;
 
 					return false;
 				}
 				void unlock(){
-					//ˆ—’†ƒV[ƒPƒ“ƒX‚ğƒLƒƒƒ“ƒZƒ‹
+					//å‡¦ç†ä¸­ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«
 					Sequence_takePicture.cancel();
 					Sequence_readPicture.cancel();
 					Sequence_command_reset.cancel();
-					//ƒƒbƒN‰ğœ
+					//ãƒ­ãƒƒã‚¯è§£é™¤
 					CommandUartLock.unlock();
 				}
 				bool is_lock()const{ return CommandUartLock; }
 			public:
-				//Ê^B‰e
-				//	return:B‰e‚µ‚½Picture‚Ìpicture_info
+				//å†™çœŸæ’®å½±
+				//	return:æ’®å½±ã—ãŸPictureã®picture_info
 				xc::future< xc::either<sprite::picture_info, error_type> > async_takePicture(sprite::commands::imagesize::type ImageSize_){
-					//ˆÈ‰º‚Ìê‡‚Í¸”s
-					//	ƒAƒCƒhƒ‹ó‘Ô=–½—ßó•t‰Â”\‚Å‚È‚¢
-					//	CommandUart‚ªŒ»İ‚àg‚í‚ê‚½‚Ü‚Ü
-					//	–¢“Ç‚İ‚İPicturec—¯
+					//ä»¥ä¸‹ã®å ´åˆã¯å¤±æ•—
+					//	ã‚¢ã‚¤ãƒ‰ãƒ«çŠ¶æ…‹=å‘½ä»¤å—ä»˜å¯èƒ½ã§ãªã„
+					//	CommandUartãŒç¾åœ¨ã‚‚ä½¿ã‚ã‚ŒãŸã¾ã¾
+					//	æœªèª­ã¿è¾¼ã¿Pictureæ®‹ç•™æ™‚
 					if (!idle()
 						|| CommandUart.is_command()
 						|| can_readPicture()){
@@ -409,17 +409,17 @@ namespace hmr {
 
 					return Sequence_takePicture.get_future(ImageSize_);
 				}
-				//Ê^ƒf[ƒ^‚ªŒ»İ‘¶İ‚µ‚Ä‚¢‚é‚©
-				//	return:readPicture‰Â”\‚ÈB‰eÏ‚İPicture‚ª‘¶İ?
+				//å†™çœŸãƒ‡ãƒ¼ã‚¿ãŒç¾åœ¨å­˜åœ¨ã—ã¦ã„ã‚‹ã‹
+				//	return:readPictureå¯èƒ½ãªæ’®å½±æ¸ˆã¿PictureãŒå­˜åœ¨?
 				bool can_readPicture()const{ return DataCnt < DataSize; }
-				//Ê^ƒf[ƒ^“Ç‚İo‚µ
-				//	return:æ“¾‚µ‚½Data‚Ìpicture_data
+				//å†™çœŸãƒ‡ãƒ¼ã‚¿èª­ã¿å‡ºã—
+				//	return:å–å¾—ã—ãŸDataã®picture_data
 				xc::future< xc::either<sprite::picture_data, error_type> > async_readPicture(unsigned char* BufPtr_, unsigned int BufSize_){
-					//ˆÈ‰º‚Ìê‡‚Í¸”s
-					//	ƒAƒCƒhƒ‹ó‘Ô=–½—ßó•t‰Â”\‚Å‚È‚¢
-					//	CommandUart‚ªŒ»İ‚àg‚í‚ê‚½‚Ü‚Ü
-					//	“Ç‚İ‚İPicture‚ª‘¶İ‚µ‚È‚¢
-					//	Promise_readPicture‚ªŒ»İ‚àg‚í‚ê‚½‚Ü‚Ü
+					//ä»¥ä¸‹ã®å ´åˆã¯å¤±æ•—
+					//	ã‚¢ã‚¤ãƒ‰ãƒ«çŠ¶æ…‹=å‘½ä»¤å—ä»˜å¯èƒ½ã§ãªã„
+					//	CommandUartãŒç¾åœ¨ã‚‚ä½¿ã‚ã‚ŒãŸã¾ã¾
+					//	èª­ã¿è¾¼ã¿PictureãŒå­˜åœ¨ã—ãªã„
+					//	Promise_readPictureãŒç¾åœ¨ã‚‚ä½¿ã‚ã‚ŒãŸã¾ã¾
 					if (!idle()
 						|| CommandUart.is_command()
 						|| !can_readPicture()){
@@ -428,13 +428,13 @@ namespace hmr {
 
 					return Sequence_readPicture.get_future(BufPtr_, BufSize_);
 				}
-				//ƒŠƒZƒbƒg—v‹
-				//	return:¸”sƒtƒ‰ƒO
+				//ãƒªã‚»ãƒƒãƒˆè¦æ±‚
+				//	return:å¤±æ•—ãƒ•ãƒ©ã‚°
 				xc::future< xc::either<void, error_type> > async_command_reset(){
-					//ˆÈ‰º‚Ìê‡‚Í¸”s
-					//	ƒAƒCƒhƒ‹ó‘Ô=–½—ßó•t‰Â”\‚Å‚È‚¢
-					//	CommandUart‚ªŒ»İ‚àg‚í‚ê‚½‚Ü‚Ü
-					//	Promise_command_reset‚ªŒ»İ‚àg‚í‚ê‚½‚Ü‚Ü
+					//ä»¥ä¸‹ã®å ´åˆã¯å¤±æ•—
+					//	ã‚¢ã‚¤ãƒ‰ãƒ«çŠ¶æ…‹=å‘½ä»¤å—ä»˜å¯èƒ½ã§ãªã„
+					//	CommandUartãŒç¾åœ¨ã‚‚ä½¿ã‚ã‚ŒãŸã¾ã¾
+					//	Promise_command_resetãŒç¾åœ¨ã‚‚ä½¿ã‚ã‚ŒãŸã¾ã¾
 					if (!idle()
 						|| CommandUart.is_command()){
 						return xc::future< xc::either<void, error_type> >();
@@ -444,7 +444,7 @@ namespace hmr {
 				}
 			};
 			
-			//“dŒ¹ŠÇ—Aƒ^ƒCƒ€ƒAƒEƒg‹@”\AƒI[ƒgƒŠƒZƒbƒg‹@”\•t‚«‚Ì‚‹@”\SpriteŠÇ—ƒNƒ‰ƒX
+			//é›»æºç®¡ç†ã€ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆæ©Ÿèƒ½ã€ã‚ªãƒ¼ãƒˆãƒªã‚»ãƒƒãƒˆæ©Ÿèƒ½ä»˜ãã®é«˜æ©Ÿèƒ½Spriteç®¡ç†ã‚¯ãƒ©ã‚¹
 			template<typename uart_register_, typename power_pin_>
 			class cSprite {
 				friend class testSprite;
@@ -453,7 +453,7 @@ namespace hmr {
 				typedef cSpriteUart<uart_register_> my_uart;
 				typedef typename my_uart::status_type uart_status_type;
 			public:
-				//===== ’Ê’m—pŠÖ”Œ^ =====
+				//===== é€šçŸ¥ç”¨é–¢æ•°å‹ =====
 				typedef xc::bytes bytes;
 				typedef typename bytes::size_type size_type;
 				typedef xc::function<void(bytes&,size_type)> bytes_builder;
@@ -462,7 +462,7 @@ namespace hmr {
 					virtual void read(sprite::picture_data PictureData_, xc::rvalue_reference<bytes> Data_) = 0;
 				};
 			public:
-				//===== ƒXƒe[ƒ^ƒX =====
+				//===== ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ =====
 				struct status_type{
 					typedef sprite::command_uart_status uart_status_type;
 				public:
@@ -482,7 +482,7 @@ namespace hmr {
 						return (0x80 * isPowerReset()) | (0x60 & (mode() << 5)) | (0x1f & id());
 					}
 				};
-				//======ƒGƒ‰[ŠÇ—======
+				//======ã‚¨ãƒ©ãƒ¼ç®¡ç†======
 				struct error_category{
 					enum type{
 						null = 0x00,
@@ -532,23 +532,23 @@ namespace hmr {
 			private:
 				bool IsLock;
 
-				//Sprite—pUart
+				//Spriteç”¨Uart
 				my_uart SpriteUart;
 				xc::unique_lock<cSpriteUart<uart_register_>> SpriteUartLock;
 
-				//Sprite—pTaskQÆ
+				//Spriteç”¨Taskå‚ç…§
 				hmr::task::host_interface* pTask;
 			public:
-				//Statusƒ`ƒFƒbƒNŠÖ”
-				//	PowerƒŠƒZƒbƒg’†‚Í0xf0, ‚»‚êˆÈŠO‚È‚çACommandID‚ğ•Ô‚·
+				//Statusãƒã‚§ãƒƒã‚¯é–¢æ•°
+				//	Powerãƒªã‚»ãƒƒãƒˆä¸­ã¯0xf0, ãã‚Œä»¥å¤–ãªã‚‰ã€CommandIDã‚’è¿”ã™
 				status_type status()const{ 
 					return status_type(SpriteUart.status(), Sequence_power_reset);
 				}
-				//Idle‚©‚Ç‚¤‚©Šm”FiIdle‚Å‚È‚¢‚ÆA–½—ßŒ`‚Ìƒƒ\ƒbƒh‚Í¸”s‚·‚éj
+				//Idleã‹ã©ã†ã‹ç¢ºèªï¼ˆIdleã§ãªã„ã¨ã€å‘½ä»¤å½¢ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯å¤±æ•—ã™ã‚‹ï¼‰
 				bool idle()const { return SpriteUart.idle() && !static_cast<bool>(Sequence_power_reset); }
 
 			private:
-				//=== TakePicture & ReadPicture ƒV[ƒPƒ“ƒX ===
+				//=== TakePicture & ReadPicture ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ ===
 				//	takePicture
 				//	readPicture
 				struct sequence_take_and_readPicture{
@@ -558,16 +558,16 @@ namespace hmr {
 					typedef xc::promise<ans_type> my_promise;
 					typedef typename my_promise::my_future my_future;
 				private:
-					//©g‚ğŠo‚¦‚Ä‚¨‚­
+					//è‡ªèº«ã‚’è¦šãˆã¦ãŠã
 					my_type& Ref;
 
-					//¸”s‚Ì‚İerror_type‚ğ•Ô‚·
+					//å¤±æ•—æ™‚ã®ã¿error_typeã‚’è¿”ã™
 					my_promise Promise;
 
-					//“Ç‚İ‚¾‚µ‚½ƒf[ƒ^‚Ì•ÛŠÇêŠ
+					//èª­ã¿ã ã—ãŸãƒ‡ãƒ¼ã‚¿ã®ä¿ç®¡å ´æ‰€
 					picture_reader* pPictureReader;
 
-					//Ê^–¢B‰eƒf[ƒ^ƒTƒCƒY
+					//å†™çœŸæœªæ’®å½±ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
 					unsigned int PictureSize;
 				public:
 					sequence_take_and_readPicture(my_type& Ref_)
@@ -586,21 +586,21 @@ namespace hmr {
 						unsigned int HeadSpace_,
 						unsigned int FootSpace_){
 
-						//future‚ª”­s‚Å‚«‚È‚¯‚ê‚ÎA‹ó‚Ìfuture‚ğ”­s
+						//futureãŒç™ºè¡Œã§ããªã‘ã‚Œã°ã€ç©ºã®futureã‚’ç™ºè¡Œ
 						if(!Promise.can_get_future())return my_future();
 
-						//future”­sˆ—
+						//futureç™ºè¡Œå‡¦ç†
 						my_future Future = Promise.get_future();
 
-						//PictureReader‚ğŠo‚¦‚Ä‚¨‚­
+						//PictureReaderã‚’è¦šãˆã¦ãŠã
 						pPictureReader = &PictureReader_;
 
 						Sequence_readPicture.initialize(BytesBuilder_, MaxSize_, HeadSpace_, FootSpace_);
 
-						//TakePicture‚ğ—v‹
+						//TakePictureã‚’è¦æ±‚
 						Sequence_takePicture.async(ImageSize_);
 
-						//Future‚ğ–ß‚·
+						//Futureã‚’æˆ»ã™
 						return Future;
 					}
 					void cancel(){
@@ -613,9 +613,9 @@ namespace hmr {
 						Sequence_readPicture.task();
 					}
 				private:
-					//=== TakePicture ƒV[ƒPƒ“ƒX ===
+					//=== TakePicture ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ ===
 					//	takePicture
-					//	=> sequence_readPicture‚Ö˜A—
+					//	=> sequence_readPictureã¸é€£çµ¡
 					struct sequence_takePicture{
 						typedef xc::either< sprite::picture_info, uart_error_type > uart_ans_type;
 						typedef xc::future< uart_ans_type > uart_future;
@@ -627,10 +627,10 @@ namespace hmr {
 					public:
 						sequence_takePicture(seq_type& Seq_) :Seq(Seq_), WatchdogCnt(0){}
 						void async(sprite::commands::imagesize::type ImageSize_){
-							//wdt—LŒø‰»
+							//wdtæœ‰åŠ¹åŒ–
 							WatchdogCnt = 3;
 
-							//ƒRƒ}ƒ“ƒhÀs
+							//ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œ
 							Canceler = Seq.async_takePicture(ImageSize_).then(xc::ref(*this));
 							if(!Canceler){
 								WatchdogCnt = 0;
@@ -640,13 +640,13 @@ namespace hmr {
 						void operator()(uart_ans_type UartAns){
 							Canceler.clear();
 
-							//wdt–³Œø‰»
+							//wdtç„¡åŠ¹åŒ–
 							WatchdogCnt = 0;
 
-							//ƒGƒ‰[‚ğ•Ô‚µ‚Ä‚«‚½ê‡
+							//ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã—ã¦ããŸå ´åˆ
 							if(!UartAns)Seq.throw_error(error_category::CatchUartError, UartAns.alternate());
 
-							//B‰eŒ‹‰Ê’Ê’m
+							//æ’®å½±çµæœé€šçŸ¥
 							Seq.finish_take(*UartAns);
 						}
 						void task(){
@@ -666,7 +666,7 @@ namespace hmr {
 						}
 					}Sequence_takePicture;
 
-					//=== Read Picture ƒV[ƒPƒ“ƒX ===
+					//=== Read Picture ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ ===
 					//	readPicture
 					struct sequence_readPicture{
 						typedef xc::either< sprite::picture_data, uart_error_type > uart_ans_type;
@@ -679,12 +679,12 @@ namespace hmr {
 
 						bytes Bytes;
 
-						//’Ê’mŠÖ”
+						//é€šçŸ¥é–¢æ•°
 						bytes_builder BytesBuilder;
 						unsigned int MaxSize;
 						unsigned int HeadSpace;
 						unsigned int FootSpace;
-						unsigned int RequestingDataSize;	//bytes build ƒŠƒNƒGƒXƒg’†‚ÌƒTƒCƒY 0‚È‚çA‚È‚µ
+						unsigned int RequestingDataSize;	//bytes build ãƒªã‚¯ã‚¨ã‚¹ãƒˆä¸­ã®ã‚µã‚¤ã‚º 0ãªã‚‰ã€ãªã—
 					public:
 						void initialize(const bytes_builder& BytesBuilder_, unsigned int MaxSize_, unsigned int HeadSpace_, unsigned int FootSpace_){
 							BytesBuilder = BytesBuilder_;
@@ -703,13 +703,13 @@ namespace hmr {
 							, RequestingDataSize(0){
 						}
 						void async(unsigned int RequestDataSize_){
-							//Ê^B‰eƒTƒCƒY‚ğŠm’è
+							//å†™çœŸæ’®å½±ã‚µã‚¤ã‚ºã‚’ç¢ºå®š
 							if(RequestDataSize_ + HeadSpace + FootSpace> MaxSize){
 								RequestDataSize_ = MaxSize - HeadSpace - FootSpace;
 								RequestDataSize_ -= (RequestDataSize_ % 8);
 							}
 
-							//Bytes‚ğŠm•Û
+							//Bytesã‚’ç¢ºä¿
 							BytesBuilder(Bytes, RequestDataSize_ + HeadSpace + FootSpace);
 							if(Bytes.empty()){
 								WatchdogCnt = 0;
@@ -718,10 +718,10 @@ namespace hmr {
 							}
 							RequestingDataSize = 0;
 
-							//wdt—LŒø‰»
+							//wdtæœ‰åŠ¹åŒ–
 							WatchdogCnt = 7;
 
-							//ƒRƒ}ƒ“ƒhÀs
+							//ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œ
 							Canceler = Seq.async_readPicture(Bytes.begin() + HeadSpace, RequestDataSize_).then(xc::ref(*this));
 							if(!Canceler){
 								WatchdogCnt = 0;
@@ -731,13 +731,13 @@ namespace hmr {
 						void operator()(uart_ans_type UartAns){
 							Canceler.clear();
 
-							//wdt–³Œø‰»
+							//wdtç„¡åŠ¹åŒ–
 							WatchdogCnt = 0;
 
-							//ƒGƒ‰[‚ğ•Ô‚µ‚Ä‚«‚½ê‡
+							//ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã—ã¦ããŸå ´åˆ
 							if(!UartAns)Seq.throw_error(error_category::CatchUartError, UartAns.alternate());
 
-							//B‰eŒ‹‰Ê’Ê’m
+							//æ’®å½±çµæœé€šçŸ¥
 							Seq.finish_read(*UartAns, xc::move(Bytes));
 						}
 						void task(){
@@ -789,19 +789,19 @@ namespace hmr {
 					void finish_read(sprite::picture_data PictureData_, xc::rvalue_reference<xc::bytes> rrBytes_){
 						pPictureReader->read(PictureData_, xc::move(rrBytes_));
 
-						//–¢óf‚Ìƒf[ƒ^‚ª‚Ü‚¾‘¶İ‚·‚éê‡
+						//æœªå—è¨ºã®ãƒ‡ãƒ¼ã‚¿ãŒã¾ã å­˜åœ¨ã™ã‚‹å ´åˆ
 						if(PictureData_.PicturePos + PictureData_.DataSize < PictureSize){
-							//Ÿ‚Ìƒf[ƒ^óM—\–ñ
+							//æ¬¡ã®ãƒ‡ãƒ¼ã‚¿å—ä¿¡äºˆç´„
 							Sequence_readPicture.async(PictureSize - (PictureData_.PicturePos + PictureData_.DataSize));
 							return;
 						}
 
-						//‘Sƒf[ƒ^B‰eÏ‚İ‚Ì
+						//å…¨ãƒ‡ãƒ¼ã‚¿æ’®å½±æ¸ˆã¿ã®æ™‚
 						pPictureReader = 0;
 						PictureSize = 0;
 
 						if(Promise.is_wait_value()){
-							//ÅŒã‚Ìƒf[ƒ^‚È‚Ì‚ÉLastƒtƒ‰ƒO‚ª•t‚¢‚Ä‚¢‚È‚©‚Á‚½ê‡
+							//æœ€å¾Œã®ãƒ‡ãƒ¼ã‚¿ãªã®ã«Lastãƒ•ãƒ©ã‚°ãŒä»˜ã„ã¦ã„ãªã‹ã£ãŸå ´åˆ
 							if(!PictureData_.IsLast){
 								Promise.set_value(error_type(error_category::InvalidReadEnd, Ref.status()));
 								return;
@@ -812,7 +812,7 @@ namespace hmr {
 					}
 				}Sequence_take_and_readPicture;
 				
-				//=== Command Reset ƒV[ƒPƒ“ƒX ===
+				//=== Command Reset ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ ===
 				//	command_reset
 				struct sequence_command_reset{
 				private:
@@ -824,13 +824,13 @@ namespace hmr {
 					typedef xc::future< uart_ans_type > uart_future;
 					typedef typename uart_future::canceler uart_canceler;
 				private:
-					//©g‚ğŠo‚¦‚Ä‚¨‚­
+					//è‡ªèº«ã‚’è¦šãˆã¦ãŠã
 					my_type& Ref;
 
-					//¸”s‚Ì‚İerror_type‚ğ•Ô‚·
+					//å¤±æ•—æ™‚ã®ã¿error_typeã‚’è¿”ã™
 					my_promise Promise;
 
-					//ƒLƒƒƒ“ƒZƒ‰[
+					//ã‚­ãƒ£ãƒ³ã‚»ãƒ©ãƒ¼
 					uart_canceler Canceler;
 
 					unsigned int WatchdogCnt;
@@ -838,16 +838,16 @@ namespace hmr {
 					sequence_command_reset(my_type& Ref_) :Ref(Ref_), WatchdogCnt(0){}
 				public:
 					my_future get_future(){
-						//future‚ª”­s‚Å‚«‚È‚¯‚ê‚ÎA‹ó‚Ìfuture‚ğ”­s
+						//futureãŒç™ºè¡Œã§ããªã‘ã‚Œã°ã€ç©ºã®futureã‚’ç™ºè¡Œ
 						if(!Promise.can_get_future())return my_future();
 
-						//future”­sˆ—
+						//futureç™ºè¡Œå‡¦ç†
 						my_future Future = Promise.get_future();
 
-						//wdt—LŒø‰»
+						//wdtæœ‰åŠ¹åŒ–
 						WatchdogCnt = 3;
 
-						//ƒRƒ}ƒ“ƒhÀs
+						//ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œ
 						Canceler = Ref.SpriteUart.async_command_reset().then(xc::ref(*this));
 						if(!Canceler){
 							WatchdogCnt = 0;
@@ -860,17 +860,17 @@ namespace hmr {
 					void operator()(uart_ans_type UartAns){
 						Canceler.clear();
 
-						//wdt–³Œø‰»
+						//wdtç„¡åŠ¹åŒ–
 						WatchdogCnt = 0;
 
 						if(Promise.is_wait_value()){
-						//ƒGƒ‰[‚ğ•Ô‚µ‚Ä‚«‚½ê‡
+						//ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã—ã¦ããŸå ´åˆ
 							if(!UartAns){
 								Promise.set_value(error_type(error_category::CatchUartError, UartAns.alternate()));
 								return;
 							}
 
-						//Promise—šs
+						//Promiseå±¥è¡Œ
 							Promise.set_value(ans_type());
 						}
 					}
@@ -895,24 +895,24 @@ namespace hmr {
 					}
 				}Sequence_command_reset;
 				
-				//=== Power Reset ƒV[ƒPƒ“ƒX ===
+				//=== Power Reset ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ ===
 				struct sequence_power_reset{
 				private:
 					typedef xc::either< void, error_type > ans_type;
 					typedef xc::promise<ans_type> my_promise;
 					typedef typename my_promise::my_future my_future;
 				private:
-					//©g‚ğŠo‚¦‚Ä‚¨‚­
+					//è‡ªèº«ã‚’è¦šãˆã¦ãŠã
 					my_type& Ref;
 
-					//Sprite‚Ì“dŒ¹§Œä
+					//Spriteã®é›»æºåˆ¶å¾¡
 					power_pin_ PowerPin;
 					xc::lock_guard<power_pin_> PowerPinLock;
 
-					//¸”s‚Ì‚İerror_type‚ğ•Ô‚·
+					//å¤±æ•—æ™‚ã®ã¿error_typeã‚’è¿”ã™
 					my_promise Promise;
 
-					//PowerƒŠƒZƒbƒg—pƒJƒEƒ“ƒ^
+					//Powerãƒªã‚»ãƒƒãƒˆç”¨ã‚«ã‚¦ãƒ³ã‚¿
 					unsigned int PowerResetCnt;
 				public:
 					sequence_power_reset(my_type& Ref_)
@@ -922,57 +922,57 @@ namespace hmr {
 						, PowerPinLock(PowerPin){
 					}
 					my_future get_future(){
-						//future‚ª”­s‚Å‚«‚È‚¯‚ê‚ÎA‹ó‚Ìfuture‚ğ”­s
+						//futureãŒç™ºè¡Œã§ããªã‘ã‚Œã°ã€ç©ºã®futureã‚’ç™ºè¡Œ
 						if(!Promise.can_get_future())return my_future();
-						//‚·‚Å‚ÉAutoReset’†‚È‚ç–³‹
+						//ã™ã§ã«AutoResetä¸­ãªã‚‰ç„¡è¦–
 						if(PowerResetCnt>0)return my_future();
 
-						//future”­sˆ—
+						//futureç™ºè¡Œå‡¦ç†
 						my_future Future = Promise.get_future();
 
-						//‘SƒLƒƒƒ“ƒZƒ‹
+						//å…¨ã‚­ãƒ£ãƒ³ã‚»ãƒ«
 						Ref.Sequence_take_and_readPicture.cancel();
 						Ref.Sequence_command_reset.cancel();
 						
-						//“dŒ¹ƒIƒt
+						//é›»æºã‚ªãƒ•
 						Ref.SpriteUartLock.unlock();
 						PowerPin(false);
 
-						//5•bŒã‚ÉÄ‹N“®‚ğ—\–ñ
+						//5ç§’å¾Œã«å†èµ·å‹•ã‚’äºˆç´„
 						PowerResetCnt=5;
 
-						//future”­s
+						//futureç™ºè¡Œ
 						return Promise.get_future();
 					}
 					void cancel(){
 						if(PowerResetCnt > 0){
-							//ƒŠƒZƒbƒgƒJƒEƒ“ƒ^‰Šú‰»
+							//ãƒªã‚»ãƒƒãƒˆã‚«ã‚¦ãƒ³ã‚¿åˆæœŸåŒ–
 							PowerResetCnt = 1;
 
-							//“dŒ¹‰ñ•œAƒ‚ƒWƒ…[ƒ‹‰Šú‰»
+							//é›»æºå›å¾©ã€ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åˆæœŸåŒ–
 							PowerPin(true);
 						}
 						if(Promise.is_wait_value()){
-							//Promise‚ğ—šs
+							//Promiseã‚’å±¥è¡Œ
 							Promise.set_value(error_type(error_category::Canceled,Ref.status()));
 						}
 					}
 					void task(){
-						//AutoReset’†
+						//AutoResetä¸­
 						if(PowerResetCnt>0){
-							//PowerReset‚ÌƒJƒEƒ“ƒg
+							//PowerResetã®ã‚«ã‚¦ãƒ³ãƒˆ
 							--PowerResetCnt;
 
-							//1•b‘O‚É“dŒ¹‰ñ•œ
+							//1ç§’å‰ã«é›»æºå›å¾©
 							if(PowerResetCnt == 1){
-								//“dŒ¹‰ñ•œAƒ‚ƒWƒ…[ƒ‹‰Šú‰»
+								//é›»æºå›å¾©ã€ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«åˆæœŸåŒ–
 								PowerPin(true);
-							}//Spriteİ’è
+							}//Spriteè¨­å®š
 							else if(PowerResetCnt ==0){
-								//ƒƒbƒN
+								//ãƒ­ãƒƒã‚¯
 								Ref.SpriteUartLock.lock();
 
-								//Promise‚ğ—šs
+								//Promiseã‚’å±¥è¡Œ
 								if(Promise.is_wait_value()){
 									Promise.set_value(ans_type());
 								}
@@ -982,13 +982,13 @@ namespace hmr {
 					operator bool()const{ return PowerResetCnt>0; }
 				public:
 					void power_on(){
-						//“dŒ¹ON
+						//é›»æºON
 						PowerPin(true);
 
 						PowerResetCnt = 2;
 					}
 					void power_off(){
-						//“dŒ¹OFF
+						//é›»æºOFF
 						PowerResetCnt = 0;
 						PowerPin(0);
 					}
@@ -1029,10 +1029,10 @@ namespace hmr {
 				bool lock(){
 					if (is_lock())return false;
 
-					//ƒ^ƒXƒNƒXƒ^[ƒg
+					//ã‚¿ã‚¹ã‚¯ã‚¹ã‚¿ãƒ¼ãƒˆ
 					pTask->start(SpriteTask, 2, 0);
 
-					//ƒpƒ[ƒŠƒZƒbƒg‚ğ‰î‚µ‚ÄAƒpƒ[§ŒäŠJn
+					//ãƒ‘ãƒ¯ãƒ¼ãƒªã‚»ãƒƒãƒˆã‚’ä»‹ã—ã¦ã€ãƒ‘ãƒ¯ãƒ¼åˆ¶å¾¡é–‹å§‹
 					Sequence_power_reset.power_on();
 
 					IsLock = true;
@@ -1042,10 +1042,10 @@ namespace hmr {
 				void unlock(){
 					if(!is_lock())return;
 
-					//ƒ^ƒXƒNƒXƒgƒbƒv
+					//ã‚¿ã‚¹ã‚¯ã‚¹ãƒˆãƒƒãƒ—
 					pTask->stop(SpriteTask);
 
-					//Às’†ƒV[ƒPƒ“ƒX‚ª‚ ‚ê‚ÎAƒLƒƒƒ“ƒZƒ‹
+					//å®Ÿè¡Œä¸­ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ãŒã‚ã‚Œã°ã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«
 					Sequence_take_and_readPicture.cancel();
 					Sequence_command_reset.cancel();
 					Sequence_power_reset.cancel();
@@ -1058,8 +1058,8 @@ namespace hmr {
 				}
 				bool is_lock()const{ return IsLock; }
 			public:
-				//Ê^B‰e
-				//	return:B‰e‚µ‚½Picture‚Ìpicture_info
+				//å†™çœŸæ’®å½±
+				//	return:æ’®å½±ã—ãŸPictureã®picture_info
 				xc::future< xc::either<void, error_type> > async_take_and_readPicture(
 					sprite::commands::imagesize::type ImageSize_, 
 					picture_reader& PictureReader_,
@@ -1070,14 +1070,14 @@ namespace hmr {
 					if(Sequence_power_reset)return xc::future< xc::either<void, error_type> >();
 					return Sequence_take_and_readPicture.get_future(ImageSize_, PictureReader_, BytesBuilder_, MaxSize_, HeadSpace_, FootSpace_);
 				}
-				//ƒŠƒZƒbƒg—v‹
-				//	return:¸”sƒtƒ‰ƒO
+				//ãƒªã‚»ãƒƒãƒˆè¦æ±‚
+				//	return:å¤±æ•—ãƒ•ãƒ©ã‚°
 				xc::future< xc::either<void, error_type> > async_command_reset(){
 					if(Sequence_power_reset)return xc::future< xc::either<void, error_type> >();
 					return Sequence_command_reset.get_future();
 				}
-				//ƒpƒ[ƒŠƒZƒbƒg—v‹
-				//	return:¸”sƒtƒ‰ƒO
+				//ãƒ‘ãƒ¯ãƒ¼ãƒªã‚»ãƒƒãƒˆè¦æ±‚
+				//	return:å¤±æ•—ãƒ•ãƒ©ã‚°
 				xc::future< xc::either<void, error_type> > async_power_reset(){ return Sequence_power_reset.get_future(); }
 			};
 		}

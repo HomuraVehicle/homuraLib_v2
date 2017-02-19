@@ -2,57 +2,57 @@
 #define HMR_VMC1_INC 400
 #
 /*===hmrVMC1===
-	�قނ�̑��c�҂�MainPic���Ȃ���ʐM�̒ʐM�t�H�[�}�b�g���K�肷��t�@�C��
-	�o�b�t�@����̑����֐���p�ӂ��Ă��ƁA
-		��M�f�[�^��VMC1�֐��Q�Ɏ󂯓n���ƁA�o�b�t�@�ւ̒ǉ��������s���Ă����
-		���M�f�[�^��VMC1�֐��Q�ŗv������ƁA�o�b�t�@��ǂݏo���ēK���ȑ��M������Ԃ�
+	ほむらの操縦者とMainPicをつなぐ主通信の通信フォーマットを規定するファイル
+	バッファ操作の窓口関数を用意してやると、
+		受信データをVMC1関数群に受け渡すと、バッファへの追加処理を行ってくれる
+		送信データをVMC1関数群で要求すると、バッファを読み出して適当な送信文字を返す
 
 hmrVMC1_v4_00/130223 hmIto
-	c�t�@�C������extern C���s�v�������̂��폜
-	vmc1_create�̈���������VMCID���Avmc1_initialize�Ɉړ�
-	boolian��hmLib_boolian�ɕύX
-	hmrType��include���폜
-	can_iniSendPac()/can_iniRecvPac()��ǉ�
-		���ꂼ��A���M/��M���̃p�P�b�g���J����
+	cファイル中のextern Cが不要だったのを削除
+	vmc1_createの引数だったVMCIDを、vmc1_initializeに移動
+	boolianをhmLib_boolianに変更
+	hmrTypeのincludeを削除
+	can_iniSendPac()/can_iniRecvPac()を追加
+		それぞれ、送信/受信時のパケットを開く可否
 hmrVMC1_v3_00/130211 hmIto
-	can_existSendDat�֐���vmc_interface�ɒǉ�
-		existSendDat�֐������s�\����₢���킹��֐�
-	getSendErr/getRecvErr/clearSendErr/clearRecvErr�֐���ǉ�
-		���ꂼ��C�Ō�ɔ�����������M���̃G���[���擾/�N���A����
-		�G���[�������ł��C���ɓ���Ɏx��͂Ȃ��i�����I�Ƀp�P�b�g�����Ȃǂ��āC����M�͏�������Ă���j
+	can_existSendDat関数をvmc_interfaceに追加
+		existSendDat関数を実行可能かを問い合わせる関数
+	getSendErr/getRecvErr/clearSendErr/clearRecvErr関数を追加
+		それぞれ，最後に発生した送受信時のエラーを取得/クリアする
+		エラー発生中でも，特に動作に支障はない（強制的にパケットを閉じるなどして，送受信は処理されている）
 hmrVMC1_v2_02/121128 hmIto
-	hmCLib��hmLib�̓����ɔ����AhmLib_v3_04�ɑΉ�����悤�ύX
-	hmrVMC1���g��C++�ɑΉ�
+	hmCLibとhmLibの統合に伴い、hmLib_v3_04に対応するよう変更
+	hmrVMC1自身をC++に対応
 hmrVMC1_v2_01/121027 hmIto
-	vmc1_send�ɂ����āC0byte�f�[�^���G���[�����ɂ��Ă����̂��C��
+	vmc1_sendにおいて，0byteデータをエラー扱いにしていたのを修正
 hmrVMC1_v2_00/121020 hmIto
-	������VMC�̓����^�p�ɑΉ�
-		3byte�̃f�o�C�X�ŗL��VMCID��V���Ɏw��
-			���M��ID�Ƒ��M��ID��VMC�\���̂ɒǉ�
-		��M���ɂ͎��g��VMCID�����̒ʐM�̂ݎ�M
-			���g��VMCID��create�֐��Ŏw��
-		���M���ɂ͑��M���VMCID���w�肷�邱�Ƃ��K�v
-			�����VMCID��initialize�֐��Ŏw��
-		�Ȍ�̋K�i�́A#{VMCID[3]}.....##crlf
-			static��STRT,TRMN�͔p�~
-	�֐�����force_ini_send/recv����force_end_send/recv�ɕύX
-	finalize�ǉ�
-	create���ł�initialize�������s��p�~
+	複数のVMCの同時運用に対応
+		3byteのデバイス固有のVMCIDを新たに指定
+			送信元IDと送信先IDをVMC構造体に追加
+		受信時には自身のVMCID向けの通信のみ受信
+			自身のVMCIDはcreate関数で指定
+		送信時には送信先のVMCIDを指定することが必要
+			相手のVMCIDはinitialize関数で指定
+		以後の規格は、#{VMCID[3]}.....##crlf
+			staticなSTRT,TRMNは廃止
+	関数名をforce_ini_send/recvからforce_end_send/recvに変更
+	finalize追加
+	create内でのinitialize自動実行を廃止
 hmrVMC1_v1_04/121014 hmIto
-	force_ini_send/recv�֐���ǉ�
-		timeout�ȂǁAVMC1�̎�M�̔@���Ɋւ�炸�����ɃX�e�[�^�X������������̂Ɏg�p
+	force_ini_send/recv関数を追加
+		timeoutなど、VMC1の受信の如何に関わらず直ちにステータスを初期化するのに使用
 hmrVMC1_v1_03/121013 hmIto
-	���O���VMC1��vmc1�ɕύX
+	名前空間VMC1をvmc1に変更
 hmrVMC1_v1_02/121008 hmIto
-	�eDat��ID�ɂ��Ă�VMC1�ŊǗ�����悤�ύX�@���M�E��M���̊֐��`�ȂǕύX
-	�f�[�^�T�C�Y�̃o�b�t�@�T�C�Y��2byte�֊g��
-	DatID[1],DatSize[2],Dat[DatSize]�Ƀf�[�^�̃t�H�[�}�b�g��ύX
-	#PacID[3],Dat...,##crlf�Ƀp�P�b�g�̃t�H�[�}�b�g��ύX
-	121009Test_hmrCom_hmrVMC1.c�ɂāA����m�F�ς�
+	各DatのIDについてもVMC1で管理するよう変更　送信・受信時の関数形など変更
+	データサイズのバッファサイズを2byteへ拡張
+	DatID[1],DatSize[2],Dat[DatSize]にデータのフォーマットを変更
+	#PacID[3],Dat...,##crlfにパケットのフォーマットを変更
+	121009Test_hmrCom_hmrVMC1.cにて、動作確認済み
 hmrVMC1_v1_01/120922 hmIto
-	�ЂƂ܂����삪���肵�Ă��邱�Ƃ��m�F�i120922Test_hmrCom_hmrVMC1.c�ɂē���m�F�ς݁j
+	ひとまず動作が安定していることを確認（120922Test_hmrCom_hmrVMC1.cにて動作確認済み）
 hmrVMC1_v1_00/120921 hmIto
-	�o�[�W�����Ǘ��J�n
+	バージョン管理開始
 */
 #ifndef HMLIB_TYPE_INC
 //#	include"hmLib_v3_05/bytebase_type.h"
@@ -76,117 +76,117 @@ typedef void(*vmc1_vFp_did_dsize)(vmc1_did_t,vmc1_dsize_t);
 typedef unsigned char(*vmc1_ucFp_v)(void);
 typedef hmLib_boolian(*vmc1_bFp_v)(void);
 typedef void(*vmc1_vFp_pdid_pdsize)(vmc1_did_t*,vmc1_dsize_t*);
-//VMC1�\���̂̐錾
+//VMC1構造体の宣言
 typedef struct{
-	//���M�厯��ID
+	//送信主識別ID
 	unsigned char VMCID[3];
-	//���M�掯��ID
+	//送信先識別ID
 	unsigned char TVMCID[3];
-	//��M���[�h
+	//受信モード
 	unsigned char RecvMode;
-	//��M���[�h�̃J�E���^
+	//受信モードのカウンタ
 	unsigned char RecvModeCnt;
-	//��M�f�[�^�̃J�E���^
+	//受信データのカウンタ
 	vmc1_dsize_t RecvDatCnt;
-	//��M���[�h�̃G���[
+	//受信モードのエラー
 	unsigned char RecvErr;
-	//��M�f�[�^�̃T�C�Y
+	//受信データのサイズ
 	vmc1_dsize_t RecvDatSize;
-	//��M�f�[�^��id
+	//受信データのid
 	vmc1_did_t RecvDatID;
-	//���M���[�h
+	//送信モード
 	unsigned int SendMode;
-	//���M���[�h�̃J�E���^
+	//送信モードのカウンタ
 	vmc1_dsize_t SendCnt;
-	//���M���[�h�̃G���[
+	//送信モードのエラー
 	unsigned char SendErr;
-	//���M�f�[�^�̃T�C�Y
+	//送信データのサイズ
 	vmc1_dsize_t SendDatSize;
-	//��M�f�[�^��id
+	//受信データのid
 	vmc1_did_t SendDatID;
-/************************����֐�**************************/
-	//iniRecvPac�����s���ėǂ����̊m�F�ɌĂ΂��
+/************************制御関数**************************/
+	//iniRecvPacを実行して良いかの確認に呼ばれる
 	vmc1_bFp_v fp_can_iniRecvPac;
-	//PacStrt��M�������ɌĂ΂��
+	//PacStrt受信完了時に呼ばれる
 	vmc1_vFp_v fp_iniRecvPac;
-	//PacTrmn��M�������ɌĂ΂��@�����̓G���[�̗L��
+	//PacTrmn受信完了時に呼ばれる　引数はエラーの有無
 	vmc1_vFp_uc fp_finRecvPac;
-	//iniRecvDat�����s���ėǂ����̊m�F�ɌĂ΂��
+	//iniRecvDatを実行して良いかの確認に呼ばれる
 	vmc1_bFp_v fp_can_iniRecvDat;
-	//Dat��M�J�n���ɌĂ΂�� �����͎�M����f�[�^�T�C�Y ���s�́C�K��can_iniRecvDat���m�F��
+	//Dat受信開始時に呼ばれる 引数は受信するデータサイズ 実行は，必ずcan_iniRecvDatを確認後
 	vmc1_vFp_did_dsize fp_iniRecvDat;
-	//Dat��M�I�����ɌĂ΂�� �����̓G���[�̗L��
+	//Dat受信終了時に呼ばれる 引数はエラーの有無
 	vmc1_vFp_uc fp_finRecvDat;
-	//recv�����s���Ă悢���̊m�F�ɌĂ΂��
+	//recvを実行してよいかの確認に呼ばれる
 	vmc1_bFp_v fp_can_recv;
-	//Dat�̒��g��M���ɌĂ΂��@��������M�����f�[�^ ���s�́C�K��fp_can_recv���m�F��
+	//Datの中身受信時に呼ばれる　引数が受信したデータ 実行は，必ずfp_can_recvを確認後
 	vmc1_vFp_uc fp_recv;
-	//iniSendPac�����s���ėǂ����̊m�F�ɌĂ΂��
+	//iniSendPacを実行して良いかの確認に呼ばれる
 	vmc1_bFp_v fp_can_iniSendPac;
-	//RacStrt���M�������ɌĂ΂��
+	//RacStrt送信完了時に呼ばれる
 	vmc1_vFp_v fp_iniSendPac;
-	//PacTrmn���M�������ɌĂ΂��@�����̓G���[�̗L��
+	//PacTrmn送信完了時に呼ばれる　引数はエラーの有無
 	vmc1_vFp_uc fp_finSendPac;
-	//existSendDat�֐��̎��s�̉ۂ��m�F
+	//existSendDat関数の実行の可否を確認
 	vmc1_bFp_v fp_can_existSendDat;
-	//���M���K�v�ȃf�[�^�̗L���̊m�F ���s�́C�K��can_existSendDat���m�F��
+	//送信が必要なデータの有無の確認 実行は，必ずcan_existSendDatを確認後
 	vmc1_bFp_v fp_existSendDat;
-	//iniSendDat�����s���ėǂ����̊m�F�ɌĂ΂�� ���s�́C�K��existSendDat���m�F��
+	//iniSendDatを実行して良いかの確認に呼ばれる 実行は，必ずexistSendDatを確認後
 	vmc1_bFp_v fp_can_iniSendDat;
-	//Dat���M�m�莞�ɌĂ΂��@�T�C�Y��id��߂� ���s�́C�K��can_iniSendDat���m�F��
+	//Dat送信確定時に呼ばれる　サイズとidを戻す 実行は，必ずcan_iniSendDatを確認後
 	vmc1_vFp_pdid_pdsize fp_iniSendDat;
-	//Dat���M�I�����ɌĂ΂��@�����̓G���[�̗L��
+	//Dat送信終了時に呼ばれる　引数はエラーの有無
 	vmc1_vFp_uc fp_finSendDat;
-	//send�����s���Ă悢���̊m�F�ɌĂ΂��
+	//sendを実行してよいかの確認に呼ばれる
 	vmc1_bFp_v fp_can_send;
-	//Dat�̒��g���M���ɌĂ΂�� ���s�́C�K��fp_can_send���m�F��
+	//Datの中身送信時に呼ばれる 実行は，必ずfp_can_sendを確認後
 	vmc1_ucFp_v fp_send;
 }VMC1;
-//VMC1���쐬���� VMCID�̎w�肪�K�v
+//VMC1を作成する VMCIDの指定が必要
 VMC1* vmc1_create
-	(vmc1_bFp_v fp_can_iniRecvPac_		//iniRecvPac�����s�\��
-	,vmc1_vFp_v fp_iniRecvPac_			//PacStrt��M�������ɌĂ΂��
-	,vmc1_vFp_uc fp_finRecvPac_			//PacTrmn��M�������ɌĂ΂��@�����̓G���[�̗L��
-	,vmc1_bFp_v fp_can_iniRecvDat_		//iniRecvDat�����s���ėǂ����̊m�F�ɌĂ΂��
-	,vmc1_vFp_did_dsize fp_iniRecvDat_	//Dat��M�m�莞�ɃT�C�Y��id��n�����
-	,vmc1_vFp_uc fp_finRecvDat_			//Dat��M�I�����ɌĂ΂�� �����̓G���[�̗L��
-	,vmc1_bFp_v fp_can_recv_			//recv�����s���Ă悢���̊m�F�ɌĂ΂��
-	,vmc1_vFp_uc fp_recv_				//Dat�̒��g��M���ɌĂ΂��@��������M�����f�[�^
-	,vmc1_bFp_v fp_can_iniSendPac		//iniSendPac�����s�\��
-	,vmc1_vFp_v fp_iniSendPac_			//RacStrt���M�������ɌĂ΂��
-	,vmc1_vFp_uc fp_finSendPac_			//PacTrmn���M�������ɌĂ΂��@�����̓G���[�̗L��
-	,vmc1_bFp_v fp_can_existSendDat_	//existSendDat�֐������s�\����₢���킹��
-	,vmc1_bFp_v fp_existSendDat_		//���M���K�v�ȃf�[�^�̗L���̊m�F
-	,vmc1_bFp_v fp_can_iniSendDat_		//iniSendDat�����s���ėǂ����̊m�F�ɌĂ΂��
-	,vmc1_vFp_pdid_pdsize fp_iniSendDat_//Dat���M�m�莞�ɌĂ΂��@�T�C�Y��߂�
-	,vmc1_vFp_uc fp_finSendDat_			//Dat���M�I�����ɌĂ΂��@�����̓G���[�̗L��
-	,vmc1_bFp_v fp_can_send_			//send�����s���Ă悢���̊m�F�ɌĂ΂��
-	,vmc1_ucFp_v fp_send_);				//Dat�̒��g���M���ɌĂ΂��
-//VMC1���I������
+	(vmc1_bFp_v fp_can_iniRecvPac_		//iniRecvPacが実行可能か
+	,vmc1_vFp_v fp_iniRecvPac_			//PacStrt受信完了時に呼ばれる
+	,vmc1_vFp_uc fp_finRecvPac_			//PacTrmn受信完了時に呼ばれる　引数はエラーの有無
+	,vmc1_bFp_v fp_can_iniRecvDat_		//iniRecvDatを実行して良いかの確認に呼ばれる
+	,vmc1_vFp_did_dsize fp_iniRecvDat_	//Dat受信確定時にサイズとidを渡される
+	,vmc1_vFp_uc fp_finRecvDat_			//Dat受信終了時に呼ばれる 引数はエラーの有無
+	,vmc1_bFp_v fp_can_recv_			//recvを実行してよいかの確認に呼ばれる
+	,vmc1_vFp_uc fp_recv_				//Datの中身受信時に呼ばれる　引数が受信したデータ
+	,vmc1_bFp_v fp_can_iniSendPac		//iniSendPacが実行可能か
+	,vmc1_vFp_v fp_iniSendPac_			//RacStrt送信完了時に呼ばれる
+	,vmc1_vFp_uc fp_finSendPac_			//PacTrmn送信完了時に呼ばれる　引数はエラーの有無
+	,vmc1_bFp_v fp_can_existSendDat_	//existSendDat関数が実行可能かを問い合わせる
+	,vmc1_bFp_v fp_existSendDat_		//送信が必要なデータの有無の確認
+	,vmc1_bFp_v fp_can_iniSendDat_		//iniSendDatを実行して良いかの確認に呼ばれる
+	,vmc1_vFp_pdid_pdsize fp_iniSendDat_//Dat送信確定時に呼ばれる　サイズを戻す
+	,vmc1_vFp_uc fp_finSendDat_			//Dat送信終了時に呼ばれる　引数はエラーの有無
+	,vmc1_bFp_v fp_can_send_			//sendを実行してよいかの確認に呼ばれる
+	,vmc1_ucFp_v fp_send_);				//Datの中身送信時に呼ばれる
+//VMC1を終了する
 void vmc1_release(VMC1* pVMC1);
-//VMC1������������ �����͑��M���VMCID
+//VMC1を初期化する 引数は送信先のVMCID
 void vmc1_initialize(VMC1* pVMC1,const unsigned char VMCID_[3],const unsigned char TVMCID_[3]);
-//VMC1���I�[������
+//VMC1を終端化する
 void vmc1_finalize(VMC1* pVMC1);
-//��M�f�[�^�𓊂�����\���m�F 0:�s��,1:��
+//受信データを投げ入れ可能か確認 0:不可,1:可
 hmLib_boolian  vmc1_can_recv(VMC1* pVMC1);
-//��M�f�[�^�𓊂������
+//受信データを投げ入れる
 void vmc1_recv(VMC1* pVMC1,unsigned char c_);
-//���M�f�[�^���Ăяo���\���m�F 0:�s��,1:��
+//送信データを呼び出し可能か確認 0:不可,1:可
 hmLib_boolian  vmc1_can_send(VMC1* pVMC1);
-//���M�f�[�^���Ăяo��
+//送信データを呼び出す
 unsigned char vmc1_send(VMC1* pVMC1);
-//��M�������I�ɏI��������
+//受信を強制的に終了させる
 void vmc1_force_end_recv(VMC1* pVMC1,unsigned char Err);
-//���M�������I�ɏI��������
+//送信を強制的に終了させる
 void vmc1_force_end_send(VMC1* pVMC1,unsigned char Err);
-//���M�G���[���擾����
+//送信エラーを取得する
 unsigned char vmc1_getSendErr(VMC1* pVMC1);
-//���M�G���[���N���A����
+//送信エラーをクリアする
 void vmc1_clearSendErr(VMC1* pVMC1);
-//��M�G���[���擾����
+//受信エラーを取得する
 unsigned char vmc1_getRecvErr(VMC1* pVMC1);
-//��M�G���[���N���A����
+//受信エラーをクリアする
 void vmc1_clearRecvErr(VMC1* pVMC1);
 #ifdef __cplusplus
 }	//extern "C"{

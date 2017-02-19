@@ -33,216 +33,216 @@
 #define vic1_mode_RECV		0x40
 
 //========== vic1::buf ===========
-//•â[‚Å‚«‚éŒÀ‚è•â[
+//è£œå……ã§ãã‚‹é™ã‚Šè£œå……
 void x_vic1_buf_load(vic1* pVIC1) {
-	//ŽóM‰Â”\‚Å‚ ‚éŒÀ‚èŽÀs
+	//å—ä¿¡å¯èƒ½ã§ã‚ã‚‹é™ã‚Šå®Ÿè¡Œ
 	while(vcom1_can_getc(pVIC1->pVCom)){
-		//ŽÀÛ‚ÉŽóM
+		//å®Ÿéš›ã«å—ä¿¡
 		*((pVIC1->_buf_VComItr)++) = vcom1_getc(pVIC1->pVCom);
 
-		//ƒoƒbƒtƒ@‚ª‚¢‚Á‚Ï‚¢‚É‚È‚Á‚½ê‡A‚ ‚é‚¢‚Ívcom‚©‚ç‚Ì‘—M‚ª“rØ‚ê‚½ê‡
+		//ãƒãƒƒãƒ•ã‚¡ãŒã„ã£ã±ã„ã«ãªã£ãŸå ´åˆã€ã‚ã‚‹ã„ã¯vcomã‹ã‚‰ã®é€ä¿¡ãŒé€”åˆ‡ã‚ŒãŸå ´åˆ
 		if(pVIC1->_buf_VComItr+1 == pVIC1->_buf_End || vcom1_flowing(pVIC1->pVCom)==0) {
-			//crc8‚ðŒvŽZ‚µ‚ÄA––”ö‚É‘‚«ž‚Þ
+			//crc8ã‚’è¨ˆç®—ã—ã¦ã€æœ«å°¾ã«æ›¸ãè¾¼ã‚€
 			*(pVIC1->_buf_VComItr) = crc8_puts(0x00,pVIC1->_buf_Begin,pVIC1->_buf_VComItr - pVIC1->_buf_Begin);
                         ++(pVIC1->_buf_VComItr);
 			break;
 		}
 	}
 }
-//ƒoƒbƒtƒ@‰Šú‰»
+//ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ–
 void _vic1_buf_initialize(vic1* pVIC1, unsigned char* BufBegin, unsigned char* BufEnd) {
 	pVIC1->_buf_Begin=BufBegin;
 	pVIC1->_buf_End=BufEnd;
 	pVIC1->_buf_VComItr=BufBegin;
 	pVIC1->_buf_GateItr=BufBegin;
 }
-//ƒoƒbƒtƒ@I’[‰»
+//ãƒãƒƒãƒ•ã‚¡çµ‚ç«¯åŒ–
 void _vic1_buf_finalize(vic1* pVIC1) {
 	pVIC1->_buf_Begin=0;
 	pVIC1->_buf_End=0;
 	pVIC1->_buf_VComItr=0;
 	pVIC1->_buf_GateItr=0;
 }
-//ƒoƒbƒtƒ@‚Ö‘‚«ž‚ñ‚¾ƒf[ƒ^‚ðˆ—
+//ãƒãƒƒãƒ•ã‚¡ã¸æ›¸ãè¾¼ã‚“ã ãƒ‡ãƒ¼ã‚¿ã‚’å‡¦ç†
 void _vic1_buf_flush(vic1* pVIC1) {
 	unsigned char CRC8;
 
-	//‚·‚Å‚ÉŽ¸”s‚µ‚Ä‚¢‚ê‚Î–³Ž‹
+	//ã™ã§ã«å¤±æ•—ã—ã¦ã„ã‚Œã°ç„¡è¦–
 	if(pVIC1->Fail==1)return;
 	
-	//‚»‚à‚»‚àŽóM‚µ‚Ä‚¢‚È‚¯‚ê‚Î–³Ž‹
+	//ãã‚‚ãã‚‚å—ä¿¡ã—ã¦ã„ãªã‘ã‚Œã°ç„¡è¦–
 	if(pVIC1->_buf_GateItr==pVIC1->_buf_Begin) {
-		//Ž¸”s‚µ‚½‚±‚Æ‚ð’Ê’m
+		//å¤±æ•—ã—ãŸã“ã¨ã‚’é€šçŸ¥
 		pVIC1->Fail=1;
-		//Iterator‚ð‰ŠúˆÊ’u‚Ö
+		//Iteratorã‚’åˆæœŸä½ç½®ã¸
 		pVIC1->_buf_VComItr=pVIC1->_buf_Begin;
 		pVIC1->_buf_GateItr=pVIC1->_buf_Begin;
 
 		return;
 	}
 
-	//1byte–ß‚·
+	//1byteæˆ»ã™
 	--(pVIC1->_buf_GateItr);
 
-	//GateItr‚Ü‚Å‚Ìƒ`ƒFƒbƒNƒTƒ€‚ð‰‰ŽZ
+	//GateItrã¾ã§ã®ãƒã‚§ãƒƒã‚¯ã‚µãƒ ã‚’æ¼”ç®—
 	CRC8=crc8_puts(0x00, pVIC1->_buf_Begin, pVIC1->_buf_GateItr - pVIC1->_buf_Begin);
 
-	//ƒ`ƒFƒbƒNƒTƒ€‚ÉŽ¸”s‚µ‚Ä‚¢‚éê‡‚Í”jŠü
+	//ãƒã‚§ãƒƒã‚¯ã‚µãƒ ã«å¤±æ•—ã—ã¦ã„ã‚‹å ´åˆã¯ç ´æ£„
 	if(*(pVIC1->_buf_GateItr)!=CRC8) {
-		//Ž¸”s‚µ‚½‚±‚Æ‚ð’Ê’m
+		//å¤±æ•—ã—ãŸã“ã¨ã‚’é€šçŸ¥
 		pVIC1->Fail=1;
-		//Iterator‚ð‰ŠúˆÊ’u‚Ö
+		//Iteratorã‚’åˆæœŸä½ç½®ã¸
 		pVIC1->_buf_VComItr=pVIC1->_buf_Begin;
 		pVIC1->_buf_GateItr=pVIC1->_buf_Begin;
 
 		return;
 	}
 
-	//ƒf[ƒ^ƒZ[ƒu
-	//VCom‚É‡ŽŸ“Š‚°“ü‚ê‚é
+	//ãƒ‡ãƒ¼ã‚¿ã‚»ãƒ¼ãƒ–
+	//VComã«é †æ¬¡æŠ•ã’å…¥ã‚Œã‚‹
 	pVIC1->_buf_VComItr = pVIC1->_buf_Begin;
 	while(pVIC1->_buf_VComItr!= pVIC1->_buf_GateItr) {
 		if(vcom1_can_putc(pVIC1->pVCom)==0) {
-			//ƒGƒ‰[”­•ñ
+			//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 			pVIC1->Err=vic1_error_SAVE_REJECTED;
 			break;
 		}
 		vcom1_putc(pVIC1->pVCom, *(pVIC1->_buf_VComItr++));
 	}
 
-	//Iterator‚ð‰ŠúˆÊ’u‚Ö
+	//Iteratorã‚’åˆæœŸä½ç½®ã¸
 	pVIC1->_buf_VComItr=pVIC1->_buf_Begin;
 	pVIC1->_buf_GateItr=pVIC1->_buf_Begin;
 }
-//ƒoƒbƒtƒ@‚Ì“à•”ƒf[ƒ^‚ð‚·‚×‚Ä”jŠü‚µAvcom‚É‚àPacketI—¹‚ð’Ê’m
+//ãƒãƒƒãƒ•ã‚¡ã®å†…éƒ¨ãƒ‡ãƒ¼ã‚¿ã‚’ã™ã¹ã¦ç ´æ£„ã—ã€vcomã«ã‚‚Packetçµ‚äº†ã‚’é€šçŸ¥
 void _vic1_buf_errorflush(vic1* pVIC1) {
 	pVIC1->_buf_GateItr=pVIC1->_buf_Begin;
 	pVIC1->_buf_VComItr=pVIC1->_buf_Begin;
 	vcom1_flush(pVIC1->pVCom);
 }
-//ƒoƒbƒtƒ@‚É‘‚«ž‚Ý‰Â”\‚©
+//ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã¿å¯èƒ½ã‹
 hmLib_boolian _vic1_buf_can_putc(vic1* pVIC1) {
-	//ƒoƒbƒtƒ@‚É‹ó‚«‚ª‚ ‚éê‡
-	//	‘—M‚Æˆá‚Á‚Äflush‚·‚é‚Ü‚Å‚Ç‚ê‚ªCheckSum‚©‚í‚©‚ç‚È‚¢‚Ì‚ÅA
-	//	1byte‚ ‚¯‚Ä‚¨‚­•K—v‚ª‚È‚¢“_‚É’ˆÓ
+	//ãƒãƒƒãƒ•ã‚¡ã«ç©ºããŒã‚ã‚‹å ´åˆ
+	//	é€ä¿¡ã¨é•ã£ã¦flushã™ã‚‹ã¾ã§ã©ã‚ŒãŒCheckSumã‹ã‚ã‹ã‚‰ãªã„ã®ã§ã€
+	//	1byteã‚ã‘ã¦ãŠãå¿…è¦ãŒãªã„ç‚¹ã«æ³¨æ„
 	return pVIC1->_buf_GateItr < pVIC1->_buf_End;
 }
-//ƒoƒbƒtƒ@‚Ö‘‚«ž‚Ý
+//ãƒãƒƒãƒ•ã‚¡ã¸æ›¸ãè¾¼ã¿
 void _vic1_buf_putc(vic1* pVIC1, unsigned char c) {
-	//‘‚«ž‚Ý‰Â”\‚Å‚È‚¢ê‡AƒGƒ‰[”­•ñ
+	//æ›¸ãè¾¼ã¿å¯èƒ½ã§ãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼ç™ºå ±
 	if(!_vic1_buf_can_putc(pVIC1)) {
-		//ƒGƒ‰[”­•ñ
+		//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 		pVIC1->Err=vic1_error_OVERFLOW;
-		//Ž¸”s‚µ‚½‚±‚Æ‚ð’Ê’m
+		//å¤±æ•—ã—ãŸã“ã¨ã‚’é€šçŸ¥
 		pVIC1->Fail=1;
-		//Iterator‚ð‰ŠúˆÊ’u‚Ö
+		//Iteratorã‚’åˆæœŸä½ç½®ã¸
 		pVIC1->_buf_VComItr=pVIC1->_buf_Begin;
 		pVIC1->_buf_GateItr=pVIC1->_buf_Begin;
 	}
 
-	//ƒf[ƒ^‘‚«ž‚Ý
+	//ãƒ‡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿
 	*((pVIC1->_buf_GateItr)++)=c;
 }
-//ƒoƒbƒtƒ@‚Ö‚©‚ç‚Ì“Ç‚Ýo‚µ‚ª‹æØ‚èˆÊ’u‚É‚¢‚é‚©
+//ãƒãƒƒãƒ•ã‚¡ã¸ã‹ã‚‰ã®èª­ã¿å‡ºã—ãŒåŒºåˆ‡ã‚Šä½ç½®ã«ã„ã‚‹ã‹
 hmLib_boolian _vic1_buf_flowing(vic1* pVIC1) {
-	//‘‚«ž‚ÝÏ‚Ýƒoƒbƒtƒ@––”ö‚Ü‚Å“Ç‚Ýo‚µ‚Ä‚¢‚È‚¢
-	//‚ ‚é‚¢‚ÍAƒoƒbƒtƒ@––”ö‚Ü‚Å‘‚«ž‚ñ‚Å‚¨‚ç‚¸‚©‚Âƒf[ƒ^‚ÍŒp‘±‚µ‚Ä‚¢‚éivcom‚©‚çŽóM—]’n‚ª‚ ‚éj
+	//æ›¸ãè¾¼ã¿æ¸ˆã¿ãƒãƒƒãƒ•ã‚¡æœ«å°¾ã¾ã§èª­ã¿å‡ºã—ã¦ã„ãªã„
+	//ã‚ã‚‹ã„ã¯ã€ãƒãƒƒãƒ•ã‚¡æœ«å°¾ã¾ã§æ›¸ãè¾¼ã‚“ã§ãŠã‚‰ãšã‹ã¤ãƒ‡ãƒ¼ã‚¿ã¯ç¶™ç¶šã—ã¦ã„ã‚‹ï¼ˆvcomã‹ã‚‰å—ä¿¡ä½™åœ°ãŒã‚ã‚‹ï¼‰
 	return pVIC1->_buf_GateItr < pVIC1->_buf_VComItr
 		|| (pVIC1->_buf_VComItr < pVIC1->_buf_End && vcom1_flowing(pVIC1->pVCom));
 }
-//ƒoƒbƒtƒ@‚©‚ç‚Ì“Ç‚Ýo‚µ‰Â”\‚©
+//ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰ã®èª­ã¿å‡ºã—å¯èƒ½ã‹
 hmLib_boolian _vic1_buf_can_getc(vic1* pVIC1) {
-	//‘‚«ž‚ÝÏ‚Ýƒoƒbƒtƒ@––”ö‚Ü‚Å“Ç‚Ýo‚µ‚Ä‚¢‚È‚¢
-	//‚ ‚é‚¢‚ÍAvcom‚©‚çŽóM‰Â”\‚Å‚ ‚é
+	//æ›¸ãè¾¼ã¿æ¸ˆã¿ãƒãƒƒãƒ•ã‚¡æœ«å°¾ã¾ã§èª­ã¿å‡ºã—ã¦ã„ãªã„
+	//ã‚ã‚‹ã„ã¯ã€vcomã‹ã‚‰å—ä¿¡å¯èƒ½ã§ã‚ã‚‹
 	return pVIC1->_buf_GateItr != pVIC1->_buf_VComItr
 		|| vcom1_can_getc(pVIC1->pVCom);
 }
-//ƒoƒbƒtƒ@‚©‚ç‚Ì“Ç‚Ýo‚µ
+//ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰ã®èª­ã¿å‡ºã—
 unsigned char _vic1_buf_getc(vic1* pVIC1) {
-	//ƒoƒbƒtƒ@‚Ö‚Ì•â[—]’n‚ª‚ ‚éê‡
+	//ãƒãƒƒãƒ•ã‚¡ã¸ã®è£œå……ä½™åœ°ãŒã‚ã‚‹å ´åˆ
 	if(pVIC1->_buf_VComItr != pVIC1->_buf_End && vcom1_flowing(pVIC1->pVCom)){
-		//•â[‚Å‚«‚éŒÀ‚è•â[
+		//è£œå……ã§ãã‚‹é™ã‚Šè£œå……
 		x_vic1_buf_load(pVIC1);
-	}//•â[—]’n‚ª‚È‚¢‚ª‘S‚Ä‘—M‚µ‚Â‚­‚µ‚½ => V‹Kƒoƒbƒtƒ@‚ðì‚ê‚éê‡
+	}//è£œå……ä½™åœ°ãŒãªã„ãŒå…¨ã¦é€ä¿¡ã—ã¤ãã—ãŸ => æ–°è¦ãƒãƒƒãƒ•ã‚¡ã‚’ä½œã‚Œã‚‹å ´åˆ
 	else if(pVIC1->_buf_GateItr == pVIC1->_buf_VComItr) {
-		//Iterator‚ð‰ŠúˆÊ’u‚Ö
+		//Iteratorã‚’åˆæœŸä½ç½®ã¸
 		pVIC1->_buf_GateItr=pVIC1->_buf_Begin;
 		pVIC1->_buf_VComItr=pVIC1->_buf_Begin;
 
-		//•â[‚Å‚«‚éŒÀ‚è•â[
+		//è£œå……ã§ãã‚‹é™ã‚Šè£œå……
 		x_vic1_buf_load(pVIC1);
 	}
 
-	//‚Ü‚¾Žc‚Á‚Ä‚¢‚éê‡
+	//ã¾ã æ®‹ã£ã¦ã„ã‚‹å ´åˆ
 	if(pVIC1->_buf_GateItr < pVIC1->_buf_VComItr) {
 		return *((pVIC1->_buf_GateItr)++);
 	} else {
-		//ƒGƒ‰[”­•ñ
+		//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 		pVIC1->Err=vic1_error_OVERREAD;
 		return 0;
 	}
 }
-//ƒoƒbƒtƒ@‚Ö‚Ì‘‚«ž‚Ý/“Ç‚Ýž‚Ý‚ðI—¹‚µAƒoƒbƒtƒ@‚ðƒNƒŠƒA‚·‚é
+//ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿/èª­ã¿è¾¼ã¿ã‚’çµ‚äº†ã—ã€ãƒãƒƒãƒ•ã‚¡ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 void _vic1_buf_clear(vic1* pVIC1) {
 	pVIC1->_buf_GateItr=pVIC1->_buf_Begin;
 	pVIC1->_buf_VComItr=pVIC1->_buf_Begin;
 }
-//ƒoƒbƒtƒ@‚Ö‚Ì“Ç‚Ýž‚Ý‚ð‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
+//ãƒãƒƒãƒ•ã‚¡ã¸ã®èª­ã¿è¾¼ã¿ã‚’ãªã‹ã£ãŸã“ã¨ã«ã™ã‚‹
 void _vic1_buf_cancel_get(vic1* pVIC1) { pVIC1->_buf_GateItr=pVIC1->_buf_Begin; }
 
 //========== vic1::gate ===========
-//-------- Mode‘JˆÚ4ŠÖ” ----------------
-//ƒRƒ}ƒ“ƒh‘—MŠ®—¹Žž
+//-------- Modeé·ç§»4é–¢æ•° ----------------
+//ã‚³ãƒžãƒ³ãƒ‰é€ä¿¡å®Œäº†æ™‚
 void _vic1_inform_send(vic1* pVIC1) {
-	//ActiveCmd‚É“o˜^
+	//ActiveCmdã«ç™»éŒ²
 	pVIC1->ActiveCmd=pVIC1->Send;
 
 	switch(pVIC1->Mode) {
 	case vic1_mode_IDLE:
-		//‚Ð‚Ü‚É‚È‚Á‚½‚µA˜b‚µ‚½‚¢l‚ª‚¢‚½ê‡
+		//ã²ã¾ã«ãªã£ãŸã—ã€è©±ã—ãŸã„äººãŒã„ãŸå ´åˆ
 		if(pVIC1->NextTergetCh!=vic1_ch_NULL) {
 			pVIC1->TergetCh=pVIC1->NextTergetCh;
 			pVIC1->NextTergetCh=vic1_ch_NULL;
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_WHAT;
 
-		}//–{“–‚É’P‚É‰É‚Èê‡
+		}//æœ¬å½“ã«å˜ã«æš‡ãªå ´åˆ
 		else {
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_NULL;
 		}
 		break;
 	case vic1_mode_RESEND:
-		//com‚©‚ç‘—Mƒf[ƒ^‚ðŽæ“¾‰Â”\‚Èê‡
+		//comã‹ã‚‰é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—å¯èƒ½ãªå ´åˆ
 		if(_vic1_buf_can_getc(pVIC1)) {
-			//ƒf[ƒ^‘—MŠJŽn
+			//ãƒ‡ãƒ¼ã‚¿é€ä¿¡é–‹å§‹
 			pVIC1->Mode=vic1_mode_SEND;
-			pVIC1->SendCnt=0xFF;		//Data‘—M‚Ìê‡‚Ì‚ÝASendCnt‚ðff‚ÉƒZƒbƒg‚·‚é•K—v‚ª‚ ‚é
+			pVIC1->SendCnt=0xFF;		//Dataé€ä¿¡ã®å ´åˆã®ã¿ã€SendCntã‚’ffã«ã‚»ãƒƒãƒˆã™ã‚‹å¿…è¦ãŒã‚ã‚‹
 			pVIC1->Send=vic1_cmd_DATA;
 		} else {
-			//Stop‘—M
+			//Stopé€ä¿¡
 			pVIC1->Mode=vic1_mode_STOP;
 			pVIC1->Send=vic1_cmd_STOP;
 			pVIC1->SendCnt=0;
 		}
 		break;
 	default:
-		//‘—M‚ðI‚¦‚Ä‘Ò‹@ó‘Ô‚É“ü‚é
+		//é€ä¿¡ã‚’çµ‚ãˆã¦å¾…æ©ŸçŠ¶æ…‹ã«å…¥ã‚‹
 		pVIC1->SendCnt=0;
 		pVIC1->Send=vic1_cmd_NULL;
 		break;
 	}
 }
-//Ž©•ªˆ¶‚ÌƒRƒ}ƒ“ƒhŽóMŠ®—¹
+//è‡ªåˆ†å®›ã®ã‚³ãƒžãƒ³ãƒ‰å—ä¿¡å®Œäº†
 void _vic1_inform_recv(vic1* pVIC1) {
 	pVIC1->RecvCnt=0;
-	//‚Ð‚Ü‚É‚µ‚Ä‚¢‚é‚Æ‚«
+	//ã²ã¾ã«ã—ã¦ã„ã‚‹ã¨ã
 	if(pVIC1->Mode==vic1_mode_IDLE) {
-		//‘ŠŽè‚©‚ç‚ÌƒRƒ}ƒ“ƒh“à—e‚Å•ªŠò
+		//ç›¸æ‰‹ã‹ã‚‰ã®ã‚³ãƒžãƒ³ãƒ‰å†…å®¹ã§åˆ†å²
 		switch(pVIC1->Recv) {
-			//‘ŠŽè‚ªStart—v‹‚ð‚µ‚Ä‚«‚½ê‡
+			//ç›¸æ‰‹ãŒStartè¦æ±‚ã‚’ã—ã¦ããŸå ´åˆ
 		case vic1_cmd_START:
-			//Ack‚ð•Ô‚µAŽ©g‚ðRecv‚É‚·‚é
+			//Ackã‚’è¿”ã—ã€è‡ªèº«ã‚’Recvã«ã™ã‚‹
 			pVIC1->Mode=vic1_mode_RECV;
 			_vic1_buf_clear(pVIC1);
 			pVIC1->TergetCh=pVIC1->RecvCh;
@@ -250,10 +250,10 @@ void _vic1_inform_recv(vic1* pVIC1) {
 			pVIC1->Send=vic1_cmd_ACK;
 			break;
 		case vic1_cmd_ERR:
-			//–³Ž‹‚·‚é
+			//ç„¡è¦–ã™ã‚‹
 			break;
 		default:
-			//‚¨‚©‚µ‚È‚±‚Æ‚ðŒ¾‚Á‚Ä‚¢‚é‚Ì‚ÅA‹³‚¦‚Ä‚ ‚°‚é
+			//ãŠã‹ã—ãªã“ã¨ã‚’è¨€ã£ã¦ã„ã‚‹ã®ã§ã€æ•™ãˆã¦ã‚ã’ã‚‹
 			pVIC1->TergetCh=pVIC1->RecvCh;
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ERR;
@@ -261,290 +261,290 @@ void _vic1_inform_recv(vic1* pVIC1) {
 		return;
 	}
 
-	//’ÊM’†‚É‘ŠŽè‚ª’m‚ç‚È‚¢l‚©‚ç’ÊM‚ª—ˆ‚½ê‡
+	//é€šä¿¡ä¸­ã«ç›¸æ‰‹ãŒçŸ¥ã‚‰ãªã„äººã‹ã‚‰é€šä¿¡ãŒæ¥ãŸå ´åˆ
 	if(pVIC1->RecvCh!=pVIC1->TergetCh) {
-		//Start—v‹‚¾‚Á‚½ê‡AØ‚è‘Ö‚¦—\–ñ
+		//Startè¦æ±‚ã ã£ãŸå ´åˆã€åˆ‡ã‚Šæ›¿ãˆäºˆç´„
 		if(pVIC1->Recv==vic1_cmd_START && pVIC1->NextTergetCh>pVIC1->RecvCh) {
 			pVIC1->NextTergetCh=pVIC1->RecvCh;
 			return;
 		}
-		//‚»‚êˆÈŠO‚È‚çA–³Ž‹
+		//ãã‚Œä»¥å¤–ãªã‚‰ã€ç„¡è¦–
 	}
 
-	//•ÔŽ–‚ª—ˆ‚½‚Ì‚ÅA‚Ð‚Æ‚Ü‚¸ƒ^ƒCƒ€ƒAƒEƒgƒŠƒZƒbƒg
+	//è¿”äº‹ãŒæ¥ãŸã®ã§ã€ã²ã¨ã¾ãšã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆãƒªã‚»ãƒƒãƒˆ
 	pVIC1->Fp_timeout_restart();
-	//•ÔŽ–‚ª—ˆ‚½‚Ì‚ÅAƒ^ƒCƒ€ƒAƒEƒg‚ÌƒJƒEƒ“ƒg‚ð–ß‚·
+	//è¿”äº‹ãŒæ¥ãŸã®ã§ã€ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆã®ã‚«ã‚¦ãƒ³ãƒˆã‚’æˆ»ã™
 	pVIC1->TimeOutCnt=0;
 
-	//ƒGƒ‰[‚Ìê‡‚Í–â“š–³—p‚ÅIDLE‚Ö
+	//ã‚¨ãƒ©ãƒ¼ã®å ´åˆã¯å•ç­”ç„¡ç”¨ã§IDLEã¸
 	if(pVIC1->Recv == vic1_cmd_ERR){
-		//ŽŸ‚É˜b‚µ‚©‚¯‚é‘ŠŽè‚ª“o˜^‚³‚ê‚Ä‚¢‚½ê‡
+		//æ¬¡ã«è©±ã—ã‹ã‘ã‚‹ç›¸æ‰‹ãŒç™»éŒ²ã•ã‚Œã¦ã„ãŸå ´åˆ
 		if(pVIC1->NextTergetCh!=vic1_ch_NULL) {
-			//WHATƒRƒ}ƒ“ƒh‚ð•Ô‘—‚µAŽ©•ª‚ÍIDLE‚É‚È‚é
+			//WHATã‚³ãƒžãƒ³ãƒ‰ã‚’è¿”é€ã—ã€è‡ªåˆ†ã¯IDLEã«ãªã‚‹
 			pVIC1->Mode=vic1_mode_IDLE;
 			pVIC1->Fp_timeout_disable();
 			pVIC1->TergetCh=pVIC1->NextTergetCh;
 			pVIC1->NextTergetCh=vic1_ch_NULL;
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_WHAT;
-		}//‰½‚Ì—\’è‚à‚È‚¢ê‡
+		}//ä½•ã®äºˆå®šã‚‚ãªã„å ´åˆ
 		else {
-			//ƒ‚[ƒh‚ðIdle‚É‚µA–Ù‚é
+			//ãƒ¢ãƒ¼ãƒ‰ã‚’Idleã«ã—ã€é»™ã‚‹
 			pVIC1->Mode=vic1_mode_IDLE;
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_NULL;
 		}
-	}//RecvŽž
+	}//Recvæ™‚
 	else if(pVIC1->Mode==vic1_mode_RECV) {
-		//ƒf[ƒ^‚ð‘—‚Á‚Ä‚«‚½ê‡
+		//ãƒ‡ãƒ¼ã‚¿ã‚’é€ã£ã¦ããŸå ´åˆ
 		switch(pVIC1->Recv) {
 		case vic1_cmd_START:
-			//ACK‘—M
+			//ACKé€ä¿¡
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ACK;
 			break;
 		case vic1_cmd_DATA:
-			//ƒtƒ‰ƒbƒVƒ…
+			//ãƒ•ãƒ©ãƒƒã‚·ãƒ¥
 			_vic1_buf_flush(pVIC1);
 
-			//ŽóM‚É¬Œ÷‚µ‚Ä‚¢‚é‚©Šm”F
+			//å—ä¿¡ã«æˆåŠŸã—ã¦ã„ã‚‹ã‹ç¢ºèª
 			if(pVIC1->Fail==0) {
-				//ACK‘—M
+				//ACKé€ä¿¡
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_ACK;
 			} else {
-				//ƒtƒ‰ƒO‚ð‚¨‚ë‚·
+				//ãƒ•ãƒ©ã‚°ã‚’ãŠã‚ã™
 				pVIC1->Fail=0;
-				//NACK‘—M
+				//NACKé€ä¿¡
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_NACK;
 			}
 			break;
 		case vic1_cmd_STOP:
-			//ƒpƒPƒbƒgI—¹’Ê’m
+			//ãƒ‘ã‚±ãƒƒãƒˆçµ‚äº†é€šçŸ¥
 			_vic1_buf_errorflush(pVIC1);
 
-			//com‚©‚ç‘—Mƒf[ƒ^‚ðŽæ“¾‰Â”\‚Èê‡(Ü‚è•Ô‚µ‚È‚Ì‚Åflowing‚Í‹C‚É‚µ‚È‚¢)
+			//comã‹ã‚‰é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—å¯èƒ½ãªå ´åˆ(æŠ˜ã‚Šè¿”ã—ãªã®ã§flowingã¯æ°—ã«ã—ãªã„)
 			if(_vic1_buf_can_getc(pVIC1)) {
-				//‘—ŽóM“ü‚ê‘Ö‚¦—v‹
+				//é€å—ä¿¡å…¥ã‚Œæ›¿ãˆè¦æ±‚
 				pVIC1->Mode=vic1_mode_START;
 				pVIC1->Fp_timeout_restart();
 				pVIC1->Fp_timeout_enable();
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_NACK;
-			}//com‚©‚ç‘—Mƒf[ƒ^‚ðŽæ“¾‚Å‚«‚È‚¢ê‡
+			}//comã‹ã‚‰é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã§ããªã„å ´åˆ
 			else {
-				//I—¹Žó‚¯“ü‚ê
+				//çµ‚äº†å—ã‘å…¥ã‚Œ
 				pVIC1->Mode=vic1_mode_IDLE;
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_ACK;
 			}
 			break;
 		default:
-			//ƒpƒPƒbƒgI—¹’Ê’m
+			//ãƒ‘ã‚±ãƒƒãƒˆçµ‚äº†é€šçŸ¥
 			_vic1_buf_errorflush(pVIC1);
 
-			//‚¨‚©‚µ‚È‚±‚Æ‚ðŒ¾‚Á‚Ä‚¢‚é‚Ì‚ÅA‹³‚¦‚Ä‚ ‚°‚é
+			//ãŠã‹ã—ãªã“ã¨ã‚’è¨€ã£ã¦ã„ã‚‹ã®ã§ã€æ•™ãˆã¦ã‚ã’ã‚‹
 			pVIC1->Mode=vic1_mode_IDLE;
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ERR;
 			break;
 		}
 
-		//ReecvMode‚ÌŽž‚É‚ÍAƒf[ƒ^‚ðƒoƒbƒtƒ@‚É‚¢‚ê‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é‚Ì‚ÅAƒŠƒZƒbƒgB
+		//ReecvModeã®æ™‚ã«ã¯ã€ãƒ‡ãƒ¼ã‚¿ã‚’ãƒãƒƒãƒ•ã‚¡ã«ã„ã‚Œã¦ã—ã¾ã£ã¦ã„ã‚‹ã®ã§ã€ãƒªã‚»ãƒƒãƒˆã€‚
 		_vic1_buf_clear(pVIC1);
 		pVIC1->Fail=0;
-	}//StartƒRƒ}ƒ“ƒh‚É‘Î‚·‚é•Ô“š
+	}//Startã‚³ãƒžãƒ³ãƒ‰ã«å¯¾ã™ã‚‹è¿”ç­”
 	else if(pVIC1->Mode==vic1_mode_START && (pVIC1->ActiveCmd==vic1_cmd_START || pVIC1->ActiveCmd==vic1_cmd_NACK)) {
 		switch(pVIC1->Recv) {
-		//‘ŠŽè‚ªŽó‘ø‚µ‚½ê‡
+		//ç›¸æ‰‹ãŒå—è«¾ã—ãŸå ´åˆ
 		case vic1_cmd_ACK:
-			//com‚©‚ç‘—Mƒf[ƒ^‚ðŽæ“¾‰Â”\‚Èê‡
+			//comã‹ã‚‰é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—å¯èƒ½ãªå ´åˆ
 			if(_vic1_buf_can_getc(pVIC1)) {
-				//‘—M’†‚¾‚Á‚½ê‡
+				//é€ä¿¡ä¸­ã ã£ãŸå ´åˆ
 				if(pVIC1->Send!=vic1_cmd_NULL) {
-					//ESC‚ðˆê’U‘—M
+					//ESCã‚’ä¸€æ—¦é€ä¿¡
 					pVIC1->Mode=vic1_mode_RESEND;
 					pVIC1->SendCnt=0;
 					pVIC1->Send=vic1_cmd_ESC;
-				}//‘¦‘—M‰Â”\‚Èê‡
+				}//å³é€ä¿¡å¯èƒ½ãªå ´åˆ
 				else {
-					//DATA‚ð‘—M
+					//DATAã‚’é€ä¿¡
 					pVIC1->Mode=vic1_mode_SEND;
-					pVIC1->SendCnt=0xFF;		//Data‘—M‚Ìê‡‚Ì‚ÝASendCnt‚ðff‚ÉƒZƒbƒg‚·‚é•K—v‚ª‚ ‚é
+					pVIC1->SendCnt=0xFF;		//Dataé€ä¿¡ã®å ´åˆã®ã¿ã€SendCntã‚’ffã«ã‚»ãƒƒãƒˆã™ã‚‹å¿…è¦ãŒã‚ã‚‹
 					pVIC1->Send=vic1_cmd_DATA;
 				}
-			}//com‚©‚ç‘—Mƒf[ƒ^‚ðŽæ“¾‚Å‚«‚È‚¢ê‡
+			}//comã‹ã‚‰é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã§ããªã„å ´åˆ
 			else {
-				//Stop‘—M
+				//Stopé€ä¿¡
 				pVIC1->Mode=vic1_mode_STOP;
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_STOP;
 			}
 			break;
-			//‘ŠŽè‚ª‹‘”Û‚µ‚Ä‚«‚½ê‡
+			//ç›¸æ‰‹ãŒæ‹’å¦ã—ã¦ããŸå ´åˆ
 		case vic1_cmd_NACK:
-			//ŽŸ‚É˜b‚µ‚©‚¯‚é‘ŠŽè‚ª“o˜^‚³‚ê‚Ä‚¢‚½ê‡
+			//æ¬¡ã«è©±ã—ã‹ã‘ã‚‹ç›¸æ‰‹ãŒç™»éŒ²ã•ã‚Œã¦ã„ãŸå ´åˆ
 			if(pVIC1->NextTergetCh!=vic1_ch_NULL) {
-				//WHATƒRƒ}ƒ“ƒh‚ð•Ô‘—‚µAŽ©•ª‚ÍIDLE‚É‚È‚é
+				//WHATã‚³ãƒžãƒ³ãƒ‰ã‚’è¿”é€ã—ã€è‡ªåˆ†ã¯IDLEã«ãªã‚‹
 				pVIC1->Mode=vic1_mode_IDLE;
 				pVIC1->Fp_timeout_disable();
 				pVIC1->TergetCh=pVIC1->NextTergetCh;
 				pVIC1->NextTergetCh=vic1_ch_NULL;
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_WHAT;
-			}//‰½‚Ì—\’è‚à‚È‚¢ê‡
+			}//ä½•ã®äºˆå®šã‚‚ãªã„å ´åˆ
 			else {
-				//ƒ‚[ƒh‚ðIdle‚É‚µA–Ù‚é
+				//ãƒ¢ãƒ¼ãƒ‰ã‚’Idleã«ã—ã€é»™ã‚‹
 				pVIC1->Mode=vic1_mode_IDLE;
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_NULL;
 			}
 			break;
-			//‘ŠŽè‚ªStart—v‹‚ðd‚Ë‚Ä‚«‚½ê‡
+			//ç›¸æ‰‹ãŒStartè¦æ±‚ã‚’é‡ã­ã¦ããŸå ´åˆ
 		case vic1_cmd_START:
-			//‘ŠŽè‚æ‚èŽ©•ª‚Ì•û‚ª‘å‚«‚Èch‚Ì‚Æ‚«
+			//ç›¸æ‰‹ã‚ˆã‚Šè‡ªåˆ†ã®æ–¹ãŒå¤§ããªchã®ã¨ã
 			if(pVIC1->RecvCh < pVIC1->Ch) {
-				//Ack‚ð•Ô‚µAŽ©g‚ðRecv‚É‚·‚é
+				//Ackã‚’è¿”ã—ã€è‡ªèº«ã‚’Recvã«ã™ã‚‹
 				pVIC1->Mode=vic1_mode_RECV;
 				pVIC1->Fp_timeout_disable();
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_ACK;
 			}
-			//¬‚³‚¢ê‡‚Í–³Ž‹
+			//å°ã•ã„å ´åˆã¯ç„¡è¦–
 			break;
-			//‚»‚êˆÈŠO‚Ì‚±‚Æ‚ðŒ¾‚Á‚Ä‚¢‚éê‡
+			//ãã‚Œä»¥å¤–ã®ã“ã¨ã‚’è¨€ã£ã¦ã„ã‚‹å ´åˆ
 		default:
-			//‚¨‚©‚µ‚È‚±‚Æ‚ðŒ¾‚Á‚Ä‚¢‚é‚Ì‚ÅA‹³‚¦‚Ä‚ ‚°‚é
+			//ãŠã‹ã—ãªã“ã¨ã‚’è¨€ã£ã¦ã„ã‚‹ã®ã§ã€æ•™ãˆã¦ã‚ã’ã‚‹
 			pVIC1->Mode=vic1_mode_IDLE;
 			pVIC1->Fp_timeout_disable();
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ERR;
 			break;
 		}
-	}//DATAƒRƒ}ƒ“ƒh‚É‘Î‚·‚é•Ô“š
+	}//DATAã‚³ãƒžãƒ³ãƒ‰ã«å¯¾ã™ã‚‹è¿”ç­”
 	else if(pVIC1->Mode==vic1_mode_SEND && pVIC1->ActiveCmd==vic1_cmd_DATA) {
 		switch(pVIC1->Recv) {
-			//‘ŠŽè‚ªŽóM‚É¬Œ÷‚µ‚Ä‚¢‚½ê‡
+			//ç›¸æ‰‹ãŒå—ä¿¡ã«æˆåŠŸã—ã¦ã„ãŸå ´åˆ
 		case vic1_cmd_ACK:
-			//com‚©‚ç‘—Mƒf[ƒ^‚ðŽæ“¾‰Â”\‚Èê‡iDATA‚ÉŒp‘±«‚ª‚ ‚éê‡‚ÉŒÀ‚éj
+			//comã‹ã‚‰é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—å¯èƒ½ãªå ´åˆï¼ˆDATAã«ç¶™ç¶šæ€§ãŒã‚ã‚‹å ´åˆã«é™ã‚‹ï¼‰
 			if(vcom1_can_getc(pVIC1->pVCom) && vcom1_flowing(pVIC1->pVCom)) {
-				//‘—M’†‚¾‚Á‚½ê‡
+				//é€ä¿¡ä¸­ã ã£ãŸå ´åˆ
 				if(pVIC1->Send!=vic1_cmd_NULL) {
-					//ESC‚ðˆê’U‘—M
+					//ESCã‚’ä¸€æ—¦é€ä¿¡
 					pVIC1->Mode=vic1_mode_RESEND;
 					pVIC1->SendCnt=0;
 					pVIC1->Send=vic1_cmd_ESC;
-				}//‘¦‘—M‰Â”\‚Èê‡
+				}//å³é€ä¿¡å¯èƒ½ãªå ´åˆ
 				else {
-					//DATA‚ð‘—M
+					//DATAã‚’é€ä¿¡
 					pVIC1->Mode=vic1_mode_SEND;
-					pVIC1->SendCnt=0xFF;		//Data‘—M‚Ìê‡‚Ì‚ÝASendCnt‚ðff‚ÉƒZƒbƒg‚·‚é•K—v‚ª‚ ‚é
+					pVIC1->SendCnt=0xFF;		//Dataé€ä¿¡ã®å ´åˆã®ã¿ã€SendCntã‚’ffã«ã‚»ãƒƒãƒˆã™ã‚‹å¿…è¦ãŒã‚ã‚‹
 					pVIC1->Send=vic1_cmd_DATA;
 				}
-			}//com‚©‚ç‘—Mƒf[ƒ^‚ðŽæ“¾‚Å‚«‚È‚¢ê‡
+			}//comã‹ã‚‰é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã§ããªã„å ´åˆ
 			else {
-				//Stop‘—M
+				//Stopé€ä¿¡
 				pVIC1->Mode=vic1_mode_STOP;
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_STOP;
 			}
 			break;
-			//‘ŠŽè‚ªŽóM‚ÉŽ¸”s‚µ‚Ä‚¢‚½ê‡
+			//ç›¸æ‰‹ãŒå—ä¿¡ã«å¤±æ•—ã—ã¦ã„ãŸå ´åˆ
 		case vic1_cmd_NACK:
-			//ƒoƒbƒtƒ@‚Ì“Ç‚Ýo‚µˆÊ’u‚ð‰Šú‰»
+			//ãƒãƒƒãƒ•ã‚¡ã®èª­ã¿å‡ºã—ä½ç½®ã‚’åˆæœŸåŒ–
 			_vic1_buf_cancel_get(pVIC1);
-			//‘—M’†‚¾‚Á‚½ê‡
+			//é€ä¿¡ä¸­ã ã£ãŸå ´åˆ
 			if(pVIC1->Send!=vic1_cmd_NULL) {
-				//ESC‚ðˆê’U‘—M
+				//ESCã‚’ä¸€æ—¦é€ä¿¡
 				pVIC1->Mode=vic1_mode_RESEND;
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_ESC;
-			}//‘¦‘—M‰Â”\‚Èê‡
+			}//å³é€ä¿¡å¯èƒ½ãªå ´åˆ
 			else {
-				//DATA‚ð‘—M
+				//DATAã‚’é€ä¿¡
 				pVIC1->Mode=vic1_mode_SEND;
-				pVIC1->SendCnt=0xFF;		//Data‘—M‚Ìê‡‚Ì‚ÝASendCnt‚ðff‚ÉƒZƒbƒg‚·‚é•K—v‚ª‚ ‚é
+				pVIC1->SendCnt=0xFF;		//Dataé€ä¿¡ã®å ´åˆã®ã¿ã€SendCntã‚’ffã«ã‚»ãƒƒãƒˆã™ã‚‹å¿…è¦ãŒã‚ã‚‹
 				pVIC1->Send=vic1_cmd_DATA;
 			}
 			break;
 		default:
-			//‚¨‚©‚µ‚È‚±‚Æ‚ðŒ¾‚Á‚Ä‚¢‚é‚Ì‚ÅA‹³‚¦‚Ä‚ ‚°‚é
+			//ãŠã‹ã—ãªã“ã¨ã‚’è¨€ã£ã¦ã„ã‚‹ã®ã§ã€æ•™ãˆã¦ã‚ã’ã‚‹
 			pVIC1->Mode=vic1_mode_IDLE;
 			pVIC1->Fp_timeout_disable();
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ERR;
 		}
-	}//StopƒRƒ}ƒ“ƒh‚É‘Î‚·‚é•Ô“š
+	}//Stopã‚³ãƒžãƒ³ãƒ‰ã«å¯¾ã™ã‚‹è¿”ç­”
 	else if(pVIC1->Mode==vic1_mode_STOP && pVIC1->ActiveCmd==vic1_cmd_STOP) {
 		switch(pVIC1->Recv) {
-		//‘ŠŽè‚ªŽó‘ø‚µ‚½ê‡
+		//ç›¸æ‰‹ãŒå—è«¾ã—ãŸå ´åˆ
 		case vic1_cmd_ACK:
-			//ŽŸ‚É˜b‚µ‚©‚¯‚é‘ŠŽè‚ª“o˜^‚³‚ê‚Ä‚¢‚½ê‡
+			//æ¬¡ã«è©±ã—ã‹ã‘ã‚‹ç›¸æ‰‹ãŒç™»éŒ²ã•ã‚Œã¦ã„ãŸå ´åˆ
 			if(pVIC1->NextTergetCh!=vic1_ch_NULL) {
-				//WHATƒRƒ}ƒ“ƒh‚ð•Ô‘—‚µAŽ©•ª‚ÍIDLE‚É‚È‚é
+				//WHATã‚³ãƒžãƒ³ãƒ‰ã‚’è¿”é€ã—ã€è‡ªåˆ†ã¯IDLEã«ãªã‚‹
 				pVIC1->Mode=vic1_mode_IDLE;
 				pVIC1->Fp_timeout_disable();
 				pVIC1->TergetCh=pVIC1->NextTergetCh;
 				pVIC1->NextTergetCh=vic1_ch_NULL;
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_WHAT;
-			}//‰½‚Ì—\’è‚à‚È‚¢ê‡
+			}//ä½•ã®äºˆå®šã‚‚ãªã„å ´åˆ
 			else {
-				//ƒ‚[ƒh‚ðIdle‚É‚µA–Ù‚é
+				//ãƒ¢ãƒ¼ãƒ‰ã‚’Idleã«ã—ã€é»™ã‚‹
 				pVIC1->Mode=vic1_mode_IDLE;
 				pVIC1->Fp_timeout_disable();
 				pVIC1->SendCnt=0;
 				pVIC1->Send=vic1_cmd_NULL;
 			}
 			break;
-		//‘ŠŽè‚ª‹‘”Û‚µ‚Ä‚«‚½ê‡
+		//ç›¸æ‰‹ãŒæ‹’å¦ã—ã¦ããŸå ´åˆ
 		case vic1_cmd_NACK:
-			//Ž©g‚ÍŽóMƒ‚[ƒh‚É‚µA‘ŠŽè‚ÉŽó‘ø‚ÌˆÓŽv‚ð“`‚¦‚é
+			//è‡ªèº«ã¯å—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã«ã—ã€ç›¸æ‰‹ã«å—è«¾ã®æ„æ€ã‚’ä¼ãˆã‚‹
 			pVIC1->Mode=vic1_mode_RECV;
-			_vic1_buf_clear(pVIC1);	//ƒoƒbƒtƒ@‚ðƒNƒŠƒA‚µ‚ÄŽóM‚É”õ‚¦‚é
+			_vic1_buf_clear(pVIC1);	//ãƒãƒƒãƒ•ã‚¡ã‚’ã‚¯ãƒªã‚¢ã—ã¦å—ä¿¡ã«å‚™ãˆã‚‹
 			pVIC1->Fp_timeout_disable();
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ACK;
 			break;
 		default:
-			//‚¨‚©‚µ‚È‚±‚Æ‚ðŒ¾‚Á‚Ä‚¢‚é‚Ì‚ÅA‹³‚¦‚Ä‚ ‚°‚é
+			//ãŠã‹ã—ãªã“ã¨ã‚’è¨€ã£ã¦ã„ã‚‹ã®ã§ã€æ•™ãˆã¦ã‚ã’ã‚‹
 			pVIC1->Mode=vic1_mode_IDLE;
 			pVIC1->Fp_timeout_disable();
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ERR;
 		}
 	} else {
-		//‚¨‚©‚µ‚È‚±‚Æ‚ðŒ¾‚Á‚Ä‚¢‚é‚Ì‚ÅA‹³‚¦‚Ä‚ ‚°‚é
+		//ãŠã‹ã—ãªã“ã¨ã‚’è¨€ã£ã¦ã„ã‚‹ã®ã§ã€æ•™ãˆã¦ã‚ã’ã‚‹
 		pVIC1->Mode=vic1_mode_IDLE;
 		pVIC1->Fp_timeout_disable();
 		pVIC1->SendCnt=0;
 		pVIC1->Send=vic1_cmd_ERR;
 	}
 }
-//ƒf[ƒ^‚Ì—L–³‚ðŠm”F‚µ‚ÄAIDLE‚©‚çSTART‚Ö‘JˆÚ‚·‚éŠÖ”
+//ãƒ‡ãƒ¼ã‚¿ã®æœ‰ç„¡ã‚’ç¢ºèªã—ã¦ã€IDLEã‹ã‚‰STARTã¸é·ç§»ã™ã‚‹é–¢æ•°
 hmLib_boolian _vic1_checkData(vic1* pVIC1) {
-	//IDLE‚Å‚ ‚éA‘—M’†ƒRƒ}ƒ“ƒh‚ª‚È‚¢A‘—M‚µ‚½‚¢ƒf[ƒ^‚ª‚ ‚éA‚Ì‚RðŒ‚ª–ž‚½‚³‚ê‚½ê‡‚Ì‚Ý”­“®
+	//IDLEã§ã‚ã‚‹ã€é€ä¿¡ä¸­ã‚³ãƒžãƒ³ãƒ‰ãŒãªã„ã€é€ä¿¡ã—ãŸã„ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹ã€ã®ï¼“æ¡ä»¶ãŒæº€ãŸã•ã‚ŒãŸå ´åˆã®ã¿ç™ºå‹•
 	if(pVIC1->Mode==vic1_mode_IDLE && pVIC1->Send==vic1_cmd_NULL && vcom1_can_getc(pVIC1->pVCom)) {
-		//chŽæ“¾‚µAstartƒ‚[ƒh‚ÖˆÚs
+		//chå–å¾—ã—ã€startãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 		pVIC1->TergetCh=vcom1_get_ch(pVIC1->pVCom);
 		pVIC1->Mode=vic1_mode_START;
 		pVIC1->Fp_timeout_restart();
-		pVIC1->Fp_timeout_enable();	//START,REDATA,DATA,STOP‚ÍÄ‘—‹@”\•t‚«
+		pVIC1->Fp_timeout_enable();	//START,REDATA,DATA,STOPã¯å†é€æ©Ÿèƒ½ä»˜ã
 		pVIC1->SendCnt=0;
 		pVIC1->Send=vic1_cmd_START;
 		return hmLib_true;
 	}
 	return hmLib_false;
 }
-//timeout‚àƒ‚[ƒh‚ðˆê•”•Ï‚¦‚Ä‚¢‚é‚Å‚²‚´‚é
-//vic1‚ÌtimeoutƒRƒ}ƒ“ƒhÄ‘—ŠÖ”
+//timeoutã‚‚ãƒ¢ãƒ¼ãƒ‰ã‚’ä¸€éƒ¨å¤‰ãˆã¦ã„ã‚‹ã§ã”ã–ã‚‹
+//vic1ã®timeoutã‚³ãƒžãƒ³ãƒ‰å†é€é–¢æ•°
 void vic1_timeout(vic1* pVIC1) {
 	if(pVIC1->Mode==vic1_mode_START) {
 		if(pVIC1->TimeOutCnt>=vic1_MaxTimeOutNum) {
 			pVIC1->TimeOutCnt=0;
 			vcom1_skip_get(pVIC1->pVCom);
-			//‚¨‚©‚µ‚È‚±‚Æ‚ðŒ¾‚Á‚Ä‚¢‚é‚Ì‚ÅA‹³‚¦‚Ä‚ ‚°‚é
+			//ãŠã‹ã—ãªã“ã¨ã‚’è¨€ã£ã¦ã„ã‚‹ã®ã§ã€æ•™ãˆã¦ã‚ã’ã‚‹
 			pVIC1->Mode=vic1_mode_IDLE;
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ERR;
@@ -556,20 +556,20 @@ void vic1_timeout(vic1* pVIC1) {
 		if(pVIC1->TimeOutCnt>=vic1_MaxTimeOutNum) {
 			pVIC1->TimeOutCnt=0;
 			vcom1_skip_get(pVIC1->pVCom);
-			//ESC‚ðˆê’U‘—M
+			//ESCã‚’ä¸€æ—¦é€ä¿¡
 			pVIC1->Mode=vic1_mode_RESEND;
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ESC;
 			return;
 		}
-		//ESC‚ðˆê’U‘—M
+		//ESCã‚’ä¸€æ—¦é€ä¿¡
 		pVIC1->Mode=vic1_mode_RESEND;
 		pVIC1->SendCnt=0;
 		pVIC1->Send=vic1_cmd_ESC;
 	} else if(pVIC1->Mode==vic1_mode_STOP) {
 		if(pVIC1->TimeOutCnt>=vic1_MaxTimeOutNum) {
 			pVIC1->TimeOutCnt=0;
-			//‚¨‚©‚µ‚È‚±‚Æ‚ðŒ¾‚Á‚Ä‚¢‚é‚Ì‚ÅA‹³‚¦‚Ä‚ ‚°‚é
+			//ãŠã‹ã—ãªã“ã¨ã‚’è¨€ã£ã¦ã„ã‚‹ã®ã§ã€æ•™ãˆã¦ã‚ã’ã‚‹
 			pVIC1->Mode=vic1_mode_IDLE;
 			pVIC1->SendCnt=0;
 			pVIC1->Send=vic1_cmd_ERR;
@@ -580,8 +580,8 @@ void vic1_timeout(vic1* pVIC1) {
 	++(pVIC1->TimeOutCnt);
 }
 
-//========== vic1 Šî–{ŠÖ” ==========
-//vic1‚ð‰Šú‰»‚·‚é ˆø”‚ÍAŽ©•ª‚Ìƒ`ƒƒƒ“ƒlƒ‹”Ô†(0x00-0x0F)A‘ŠŽè‚Ìƒ`ƒƒƒ“ƒlƒ‹”Ô†A—^‚¦‚é‘—ŽóM—pŒÅ’è’·ƒoƒbƒtƒ@ƒAƒhƒŒƒX
+//========== vic1 åŸºæœ¬é–¢æ•° ==========
+//vic1ã‚’åˆæœŸåŒ–ã™ã‚‹ å¼•æ•°ã¯ã€è‡ªåˆ†ã®ãƒãƒ£ãƒ³ãƒãƒ«ç•ªå·(0x00-0x0F)ã€ç›¸æ‰‹ã®ãƒãƒ£ãƒ³ãƒãƒ«ç•ªå·ã€ä¸Žãˆã‚‹é€å—ä¿¡ç”¨å›ºå®šé•·ãƒãƒƒãƒ•ã‚¡ã‚¢ãƒ‰ãƒ¬ã‚¹
 void vic1_initialize(vic1* pVIC1, vcom1* pVCom1, const unsigned char Ch, unsigned char* BufBegin, unsigned char* BufEnd, hmLib_vFp_v FpTimeoutRestart, hmLib_vFp_v FpTimeoutEnable, hmLib_vFp_v FpTimeoutDisable) {
 	pVIC1->pVCom=pVCom1;
 
@@ -608,7 +608,7 @@ void vic1_initialize(vic1* pVIC1, vcom1* pVCom1, const unsigned char Ch, unsigne
 	pVIC1->RecvCnt=0;
 //	maintask_start(vic1_task, 0, 0, 0);
 }
-//vic1‚ðI’[‰»‚·‚é
+//vic1ã‚’çµ‚ç«¯åŒ–ã™ã‚‹
 void vic1_finalize(vic1* pVIC1){
 	if(pVIC1->Fp_timeout_disable)pVIC1->Fp_timeout_disable();
 
@@ -635,60 +635,60 @@ void vic1_finalize(vic1* pVIC1){
 
 
 //========== gate interface =================
-//ŽóMƒf[ƒ^‚ð“Š‚°“ü‚ê‰Â”\‚©Šm”F 0:•s‰Â,1:‰Â
+//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠ•ã’å…¥ã‚Œå¯èƒ½ã‹ç¢ºèª 0:ä¸å¯,1:å¯
 hmLib_boolian  vic1_can_putc(vic1* pVIC1){
-	//ŽóMƒf[ƒ^‚Íí‚ÉŽó‚¯“ü‚ê‰Â”\i“Ç‚ÝŽÌ‚Ä‚é‚©‚Ç‚¤‚©‚Í•Êj
+	//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã¯å¸¸ã«å—ã‘å…¥ã‚Œå¯èƒ½ï¼ˆèª­ã¿æ¨ã¦ã‚‹ã‹ã©ã†ã‹ã¯åˆ¥ï¼‰
 	return hmLib_true;
 }
-//ŽóMƒf[ƒ^1byte–Ú”»•ÊŠÖ”
+//å—ä¿¡ãƒ‡ãƒ¼ã‚¿1byteç›®åˆ¤åˆ¥é–¢æ•°
 void x_vic1_putc_1byte(vic1* pVIC1, unsigned char c) {
-	//Ž©•ªˆ¶‚ÌCh‚©H
+	//è‡ªåˆ†å®›ã®Chã‹ï¼Ÿ
 	if(pVIC1->Ch==(c&0x0F)) {
 		pVIC1->RecvCh=(c>>4);
 		++(pVIC1->RecvCnt);
-	}//ã‹LˆÈŠO‚È‚çA­‚È‚­‚Æ‚àŽ©•ª‚É‚Æ‚Á‚ÄƒRƒ}ƒ“ƒh‚Å‚Í‚È‚¢
+	}//ä¸Šè¨˜ä»¥å¤–ãªã‚‰ã€å°‘ãªãã¨ã‚‚è‡ªåˆ†ã«ã¨ã£ã¦ã‚³ãƒžãƒ³ãƒ‰ã§ã¯ãªã„
 	else {
-		//ŽóM’†‚È‚çƒf[ƒ^ˆµ‚¢‚ð‚µ‚Ä‚¨‚­
+		//å—ä¿¡ä¸­ãªã‚‰ãƒ‡ãƒ¼ã‚¿æ‰±ã„ã‚’ã—ã¦ãŠã
 		if(pVIC1->Mode==vic1_mode_RECV) {
 			_vic1_buf_putc(pVIC1, c);
 		}
 	}
 }
-//ŽóMƒf[ƒ^2byte–Ú”»•ÊŠÖ”
+//å—ä¿¡ãƒ‡ãƒ¼ã‚¿2byteç›®åˆ¤åˆ¥é–¢æ•°
 void x_vic1_putc_2byte(vic1* pVIC1, unsigned char c1, unsigned char c2) {
-	//¡’ÊM’†‚Ì‘ŠŽè‚Ìê‡
+	//ä»Šé€šä¿¡ä¸­ã®ç›¸æ‰‹ã®å ´åˆ
 	if(pVIC1->RecvCh==pVIC1->TergetCh) {
-		//‚Æ‚É‚©‚­ƒRƒƒ“ƒg‚Í•·‚¢‚Ä‚¨‚­
+		//ã¨ã«ã‹ãã‚³ãƒ¡ãƒ³ãƒˆã¯èžã„ã¦ãŠã
 		pVIC1->Recv=c2;
 		++(pVIC1->RecvCnt);
-	}//’m‚ç‚È‚¢l‚©‚çStartƒRƒ}ƒ“ƒh‚ª—ˆ‚½ê‡
+	}//çŸ¥ã‚‰ãªã„äººã‹ã‚‰Startã‚³ãƒžãƒ³ãƒ‰ãŒæ¥ãŸå ´åˆ
 	else if(c2==vic1_cmd_START) {
-		//‚±‚ê‚à•·‚¢‚Ä‚¨‚­
+		//ã“ã‚Œã‚‚èžã„ã¦ãŠã
 		pVIC1->Recv=c2;
 		++(pVIC1->RecvCnt);
-	}//ã‹LˆÈŠO‚È‚çA­‚È‚­‚Æ‚àŽ©•ª‚É‚Æ‚Á‚ÄƒRƒ}ƒ“ƒh‚Å‚Í‚È‚¢
+	}//ä¸Šè¨˜ä»¥å¤–ãªã‚‰ã€å°‘ãªãã¨ã‚‚è‡ªåˆ†ã«ã¨ã£ã¦ã‚³ãƒžãƒ³ãƒ‰ã§ã¯ãªã„
 	else {
-		//ƒJƒEƒ“ƒ^‚ð–ß‚·
+		//ã‚«ã‚¦ãƒ³ã‚¿ã‚’æˆ»ã™
 		pVIC1->RecvCnt=0;
 
-		//ŽóM’†‚È‚çƒf[ƒ^ˆµ‚¢‚ð‚µ‚Ä‚¨‚­
+		//å—ä¿¡ä¸­ãªã‚‰ãƒ‡ãƒ¼ã‚¿æ‰±ã„ã‚’ã—ã¦ãŠã
 		if(pVIC1->Mode==vic1_mode_RECV) {
 			_vic1_buf_putc(pVIC1, c1);
 		}
 		x_vic1_putc_1byte(pVIC1, c2);
 	}
 }
-//ŽóMƒf[ƒ^3byte–Ú”»•ÊŠÖ”
+//å—ä¿¡ãƒ‡ãƒ¼ã‚¿3byteç›®åˆ¤åˆ¥é–¢æ•°
 void x_vic1_putc_3byte(vic1* pVIC1, unsigned char c1, unsigned char c2, unsigned char c3) {
 	//Trmn1
 	if(c3==0x0d) {
 		++(pVIC1->RecvCnt);
-	}//ã‹LˆÈŠO‚È‚çA­‚È‚­‚Æ‚à1byte–Ú‚Ì•¶Žš‚ÍŽ©•ª‚É‚Æ‚Á‚ÄƒRƒ}ƒ“ƒh‚Å‚Í‚È‚¢
+	}//ä¸Šè¨˜ä»¥å¤–ãªã‚‰ã€å°‘ãªãã¨ã‚‚1byteç›®ã®æ–‡å­—ã¯è‡ªåˆ†ã«ã¨ã£ã¦ã‚³ãƒžãƒ³ãƒ‰ã§ã¯ãªã„
 	else {
-		//ƒJƒEƒ“ƒ^‚ð–ß‚·
+		//ã‚«ã‚¦ãƒ³ã‚¿ã‚’æˆ»ã™
 		pVIC1->RecvCnt=0;
 
-		//ŽóM’†‚È‚çƒf[ƒ^ˆµ‚¢‚ð‚µ‚Ä‚¨‚­
+		//å—ä¿¡ä¸­ãªã‚‰ãƒ‡ãƒ¼ã‚¿æ‰±ã„ã‚’ã—ã¦ãŠã
 		if(pVIC1->Mode==vic1_mode_RECV) {
 			_vic1_buf_putc(pVIC1, c1);
 		}
@@ -701,18 +701,18 @@ void x_vic1_putc_3byte(vic1* pVIC1, unsigned char c1, unsigned char c2, unsigned
 		}
 	}
 }
-//ŽóMƒf[ƒ^3byte–Ú”»•ÊŠÖ”
+//å—ä¿¡ãƒ‡ãƒ¼ã‚¿3byteç›®åˆ¤åˆ¥é–¢æ•°
 void x_vic1_putc_4byte(vic1* pVIC1, unsigned char c1, unsigned char c2, unsigned char c3, unsigned char c4) {
 	//Trmn1
 	if(c4==0x0a) {
-		//ƒRƒ}ƒ“ƒhŽóMŠ®—¹A”­•ñ
+		//ã‚³ãƒžãƒ³ãƒ‰å—ä¿¡å®Œäº†ã€ç™ºå ±
 		_vic1_inform_recv(pVIC1);
-	}//ã‹LˆÈŠO‚È‚çA­‚È‚­‚Æ‚à1byte–Ú‚Ì•¶Žš‚ÍŽ©•ª‚É‚Æ‚Á‚ÄƒRƒ}ƒ“ƒh‚Å‚Í‚È‚¢
+	}//ä¸Šè¨˜ä»¥å¤–ãªã‚‰ã€å°‘ãªãã¨ã‚‚1byteç›®ã®æ–‡å­—ã¯è‡ªåˆ†ã«ã¨ã£ã¦ã‚³ãƒžãƒ³ãƒ‰ã§ã¯ãªã„
 	else {
-		//ƒJƒEƒ“ƒ^‚ð–ß‚·
+		//ã‚«ã‚¦ãƒ³ã‚¿ã‚’æˆ»ã™
 		pVIC1->RecvCnt=0;
 
-		//ŽóM’†‚È‚çƒf[ƒ^ˆµ‚¢‚ð‚µ‚Ä‚¨‚­
+		//å—ä¿¡ä¸­ãªã‚‰ãƒ‡ãƒ¼ã‚¿æ‰±ã„ã‚’ã—ã¦ãŠã
 		if(pVIC1->Mode==vic1_mode_RECV) {
 			_vic1_buf_putc(pVIC1, c1);
 		}
@@ -742,7 +742,7 @@ void x_vic1_putc_4byte(vic1* pVIC1, unsigned char c1, unsigned char c2, unsigned
 
 	}
 }
-//ŽóMƒf[ƒ^‚ð“Š‚°“ü‚ê‚é
+//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠ•ã’å…¥ã‚Œã‚‹
 void vic1_putc(vic1* pVIC1, unsigned char c){
 	if(pVIC1->RecvCnt==0) {
 		x_vic1_putc_1byte(pVIC1, c);
@@ -754,53 +754,53 @@ void vic1_putc(vic1* pVIC1, unsigned char c){
 		x_vic1_putc_4byte(pVIC1, ((pVIC1->RecvCh)<<4)|(pVIC1->Ch), pVIC1->Recv, 0x0d, c);
 	}
 }
-//ŽóMƒf[ƒ^‚ðƒtƒ‰ƒbƒVƒ…‚·‚éigateŒÝŠ·—pAVIC“à‚Å‚Ìˆ—‚Í‚È‚¢j
+//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ï¼ˆgateäº’æ›ç”¨ã€VICå†…ã§ã®å‡¦ç†ã¯ãªã„ï¼‰
 void vic1_flush(vic1* pVIC1) {}
-//‘—Mƒf[ƒ^‚ðŒÄ‚Ño‚µ‰Â”\‚©Šm”F 0:•s‰Â,1:‰Â
+//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å‘¼ã³å‡ºã—å¯èƒ½ã‹ç¢ºèª 0:ä¸å¯,1:å¯
 hmLib_boolian  vic1_can_getc(vic1* pVIC1){
-	//‘—Mƒ‚[ƒh‚É‘JˆÚ‚Å‚«‚é‚Æ‚Ì’Ê‚ª‚ ‚ê‚ÎA‘JˆÚ
+	//é€ä¿¡ãƒ¢ãƒ¼ãƒ‰ã«é·ç§»ã§ãã‚‹ã¨ã®é€šå‘ŠãŒã‚ã‚Œã°ã€é·ç§»
 	if(_vic1_checkData(pVIC1))return hmLib_true;
 
-	//‘—Mƒ‚[ƒh‚ÅA‘—Mƒf[ƒ^‚ª‘S‚Ä‘—MŠ®—¹‚µ‚Ä‚¢‚È‚¢ê‡
+	//é€ä¿¡ãƒ¢ãƒ¼ãƒ‰ã§ã€é€ä¿¡ãƒ‡ãƒ¼ã‚¿ãŒå…¨ã¦é€ä¿¡å®Œäº†ã—ã¦ã„ãªã„å ´åˆ
 	if(pVIC1->Send==vic1_cmd_DATA && pVIC1->SendCnt==0xFF)return _vic1_buf_can_getc(pVIC1);
 
-	//ƒRƒ}ƒ“ƒh‘—M’†‚Ìê‡
+	//ã‚³ãƒžãƒ³ãƒ‰é€ä¿¡ä¸­ã®å ´åˆ
 	if(pVIC1->Send!=vic1_cmd_NULL)return hmLib_true;
 
 	return hmLib_false;
 }
-//‘—Mƒf[ƒ^‚ðŒÄ‚Ño‚·
+//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å‘¼ã³å‡ºã™
 unsigned char vic1_getc(vic1* pVIC1) {
 	unsigned char c=0x00;
 
-	//‘—M‚Å‚«‚È‚¢ê‡‚ÍƒGƒ‰[
+	//é€ä¿¡ã§ããªã„å ´åˆã¯ã‚¨ãƒ©ãƒ¼
 	if(!vic1_can_getc(pVIC1)) {
 		pVIC1->Err=vic1_error_INVALID_GETC;
 		return 0xC0;
 	}
 
-	//ƒf[ƒ^‘—Mƒ‚[ƒh‚ÅA‚©‚Âƒf[ƒ^‚ð‘—‚èI‚¦‚Ä‚¢‚È‚¢ê‡
+	//ãƒ‡ãƒ¼ã‚¿é€ä¿¡ãƒ¢ãƒ¼ãƒ‰ã§ã€ã‹ã¤ãƒ‡ãƒ¼ã‚¿ã‚’é€ã‚Šçµ‚ãˆã¦ã„ãªã„å ´åˆ
 	if(pVIC1->Send==vic1_cmd_DATA && pVIC1->SendCnt==0xFF) {
-		//ƒf[ƒ^‘—M’†‚Ìê‡‚ÍAƒf[ƒ^‚ð‘—Mˆ—
+		//ãƒ‡ãƒ¼ã‚¿é€ä¿¡ä¸­ã®å ´åˆã¯ã€ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡å‡¦ç†
 		c=_vic1_buf_getc(pVIC1);
 
-		//‘—M‚·‚×‚«ƒf[ƒ^‚ð‘—‚èI‚¦‚½ê‡‚ÍASendCnt‚ð–ß‚·
+		//é€ä¿¡ã™ã¹ããƒ‡ãƒ¼ã‚¿ã‚’é€ã‚Šçµ‚ãˆãŸå ´åˆã¯ã€SendCntã‚’æˆ»ã™
 		if(_vic1_buf_flowing(pVIC1)==0) {
-			//SendCnt‚ð³‚µ‚¢’l‚É–ß‚·
+			//SendCntã‚’æ­£ã—ã„å€¤ã«æˆ»ã™
 			pVIC1->SendCnt=0;
 		}
 	}else{
-		//SendCnt‚ª‰ó‚ê‚Ä‚¢‚½‚çAƒGƒ‰[”­•ñ
+		//SendCntãŒå£Šã‚Œã¦ã„ãŸã‚‰ã€ã‚¨ãƒ©ãƒ¼ç™ºå ±
 		if(pVIC1->SendCnt>3) {
 			pVIC1->Err=vic1_error_INCORRECT_SENDCNT;
 			pVIC1->Send=vic1_cmd_ERR;
 			pVIC1->SendCnt=0;
 		}
 
-		//ƒRƒ}ƒ“ƒh‘—M’†‚Ìê‡‚ÍAƒRƒ}ƒ“ƒh‚ð“Ç‚Þ
+		//ã‚³ãƒžãƒ³ãƒ‰é€ä¿¡ä¸­ã®å ´åˆã¯ã€ã‚³ãƒžãƒ³ãƒ‰ã‚’èª­ã‚€
 		if(pVIC1->SendCnt==0) {
 			c=((pVIC1->Ch<<4) | pVIC1->TergetCh);
-			//‘—MƒJƒEƒ“ƒ^‚ði‚ß‚é
+			//é€ä¿¡ã‚«ã‚¦ãƒ³ã‚¿ã‚’é€²ã‚ã‚‹
 			++(pVIC1->SendCnt);
 		} else if(pVIC1->SendCnt==1) {
 			switch(pVIC1->Send) {
@@ -824,11 +824,11 @@ unsigned char vic1_getc(vic1* pVIC1) {
 				c=vic1_cmd_ERR;
 				break;
 			}
-			//‘—MƒJƒEƒ“ƒ^‚ði‚ß‚é
+			//é€ä¿¡ã‚«ã‚¦ãƒ³ã‚¿ã‚’é€²ã‚ã‚‹
 			++(pVIC1->SendCnt);
 		} else if(pVIC1->SendCnt==2) {
 			c=0x0d;
-			//‘—MƒJƒEƒ“ƒ^‚ði‚ß‚é
+			//é€ä¿¡ã‚«ã‚¦ãƒ³ã‚¿ã‚’é€²ã‚ã‚‹
 			++(pVIC1->SendCnt);
 		} else if(pVIC1->SendCnt==3) {
 			_vic1_inform_send(pVIC1);
@@ -838,11 +838,11 @@ unsigned char vic1_getc(vic1* pVIC1) {
 	}
 	return c;
 }
-//‘—Mƒf[ƒ^‚ð—¬‚ê‘±‚¯‚Ä‚¢‚é‚©Šm”FiVIC‚Ìê‡‚ÍAƒRƒ}ƒ“ƒh––”ö‚ª0,‚»‚êˆÈŠO‚Í1j
+//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æµã‚Œç¶šã‘ã¦ã„ã‚‹ã‹ç¢ºèªï¼ˆVICã®å ´åˆã¯ã€ã‚³ãƒžãƒ³ãƒ‰æœ«å°¾ãŒ0,ãã‚Œä»¥å¤–ã¯1ï¼‰
 hmLib_boolian vic1_flowing(vic1* pVIC1) { return pVIC1->Send!=vic1_cmd_NULL; }
 
 //============ vic functions ================
-//’ÊM‚ð‹­§“I‚ÉI—¹‚³‚¹‚é
+//é€šä¿¡ã‚’å¼·åˆ¶çš„ã«çµ‚äº†ã•ã›ã‚‹
 void vic1_force_end(vic1* pVIC1) {
 	pVIC1->Mode=vic1_mode_IDLE;
 	pVIC1->Send=vic1_cmd_ERR;
@@ -854,14 +854,14 @@ void vic1_force_end(vic1* pVIC1) {
 	pVIC1->TergetCh=vic1_ch_NULL;
 	pVIC1->NextTergetCh=vic1_ch_NULL;
 
-	//ƒf[ƒ^ŽóM‚ð‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
+	//ãƒ‡ãƒ¼ã‚¿å—ä¿¡ã‚’ãªã‹ã£ãŸã“ã¨ã«ã™ã‚‹
 	vcom1_flush(pVIC1->pVCom);
-	//ƒf[ƒ^‘—M‚ð‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
+	//ãƒ‡ãƒ¼ã‚¿é€ä¿¡ã‚’ãªã‹ã£ãŸã“ã¨ã«ã™ã‚‹
 	vcom1_cancel_get(pVIC1->pVCom);
 }
-//ƒGƒ‰[‚ðŽæ“¾‚·‚é
+//ã‚¨ãƒ©ãƒ¼ã‚’å–å¾—ã™ã‚‹
 unsigned char vic1_error(vic1* pVIC1) { return pVIC1->Err; }
-//ƒGƒ‰[‚ðƒNƒŠƒA‚·‚é
+//ã‚¨ãƒ©ãƒ¼ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 void vic1_clear_error(vic1* pVIC1) { pVIC1->Err=vic1_error_NULL; }
 #
 #endif

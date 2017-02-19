@@ -2,85 +2,85 @@
 #define HMR_MACHINE_SERVICE_FUNCTIONALTASK_INC 200
 #
 /*===hmrTask===
-�^�X�N�Ǘ��p�֐��Z�b�g
-�E�^�X�N�����ԂƂƂ��ɓo�^����ƁA�w�莞�ԊԊu�Ń^�X�N���쓮����B
-�E�^�X�N�V�X�e�����̂́A�^�C�}�[����task_interrupt_function�����I�ɌĂяo���Ď��s����B
-	�E�o�^���ꂽ�^�X�N�́A�^�X�N�V�X�e���̌Ăяo���^�C�~���O�Ŏ��s�̗L���𔻒肳���B
-�E�e�^�X�N�́A���s�A�ҋ@�A��~��3�̏�Ԃɕ��ނ����B
-	�E���s�F�^�X�N�o�b�t�@�ɓo�^����A�w�莞�Ԃ��ƂɎ��s���Ă�����
-	�E�ҋ@�F�^�X�N�o�b�t�@�ɓo�^����Ă��邪�A���s����Ȃ����
-	�E��~�G�^�X�N�o�b�t�@�ɓo�^����Ă��Ȃ����
-	�E���s/�ҋ@<=>��~�̑J�ڂ́A�o�b�t�@�����𔺂����ߒᑬ�@���΂炭���p���Ȃ��ꍇ�ɗ��p
-	�E���s<=>�ҋ@�̑J�ڂ́A���Ԏw��ύX�݂̂̂��ߍ����@�ꎞ�I�ɒ�~���������ɗ��p
-�E�^�X�N�̎��s�̗L�����̐���́A�^�X�N��������A�^�X�N�O������̓�ʂ�̕��@�Ő��䂷��B
-	�E�^�X�N�O������̏���
-		�Estart/quick_start/restart�Ń^�X�N���J�n/�ҋ@���w��
-		�Estart�Ń^�X�N���J�n����B���łɓo�^�ς݂̃^�X�N�ɑ΂��Ď��s�����ꍇ�A���ԊԊu��ύX����B
-			�E�w�莞�ԊԊu��0�̏ꍇ�́A�ҋ@��ԂɂȂ�B
-			�E�w�莞�ԊԊu�����̏ꍇ�́A���̃^�X�N���~����B
-		�Equick_start��start��菈���������B�������A���łɂ��̃^�X�N���o�^�ς݂łȂ��ꍇ�����g���Ȃ��B
-			�E�o�^�ς݃^�X�N�ɑ΂��Ďg�p�����ꍇ�́A����`�̓���ƂȂ�B�֎~�B
-		�Erestart�Ń^�X�N�̎��ԊԊu��ύX����B���̃^�X�N���o�^�ς݂łȂ��ꍇ�̓G���[��Ԃ��B
-			�Estart�Ƃ̈Ⴂ�́A�V�K�o�^���ł��Ȃ����Ƃ����B
-		�Estop�Ń^�X�N���~����B���̃^�X�N���o�^�ς݂łȂ��ꍇ�̓G���[��Ԃ��B
-			�Erestart�Ŏw�莞�ԊԊu��-1�ɂ����ꍇ�Ɠ��������s���B
-	�E�^�X�N��������̏���
-		�E�o�^�֐��߂�l�����̒l�Ȃ�A��������s���
-		�E�o�^�֐��߂�l��0�Ȃ�A�ҋ@��ԂɑJ��
-		�E�o�^�֐��߂�l�����̒l�Ȃ�A��~
+タスク管理用関数セット
+・タスクを時間とともに登録すると、指定時間間隔でタスクが駆動する。
+・タスクシステム自体は、タイマー等でtask_interrupt_functionを定期的に呼び出して実行する。
+	・登録されたタスクは、タスクシステムの呼び出しタイミングで実行の有無を判定される。
+・各タスクは、実行、待機、停止の3つの状態に分類される。
+	・実行：タスクバッファに登録され、指定時間ごとに実行している状態
+	・待機：タスクバッファに登録されているが、実行されない状態
+	・停止；タスクバッファに登録されていない状態
+	・実行/待機<=>停止の遷移は、バッファ処理を伴うため低速　しばらく利用しない場合に利用
+	・実行<=>待機の遷移は、時間指定変更のみのため高速　一時的に停止したい時に利用
+・タスクの実行の有無等の制御は、タスク内部から、タスク外部からの二通りの方法で制御する。
+	・タスク外部からの処理
+		・start/quick_start/restartでタスクを開始/待機を指令
+		・startでタスクを開始する。すでに登録済みのタスクに対して実行した場合、時間間隔を変更する。
+			・指定時間間隔が0の場合は、待機状態になる。
+			・指定時間間隔が負の場合は、そのタスクを停止する。
+		・quick_startはstartより処理が高速。ただし、すでにそのタスクが登録済みでない場合しか使えない。
+			・登録済みタスクに対して使用した場合は、未定義の動作となる。禁止。
+		・restartでタスクの時間間隔を変更する。そのタスクが登録済みでない場合はエラーを返す。
+			・startとの違いは、新規登録ができないことだけ。
+		・stopでタスクを停止する。そのタスクが登録済みでない場合はエラーを返す。
+			・restartで指定時間間隔を-1にした場合と同処理を行う。
+	・タスク内部からの処理
+		・登録関数戻り値が正の値なら、次回も実行状態
+		・登録関数戻り値が0なら、待機状態に遷移
+		・登録関数戻り値が負の値なら、停止
 
 === hmr::machine::service::functional_task ===
 v2_00/141201 hmIto
-	cpp��
+	cpp化
 ===hmrTask===
 v1_08/141122 hmIto
-	cpp���痘�p�ł���悤�ɕύX
+	cppから利用できるように変更
 v1_06/130921 hmIto
-	task_informStart/Stop�̓o�^�p�֐���ǉ�
+	task_informStart/Stopの登録用関数を追加
 v1_05/130905 hmIto
-	�^�X�N���o�b�t�@����������Ɉꎞ��~�ɂ���u�ҋ@�v��ǉ�
-	��ԑJ�ڂ̎�i���A�^�X�N�����ƃ^�X�N�O���Ő���
-		�^�X�N��������́A�^�X�N�̖߂�l�Ń^�X�N�̎��s�Ԋu/�ҋ@/��~�����s�\
-		�^�X�N�O������́Astart/quick_start/restart/stop�֐��Ő���
+	タスクをバッファから消さずに一時停止にする「待機」を追加
+	状態遷移の手段を、タスク内部とタスク外部で整理
+		タスク内部からは、タスクの戻り値でタスクの実行間隔/待機/停止を実行可能
+		タスク外部からは、start/quick_start/restart/stop関数で制御
 v1_04/130720 hmIto
-	timer5�Ɉˑ����Ȃ��`�ɕύX
-		task_interrupt_function�����荞�݊֐����Ŏ��s���Ă��炤
+	timer5に依存しない形に変更
+		task_interrupt_functionを割り込み関数内で実行してもらう
 v1_03/121006 hmIto
-	�^�X�N�֐�����task_stop�֐��̎g�p���֎~
-	�^�X�N�֐��̖߂�l���^�̂Ƃ��ɁATask���~����@�\��ǉ�
-	Task��task�ɕύX
+	タスク関数内でtask_stop関数の使用を禁止
+	タスク関数の戻り値が真のときに、Taskを停止する機能を追加
+	Taskをtaskに変更
 v1_02/121005 hmIto
-	�^�X�N�̊��荞�ݏ����֌W�̊֐��Q���Atimer5_XXX�n�֐��łƂ肠��������
-		timer5_XXX�n�֐��Q�́AhmrDevice�����hmrDeviceConfig�Ɉˑ�
+	タスクの割り込み処理関係の関数群を、timer5_XXX系関数でとりあえず実装
+		timer5_XXX系関数群は、hmrDeviceおよびhmrDeviceConfigに依存
 v1_01/120922 hmIto
-	�C���^�[�t�F�C�X������������
-		//�^�X�N�������֐�
+	インターフェイス部分実装完了
+		//タスク初期化関数
 		void task_initialize(void);
-		//�^�X�N�I�[���֐�
+		//タスク終端化関数
 		void task_finalize(void);
-		//�^�X�N�ɓo�^�ł���m�F����
+		//タスクに登録できる確認する
 		task_bool_t task_can_start(void);
-		//�^�X�N��o�^
+		//タスクを登録
 		task_bool_t task_start(task_vFp_v TaskFp);
-		//�^�X�N��o�^(��d�o�^�͉��)
+		//タスクを登録(二重登録は回避)
 		task_bool_t task_check_start(task_vFp_v TaskFp);
-		//�^�X�N���J��
+		//タスクを開放
 		task_bool_t task_stop(task_vFp_v TaskFp);
-	120922Test_hmrTask.h/c�œ���m�F�ς�
-	�^�X�N�̊��荞�݊֌W�������ȉ��̊֐���������
-		//�^�X�N�Ŏg���Ă��銄�荞�݃^�C�}�[��L���ɂ���
+	120922Test_hmrTask.h/cで動作確認済み
+	タスクの割り込み関係を扱う以下の関数が未実装
+		//タスクで使っている割り込みタイマーを有効にする
 		void _task_enable_timer(void);
-		//�^�X�N�Ŏg���Ă��銄�荞�݃^�C�}�[�𖳌��ɂ���
+		//タスクで使っている割り込みタイマーを無効にする
 		void _task_disable_timer(void);
-		//�^�X�N�N���e�B�J���������ɁAtask_start,task_check_start,task_stop�����s����\�������銄�荞�݂����b�N
+		//タスククリティカル処理時に、task_start,task_check_start,task_stopを実行する可能性がある割り込みをロック
 		void _task_lock_interrupt(void);
-		//_task_lock_interrupt�Ń��b�N�����荞�݂�����
+		//_task_lock_interruptでロックし割り込みを解除
 		void _task_unlock_interrupt(void);
-		//timer5���荞�݊֐�(timer4�ƘA�����Ă���炵��
+		//timer5割り込み関数(timer4と連動しているらしい
 		void __attribute__((interrupt, no_auto_psv)) _T5Interrupt(void);
-	timer4/timer5�̐ݒ���@�Ȃǂ��v�`�F�b�N
+	timer4/timer5の設定方法なども要チェック
 v1_00/120921 hmIto
-	�^�X�N�̊�{�\�������݌v
+	タスクの基本構造だけ設計
 */
 #include<homuraLib_v2/type.hpp>
 namespace hmr {
@@ -92,58 +92,58 @@ namespace hmr {
 				typedef void(*vFp_v)(void);
 				typedef s16Fp_s16 function;
 				typedef vFp_v inform;
-				//�^�X�N�N���X
+				//タスククラス
 				typedef struct {
-					//�^�X�N�����Ŏ��s�������֐�
+					//タスク処理で実行したい関数
 					function Fp;
-					//�^�X�N��������~���ꂽ�ꍇ�̒ʒm�֐�
+					//タスクが強制停止された場合の通知関数
 					inform InformStop;
-					//�^�X�N�̎��s�Ԋu
+					//タスクの実行間隔
 					uint16 Interval;
 				}task;
 				typedef struct {
-					//���ԗݐϗp�ϐ�
+					//時間累積用変数
 					uint16 Counter;
-					//�^�X�N�V�X�e���̓o�^���[���łȂ��Ȃ����ꍇ�ɒʒm
+					//タスクシステムの登録がゼロでなくなった場合に通知
 					vFp_v Fp_informStart;
-					//�^�X�N�V�X�e�����炷�ׂĂ̓o�^���������Əꍇ�ɒʒm
+					//タスクシステムからすべての登録が消えたと場合に通知
 					vFp_v Fp_informStop;
-					//�^�X�N�p�֐��z��
+					//タスク用関数配列
 					task* Buf;
-					//�ő�̃^�X�N�̐�
+					//最大のタスクの数
 					uint8 MaxSize;
-					//���݂̃^�X�N�̐�
+					//現在のタスクの数
 					uint8 Size;
-					//dynamic�Ɋm�ۂ������ǂ����̃t���O
+					//dynamicに確保したかどうかのフラグ
 					bool DynamicFlag;
 				}taskmaster;
 
-				//===�^�X�N�o�b�t�@�p�֐�===
-				//�^�X�N�V�X�e���t�H�[�}�b�g
+				//===タスクバッファ用関数===
+				//タスクシステムフォーマット
 				void format(taskmaster* TaskMaster);
-				//�^�X�N�V�X�e��������������Ă��邩
+				//タスクシステムが初期化されているか
 				bool is_constructed(taskmaster* TaskMaster);
-				//�^�X�N�V�X�e���������֐�
+				//タスクシステム初期化関数
 				void construct_dynamic(taskmaster* TaskMaster, uint8 MaxSize);
-				//�^�X�N�V�X�e���������֐�
+				//タスクシステム初期化関数
 				void construct_static(taskmaster* TaskMaster, task* Begin, task* End);
-				//�^�X�N�V�X�e���I�[���֐�	
+				//タスクシステム終端化関数	
 				void destruct(taskmaster* TaskMaster);
-				//�^�X�N��V�K�o�^�ł���m�F����
+				//タスクを新規登録できる確認する
 				bool can_start(taskmaster* TaskMaster);
-				//�^�X�N��o�^�i��d�o�^�͉���j
+				//タスクを登録（二重登録は回避）
 				bool start(taskmaster* TaskMaster, sint16 Interval, function TaskFp, inform TaskInformStopFp);
-				//�^�X�N��o�^�i��d�o�^�ł��Ă��܂��̂ŁA�댯�j
+				//タスクを登録（二重登録できてしまうので、危険）
 				bool quick_start(taskmaster* TaskMaster, sint16 Interval, function TaskFp, inform TaskInformStopFp);
-				//�^�X�N��ݒ�ύX
+				//タスクを設定変更
 				bool restart(taskmaster* TaskMaster, function TaskFp, sint16 Interval);
-				//�^�X�N���폜
+				//タスクを削除
 				bool stop(taskmaster* TaskMaster, function TaskFp);
-				//�^�X�N�̎��s
+				//タスクの実行
 				void interrupt_function(taskmaster* TaskMaster, sint16 Interval);
-				//�^�X�N�V�X�e���̓o�^���[���łȂ��Ȃ����ꍇ�ɒʒm
+				//タスクシステムの登録がゼロでなくなった場合に通知
 				void resgist_informStart(taskmaster* TaskMaster, vFp_v Fp);
-				//�^�X�N�V�X�e�����炷�ׂĂ̓o�^���������Əꍇ�ɒʒm
+				//タスクシステムからすべての登録が消えたと場合に通知
 				void resgist_informStop(taskmaster* TaskMaster, vFp_v Fp);
 			}
 		}

@@ -2,25 +2,25 @@
 #define HMR_VCOM_VCOM_INC 100
 #
 /*---vcom---
-gate‚à‚Ç‚«‚Ì•¶š—ñ‘—óM—pƒtƒH[ƒ}ƒbƒg
+gateã‚‚ã©ãã®æ–‡å­—åˆ—é€å—ä¿¡ç”¨ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 */
 namespace hmr {
 	class gate {
 	public:
 		//======== gate interface =======
-		//‚·‚Å‚É—˜—p‰Â”\‚É‚È‚Á‚Ä‚¢‚é‚©
+		//ã™ã§ã«åˆ©ç”¨å¯èƒ½ã«ãªã£ã¦ã„ã‚‹ã‹
 		virtual bool is_open()=0;
-		//send‚Å‚«‚é‚©H
+		//sendã§ãã‚‹ã‹ï¼Ÿ
 		virtual bool can_getc()=0;
-		//‘—M•¶š—ñ‚ğ1byteæ“¾‚·‚é
+		//é€ä¿¡æ–‡å­—åˆ—ã‚’1byteå–å¾—ã™ã‚‹
 		virtual unsigned char getc()=0;
-		//‘—M•¶š—ñ‚ªeofˆÊ’u=PacI’[‚©‚Ç‚¤‚©‚ğŒŸ’m‚·‚é
+		//é€ä¿¡æ–‡å­—åˆ—ãŒeofä½ç½®=Pacçµ‚ç«¯ã‹ã©ã†ã‹ã‚’æ¤œçŸ¥ã™ã‚‹
 		virtual bool flowing()=0;
-		//recv‚Å‚«‚é‚©H(’P‚Éreturn 1)
+		//recvã§ãã‚‹ã‹ï¼Ÿ(å˜ã«return 1)
 		virtual bool can_putc()=0;
-		//óM•¶š—ñ‚ğ1byte—^‚¦‚é
+		//å—ä¿¡æ–‡å­—åˆ—ã‚’1byteä¸ãˆã‚‹
 		virtual void putc(unsigned char c)=0;
-		//flush‚·‚é(eof‰»‚·‚é=Pac‚ğ•Â‚¶‚é)
+		//flushã™ã‚‹(eofåŒ–ã™ã‚‹=Pacã‚’é–‰ã˜ã‚‹)
 		virtual void flush()=0;
 	};
 }

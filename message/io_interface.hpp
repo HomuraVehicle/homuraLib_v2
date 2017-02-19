@@ -4,7 +4,7 @@
 /*
 === message_reference ===
 v1_01/140525 hmIto
-	NVI‚É]‚Á‚ÄAvirtualŠÖ”‚ğ”ñŒöŠJ‰»
+	NVIã«å¾“ã£ã¦ã€virtualé–¢æ•°ã‚’éå…¬é–‹åŒ–
 */
 #include<XCBase/bytes.hpp>
 namespace hmr {

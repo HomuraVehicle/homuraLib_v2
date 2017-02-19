@@ -7,8 +7,8 @@
 
 #include<stdlib.h>
 
-#define vmc2_putmode_IDLE	0	//‘Ò‹@’†
-#define vmc2_putmode_DATA	1	//óM’†
+#define vmc2_putmode_IDLE	0	//å¾…æ©Ÿä¸­
+#define vmc2_putmode_DATA	1	//å—ä¿¡ä¸­
 
 #define vmc2_getmode_STRT	0
 #define vmc2_getmode_DATA	1
@@ -19,231 +19,231 @@ static const unsigned char vmc2_PacStrtSize=4;
 static const unsigned char vmc2_PacTrmn[4]={'#', '|', 0x0d, 0x0a};
 static const unsigned char vmc2_PacTrmnSize=4;
 
-//vmc2‚ğ‰Šú‰»‚·‚é
+//vmc2ã‚’åˆæœŸåŒ–ã™ã‚‹
 void vmc2_initialize(vmc2* pVMC2, vcom* pVCom, unsigned char Ch) {
 	//VCom,Ch
 	pVMC2->pVCom=pVCom;
 	pVMC2->Ch=Ch;
 
-	//óM‘¤•Ï”
+	//å—ä¿¡å´å¤‰æ•°
 	pVMC2->RecvErr=vmc2_puterr_NULL;
 	pVMC2->RecvMode=vmc2_putmode_IDLE;
 	pVMC2->RecvCnt=0;
 	pVMC2->RecvCh=0xFF;
 
-	//‘—M‘¤•Ï”
+	//é€ä¿¡å´å¤‰æ•°
 	pVMC2->SendErr=vmc2_geterr_NULL;
 	pVMC2->SendMode=vmc2_getmode_STRT;
 	pVMC2->SendCnt=0;
 }
-//vmc2‚ğI’[‰»‚·‚é
+//vmc2ã‚’çµ‚ç«¯åŒ–ã™ã‚‹
 void vmc2_finalize(vmc2* pVMC2) {
-	//óMƒ‚[ƒh‚Ì‚Ü‚Ü‚Ìê‡
+	//å—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã®ã¾ã¾ã®å ´åˆ
 	if(pVMC2->RecvMode==vmc2_putmode_DATA) {
 		vcom1_flush(pVMC2->pVCom);
 		pVMC2->RecvMode=vmc2_putmode_IDLE;
 		pVMC2->RecvCnt=0;
 	}
-	//‘—Mƒ‚[ƒh‚Ì‚Ü‚Ü‚Ìê‡
+	//é€ä¿¡ãƒ¢ãƒ¼ãƒ‰ã®ã¾ã¾ã®å ´åˆ
 	if(pVMC2->SendMode==vmc2_getmode_DATA) {
 		vcom1_cancel_get(pVMC2->pVCom);
 		pVMC2->SendMode=vmc2_getmode_STRT;
 		pVMC2->SendCnt=0;
 	}
 }
-//ƒtƒ‰ƒbƒVƒ…‚·‚éiÀ¿‰½‚à‚µ‚È‚¢j
+//ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ï¼ˆå®Ÿè³ªä½•ã‚‚ã—ãªã„ï¼‰
 void vmc2_flush(vmc2* pVMC2) { return; }
-//óMƒf[ƒ^‚ğ“Š‚°“ü‚ê‰Â”\‚©Šm”F 0:•s‰Â,1:‰Â
+//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠ•ã’å…¥ã‚Œå¯èƒ½ã‹ç¢ºèª 0:ä¸å¯,1:å¯
 hmLib_boolian vmc2_can_putc(vmc2* pVMC2) { 
 	if(pVMC2->RecvMode==vmc2_putmode_DATA) {
 		return vcom1_can_putc(pVMC2->pVCom);
 	}
 	return 1;
 }
-//óMƒf[ƒ^‚ğ“Š‚°“ü‚ê‚é
+//å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æŠ•ã’å…¥ã‚Œã‚‹
 void vmc2_putc(vmc2* pVMC2, unsigned char c) {
 	unsigned char cnt;
 
-	//óM‚Å‚«‚È‚¢‚Ì‚É“Š‚°“ü‚ê‚½‚çƒGƒ‰[
+	//å—ä¿¡ã§ããªã„ã®ã«æŠ•ã’å…¥ã‚ŒãŸã‚‰ã‚¨ãƒ©ãƒ¼
 	if(!vmc2_can_putc(pVMC2)) {
 		pVMC2->RecvErr=vmc2_puterr_INVALID_PUTC;
 	}
 
-	//”ñóMƒ‚[ƒh(vmc2_RecvPacStrt‘Ò‚¿)
+	//éå—ä¿¡ãƒ¢ãƒ¼ãƒ‰(vmc2_RecvPacStrtå¾…ã¡)
 	if(pVMC2->RecvMode==vmc2_putmode_IDLE) {
-		//CH•”•ªóM’†‚ÉCh‚Æˆê’v
+		//CHéƒ¨åˆ†å—ä¿¡ä¸­ã«Chã¨ä¸€è‡´
 		if(pVMC2->RecvCnt==2 && (c&0x0F)==pVMC2->Ch) {
 			++(pVMC2->RecvCnt);
 
-			//‘Šè‚ÌCh‚ğó‚¯æ‚é
+			//ç›¸æ‰‹ã®Chã‚’å—ã‘å–ã‚‹
 			pVMC2->RecvCh=((c>>4)&0x0F);
-		}//”ñCH•”•ªóM’†‚ÉStrt‚Æˆê’v
+		}//éCHéƒ¨åˆ†å—ä¿¡ä¸­ã«Strtã¨ä¸€è‡´
 		else if(pVMC2->RecvCnt!=2 && c==vmc2_PacStrt[pVMC2->RecvCnt]) {
 			++(pVMC2->RecvCnt);
 
-			//‚·‚×‚Ä‚ÌSTRT‚ğóM
+			//ã™ã¹ã¦ã®STRTã‚’å—ä¿¡
 			if(pVMC2->RecvCnt==vmc2_PacStrtSize) {
-				//ƒ‚[ƒh‚ğPacóMƒ‚[ƒh‚ÖˆÚs
+				//ãƒ¢ãƒ¼ãƒ‰ã‚’Pacå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 				pVMC2->RecvMode=vmc2_putmode_DATA;
 				pVMC2->RecvCnt=0;
 
-				//óMch‚ğ’Ê’m
+				//å—ä¿¡chã‚’é€šçŸ¥
 				vcom1_put_ch(pVMC2->pVCom,pVMC2->RecvCh);
 			}
-		}//STRT‚Í•sˆê’v‚¾‚ªæ“ªSTRT‚Æ‚Íˆê’v
+		}//STRTã¯ä¸ä¸€è‡´ã ãŒå…ˆé ­STRTã¨ã¯ä¸€è‡´
 		else if(c==vmc2_PacStrt[0]) {
 			pVMC2->RecvCnt=1;
-		}//‚»‚êˆÈŠO
+		}//ãã‚Œä»¥å¤–
 		else {
 			pVMC2->RecvCnt=0;
 		}
-	}//óMƒ‚[ƒh(PacTrmn‘Ò‚¿)
+	}//å—ä¿¡ãƒ¢ãƒ¼ãƒ‰(PacTrmnå¾…ã¡)
 	else {
-		//óM•¶š‚ªputmodeCnt”Ô–Ú‚ÌPacTrmn•¶š‚Æˆê’v
+		//å—ä¿¡æ–‡å­—ãŒputmodeCntç•ªç›®ã®PacTrmnæ–‡å­—ã¨ä¸€è‡´
 		if(vmc2_PacTrmn[pVMC2->RecvCnt]==c) {
-			//ƒJƒEƒ“ƒ^[‰ÁZ
+			//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼åŠ ç®—
 			++(pVMC2->RecvCnt);
 
-			//‘Svmc2_RecvPacTrmnóM
+			//å…¨vmc2_RecvPacTrmnå—ä¿¡
 			if(pVMC2->RecvCnt==vmc2_PacTrmnSize) {
-				//I—¹’Ê’m
+				//çµ‚äº†é€šçŸ¥
 				vcom1_flush(pVMC2->pVCom);
 
-				//ƒ‚[ƒh‚ğPacóMƒ‚[ƒh‚ÖˆÚs
+				//ãƒ¢ãƒ¼ãƒ‰ã‚’Pacå—ä¿¡ãƒ¢ãƒ¼ãƒ‰ã¸ç§»è¡Œ
 				pVMC2->RecvMode=vmc2_putmode_IDLE;
 				pVMC2->RecvCnt=0;
 			}
-		}//óM•¶š‚ª0”Ô–Ú‚ÌPacTrmn•¶š‚Æˆê’v
+		}//å—ä¿¡æ–‡å­—ãŒ0ç•ªç›®ã®PacTrmnæ–‡å­—ã¨ä¸€è‡´
 		else if(vmc2_PacTrmn[0]==c) {
 			for(cnt=0; cnt<pVMC2->RecvCnt;++cnt) {
-				//óM‚Å‚«‚È‚¢ê‡
+				//å—ä¿¡ã§ããªã„å ´åˆ
 				if(vcom1_can_putc(pVMC2->pVCom)==0) {
-					//ƒGƒ‰[”­•ñ
+					//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 					pVMC2->RecvErr=vmc2_puterr_RECVREJECTED;
-					//óM‚ğƒXƒgƒbƒv
+					//å—ä¿¡ã‚’ã‚¹ãƒˆãƒƒãƒ—
 					vcom1_flush(pVMC2->pVCom);
-					//ƒ‚[ƒh‚ğ–ß‚·
+					//ãƒ¢ãƒ¼ãƒ‰ã‚’æˆ»ã™
 					pVMC2->RecvMode=vmc2_putmode_IDLE;
 					pVMC2->RecvCnt=0;
 					return;
 				}
 
-				//ƒf[ƒ^‚ğˆø‚«“n‚·
+				//ãƒ‡ãƒ¼ã‚¿ã‚’å¼•ãæ¸¡ã™
 				vcom1_putc(pVMC2->pVCom, vmc2_PacTrmn[cnt]);
 			}
-			//ƒJƒEƒ“ƒ^[‚ğ1‚É(1•¶š‚Íˆê’v‚µ‚½‚©‚ç)
+			//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’1ã«(1æ–‡å­—ã¯ä¸€è‡´ã—ãŸã‹ã‚‰)
 			pVMC2->RecvCnt=1;
-		}//óM•¶š‚ªPacTrmn•¶š‚Æ•sˆê’v
+		}//å—ä¿¡æ–‡å­—ãŒPacTrmnæ–‡å­—ã¨ä¸ä¸€è‡´
 		else{
 			for(cnt=0; cnt<pVMC2->RecvCnt; ++cnt) {
-				//óM‚Å‚«‚È‚¢ê‡
+				//å—ä¿¡ã§ããªã„å ´åˆ
 				if(vcom1_can_putc(pVMC2->pVCom)==0) {
-					//ƒGƒ‰[”­•ñ
+					//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 					pVMC2->RecvErr=vmc2_puterr_RECVREJECTED;
-					//óM‚ğƒXƒgƒbƒv
+					//å—ä¿¡ã‚’ã‚¹ãƒˆãƒƒãƒ—
 					vcom1_flush(pVMC2->pVCom);
-					//ƒ‚[ƒh‚ğ–ß‚·
+					//ãƒ¢ãƒ¼ãƒ‰ã‚’æˆ»ã™
 					pVMC2->RecvMode=vmc2_putmode_IDLE;
 					pVMC2->RecvCnt=0;
 					return;
 				}
 
-				//ƒf[ƒ^‚ğˆø‚«“n‚·
+				//ãƒ‡ãƒ¼ã‚¿ã‚’å¼•ãæ¸¡ã™
 				vcom1_putc(pVMC2->pVCom, vmc2_PacTrmn[cnt]);
 			}
-			//ƒJƒEƒ“ƒ^[ƒŠƒZƒbƒg
+			//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ãƒªã‚»ãƒƒãƒˆ
 			pVMC2->RecvCnt=0;
 
-			//óM‚Å‚«‚È‚¢ê‡
+			//å—ä¿¡ã§ããªã„å ´åˆ
 			if(vcom1_can_putc(pVMC2->pVCom)==0) {
-				//ƒGƒ‰[”­•ñ
+				//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 				pVMC2->RecvErr=vmc2_puterr_RECVREJECTED;
-				//óM‚ğƒXƒgƒbƒv
+				//å—ä¿¡ã‚’ã‚¹ãƒˆãƒƒãƒ—
 				vcom1_flush(pVMC2->pVCom);
-				//ƒ‚[ƒh‚ğ–ß‚·
+				//ãƒ¢ãƒ¼ãƒ‰ã‚’æˆ»ã™
 				pVMC2->RecvMode=vmc2_putmode_IDLE;
 				pVMC2->RecvCnt=0;
 				return;
 			}
 			
-			//ƒf[ƒ^‚ğˆø‚«“n‚·
+			//ãƒ‡ãƒ¼ã‚¿ã‚’å¼•ãæ¸¡ã™
 			vcom1_putc(pVMC2->pVCom, c);
 
 		}
 	}
 }
-//‘—Mƒf[ƒ^‚ğŒÄ‚Ño‚µ‰Â”\‚©Šm”F 0:•s‰Â,1:‰Â
+//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å‘¼ã³å‡ºã—å¯èƒ½ã‹ç¢ºèª 0:ä¸å¯,1:å¯
 hmLib_boolian vmc2_can_getc(vmc2* pVMC2) {
 	if(pVMC2->SendMode==vmc2_getmode_STRT&&pVMC2->SendCnt==0) {
-		//‘—óM‚Å‚«‚éƒf[ƒ^‚ª‘¶İ‚·‚é‚©
+		//é€å—ä¿¡ã§ãã‚‹ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã™ã‚‹ã‹
 		return vcom1_can_getc(pVMC2->pVCom);
 	}else if(pVMC2->SendMode==vmc2_getmode_DATA) {
-		//‘—MÏ‚İó‘Ôƒf[ƒ^––”ö‚É‚¢‚éê‡‚ÍAŸ‚ÍTRMN‚Ì‚Í‚¸‚È‚Ì‚Å1
+		//é€ä¿¡æ¸ˆã¿çŠ¶æ…‹ãƒ‡ãƒ¼ã‚¿æœ«å°¾ã«ã„ã‚‹å ´åˆã¯ã€æ¬¡ã¯TRMNã®ã¯ãšãªã®ã§1
 		if(vcom1_flowing(pVMC2->pVCom)==0 && pVMC2->SendCnt!=0)return 1;
 		return vcom1_can_getc(pVMC2->pVCom);
 	}
 
 	return 1;
 }
-//‘—Mƒf[ƒ^‚ğŒÄ‚Ño‚·
+//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å‘¼ã³å‡ºã™
 unsigned char vmc2_getc(vmc2* pVMC2) {
 	unsigned char c=0x00;
 
-	//getc‚Å‚«‚È‚¢‚Æ‚«‚É‚ÍCƒGƒ‰[
+	//getcã§ããªã„ã¨ãã«ã¯ï¼Œã‚¨ãƒ©ãƒ¼
 	if(!vmc2_can_getc(pVMC2)) {
 		pVMC2->SendCnt=vmc2_geterr_INVALID_GETC;
 		return 0xC0;
 	}
 
-	//”ñ‘—Mƒ‚[ƒh(vmc2_SendPacStrt‘Ò‚¿)
+	//éé€ä¿¡ãƒ¢ãƒ¼ãƒ‰(vmc2_SendPacStrtå¾…ã¡)
 	if(pVMC2->SendMode==vmc2_getmode_STRT) {
-		//CHƒtƒF[ƒY‚Ì
+		//CHãƒ•ã‚§ãƒ¼ã‚ºã®æ™‚
 		if(pVMC2->SendCnt==2) {
 			c = ((pVMC2->Ch)<<4)|(vcom1_get_ch(pVMC2->pVCom)&0x0F);
 			++(pVMC2->SendCnt);
-		}//ŒÅ’è•¶š—ñ‘—MƒtƒF[ƒY
+		}//å›ºå®šæ–‡å­—åˆ—é€ä¿¡ãƒ•ã‚§ãƒ¼ã‚º
 		else{
 			c = vmc2_PacStrt[pVMC2->SendCnt];
 			++(pVMC2->SendCnt);
 
-			//PacStrt‚ğ‘—‚èI‚í‚Á‚½‚çA‘—M—p‚É‰Šú‰»
+			//PacStrtã‚’é€ã‚Šçµ‚ã‚ã£ãŸã‚‰ã€é€ä¿¡ç”¨ã«åˆæœŸåŒ–
 			if(pVMC2->SendCnt>=4) {
 				pVMC2->SendMode=vmc2_getmode_DATA;
 				pVMC2->SendCnt=0;
 			}
 		}
-	}//Data‘—Mƒ‚[ƒh
+	}//Dataé€ä¿¡ãƒ¢ãƒ¼ãƒ‰
 	else if(pVMC2->SendMode==vmc2_getmode_DATA) {
-		//ƒf[ƒ^‚ªI—¹‚µ‚½ê‡ATRMN‚ÉˆÚs‚·‚é
+		//ãƒ‡ãƒ¼ã‚¿ãŒçµ‚äº†ã—ãŸå ´åˆã€TRMNã«ç§»è¡Œã™ã‚‹
 		if(vcom1_flowing(pVMC2->pVCom)==0 && pVMC2->SendCnt!=0) {
-			//TRMN‘—M
+			//TRMNé€ä¿¡
 			pVMC2->SendMode=vmc2_getmode_TRMN;
 			c=vmc2_PacTrmn[0];
 			pVMC2->SendCnt=1;
-		}//send‚É¸”s‚·‚éê‡‚Í‹­§I—¹
+		}//sendã«å¤±æ•—ã™ã‚‹å ´åˆã¯å¼·åˆ¶çµ‚äº†
 		else if(vcom1_can_getc(pVMC2->pVCom)==0) {
-			//ƒGƒ‰[”­•ñ
+			//ã‚¨ãƒ©ãƒ¼ç™ºå ±
 			pVMC2->SendErr=vmc2_geterr_SENDREJECTED;
 
-			//vcomŒãˆ—
+			//vcomå¾Œå‡¦ç†
 			vcom1_cancel_get(pVMC2->pVCom);
 
-			//TRMN‚ğ‹­§‘—M
+			//TRMNã‚’å¼·åˆ¶é€ä¿¡
 			pVMC2->SendMode=vmc2_getmode_TRMN;
 			c=vmc2_PacTrmn[0];
 			pVMC2->SendCnt=1;
 		} else {
-			//ƒf[ƒ^‚ğ‘—M
+			//ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡
 			c=vcom1_getc(pVMC2->pVCom);
 			pVMC2->SendCnt=1;
 		}
-	}//TRMN‚ğ‘—‚é
+	}//TRMNã‚’é€ã‚‹
 	else if(pVMC2->SendMode==vmc2_getmode_TRMN) {
-		//vmc2_SendPacTrmn‘—M
+		//vmc2_SendPacTrmné€ä¿¡
 		c=vmc2_PacTrmn[pVMC2->SendCnt];
 		++(pVMC2->SendCnt);
 
-		//PacTrmn‚ğ‘—‚èI‚í‚Á‚½‚çA‘—M—p‚É‰Šú‰»
+		//PacTrmnã‚’é€ã‚Šçµ‚ã‚ã£ãŸã‚‰ã€é€ä¿¡ç”¨ã«åˆæœŸåŒ–
 		if(pVMC2->SendCnt>=vmc2_PacTrmnSize) {
 			pVMC2->SendMode=vmc2_getmode_STRT;
 			pVMC2->SendCnt=0;
@@ -252,37 +252,37 @@ unsigned char vmc2_getc(vmc2* pVMC2) {
 	}
 	return c;
 }
-//‘—Mƒf[ƒ^‚ªeofˆÊ’u‚Å‚È‚¢‚©‚ğŠm”F‚·‚é
+//é€ä¿¡ãƒ‡ãƒ¼ã‚¿ãŒeofä½ç½®ã§ãªã„ã‹ã‚’ç¢ºèªã™ã‚‹
 hmLib_boolian vmc2_flowing(vmc2* pVMC2) {
 	return !(pVMC2->SendMode==vmc2_getmode_STRT&&pVMC2->SendCnt==0);
 }
-//óM‚ğ‹­§“I‚ÉI—¹‚³‚¹‚é
+//å—ä¿¡ã‚’å¼·åˆ¶çš„ã«çµ‚äº†ã•ã›ã‚‹
 void vmc2_force_end_get(vmc2* pVMC2) {
 	if(pVMC2->RecvMode==vmc2_putmode_IDLE)return;
-	//ƒf[ƒ^óM‚ğ‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
+	//ãƒ‡ãƒ¼ã‚¿å—ä¿¡ã‚’ãªã‹ã£ãŸã“ã¨ã«ã™ã‚‹
 	vcom1_flush(pVMC2->pVCom);
 
-	//vmc2‚ª‚ç‚İ‚ğŒãn––
+	//vmc2ãŒã‚‰ã¿ã‚’å¾Œå§‹æœ«
 	pVMC2->RecvMode=vmc2_putmode_IDLE;
 	pVMC2->RecvCnt=0;
 }
-//‘—M‚ğ‹­§“I‚ÉI—¹‚³‚¹‚é
+//é€ä¿¡ã‚’å¼·åˆ¶çš„ã«çµ‚äº†ã•ã›ã‚‹
 void vmc2_force_end_put(vmc2* pVMC2) {
 	if(pVMC2->SendMode==vmc2_getmode_STRT)return;
 
-	//ƒf[ƒ^‘—M‚ğ‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
+	//ãƒ‡ãƒ¼ã‚¿é€ä¿¡ã‚’ãªã‹ã£ãŸã“ã¨ã«ã™ã‚‹
 	vcom1_cancel_get(pVMC2->pVCom);
 
 	pVMC2->SendMode=vmc2_getmode_STRT;
 	pVMC2->SendCnt=0;
 }
-//‘—MƒGƒ‰[‚ğæ“¾‚·‚é
+//é€ä¿¡ã‚¨ãƒ©ãƒ¼ã‚’å–å¾—ã™ã‚‹
 unsigned char vmc2_error_of_get(vmc2* pVMC2) { return pVMC2->SendErr; }
-//‘—MƒGƒ‰[‚ğƒNƒŠƒA‚·‚é
+//é€ä¿¡ã‚¨ãƒ©ãƒ¼ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 void vmc2_clear_error_of_get(vmc2* pVMC2) { pVMC2->SendErr=0; }
-//óMƒGƒ‰[‚ğæ“¾‚·‚é
+//å—ä¿¡ã‚¨ãƒ©ãƒ¼ã‚’å–å¾—ã™ã‚‹
 unsigned char vmc2_error_of_put(vmc2* pVMC2) { return pVMC2->RecvErr; }
-//óMƒGƒ‰[‚ğƒNƒŠƒA‚·‚é
+//å—ä¿¡ã‚¨ãƒ©ãƒ¼ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
 void vmc2_clear_error_of_put(vmc2* pVMC2) { pVMC2->RecvErr=0; }
 #
 #endif

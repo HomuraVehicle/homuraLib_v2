@@ -86,25 +86,25 @@ namespace hmr{
 			unsigned int size()const { return Tasks.size(); }
 			bool empty()const { return Tasks.empty(); }
 			void operator()(duration Interval_) {
-				//ƒ^ƒXƒNƒoƒbƒtƒ@‚ğ‡‚ÉŠm”F‚·‚é
+				//ã‚¿ã‚¹ã‚¯ãƒãƒƒãƒ•ã‚¡ã‚’é †ã«ç¢ºèªã™ã‚‹
 				for(iterator itr=Tasks.begin(); itr != Tasks.end(); ++itr) {
-					//‘O‰ñ‚ÌƒJƒEƒ“ƒ^[‚Æ¡‰ñ‚ÌƒJƒEƒ“ƒ^[‚ÌŠÔ‚ÉInterval‚ğŒ×‚¢‚Å‚¢‚ê‚ÎAÀs
+					//å‰å›ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã¨ä»Šå›ã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®é–“ã«Intervalã‚’è·¨ã„ã§ã„ã‚Œã°ã€å®Ÿè¡Œ
 					if(itr->Interval > 0){
-						//ƒJƒEƒ“ƒ^[‰ÁZ
+						//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼åŠ ç®—
 						itr->Count += Interval_;
 
-						//ƒJƒEƒ“ƒ^[‚ªƒI[ƒo[ƒtƒ[‚µ‚½ê‡
+						//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ãŒã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã—ãŸå ´åˆ
 						if(itr->Count >= itr->Interval){
-							//ƒJƒEƒ“ƒ^‚©‚çœZ
+							//ã‚«ã‚¦ãƒ³ã‚¿ã‹ã‚‰é™¤ç®—
 							itr->Count %= itr->Interval;
 
-							//ƒ^ƒXƒN‚ğÀs
+							//ã‚¿ã‚¹ã‚¯ã‚’å®Ÿè¡Œ
 							itr->Interval = (*(itr->pClient))(itr->Interval);
 						}
 					}
 				}
 
-				//I—¹—v‹‚ª‚ ‚Á‚½ƒ^ƒXƒN‚ğ‚Í‚¶‚­
+				//çµ‚äº†è¦æ±‚ãŒã‚ã£ãŸã‚¿ã‚¹ã‚¯ã‚’ã¯ã˜ã
 				Tasks.erase(std::remove_if(Tasks.begin(), Tasks.end(), is_ref_stop()) , Tasks.end());
 			}
 		};

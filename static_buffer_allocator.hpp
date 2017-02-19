@@ -10,7 +10,7 @@ namespace hmr{
 	private:
 		typedef static_buffer_allocator<void, Size, Num, Identifier> void_type;
 	public:
-		// Œ^’è‹`
+		// å‹å®šç¾©
 		typedef unsigned int size_type;
 		typedef signed int difference_type;
 		typedef T* pointer;
@@ -19,38 +19,38 @@ namespace hmr{
 		typedef const T& const_reference;
 		typedef T value_type;
 		typedef static_buffer_allocator<T,Size,Num,Identifier> my_type;
-		// ƒAƒƒP[ƒ^‚ğUŒ^‚ÉƒoƒCƒ“ƒh‚·‚é
+		// ã‚¢ãƒ­ã‚±ãƒ¼ã‚¿ã‚’Uå‹ã«ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹
 		template <class U>
 		struct rebind {
 			typedef static_buffer_allocator<U, Size, Num, Identifier> other;
 		};
 
-		// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		static_buffer_allocator() throw() {}
 		static_buffer_allocator(const my_type&) throw() {}
 		template <class U> static_buffer_allocator(const static_buffer_allocator<U, Size, Num, Identifier>&) throw() {}
-		// ƒfƒXƒgƒ‰ƒNƒ^
+		// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		~static_buffer_allocator() throw() {}
 
-		// ƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚é
+		// ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹
 		pointer allocate(size_type num, const_pointer hint = 0) {
 			return static_cast<pointer>(void_type().allocate(num, hint));
 		}
-		// ƒƒ‚ƒŠ‚ğ‰ğ•ú‚·‚é
+		// ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾ã™ã‚‹
 		void deallocate(pointer p, size_type num) {
 			void_type().deallocate(p,num);
 		}
 
-		// Š„“–‚ÄÏ‚İ‚Ì—Ìˆæ‚ğ‰Šú‰»‚·‚é
+		// å‰²å½“ã¦æ¸ˆã¿ã®é ˜åŸŸã‚’åˆæœŸåŒ–ã™ã‚‹
 		void construct(pointer p, const T& value) { new((void*)p) T(value); }
-		// ‰Šú‰»Ï‚İ‚Ì—Ìˆæ‚ğíœ‚·‚é
+		// åˆæœŸåŒ–æ¸ˆã¿ã®é ˜åŸŸã‚’å‰Šé™¤ã™ã‚‹
 		void destroy(pointer p) { p->~T(); }
 
-		// ƒAƒhƒŒƒX‚ğ•Ô‚·
+		// ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¿”ã™
 		pointer address(reference value) const { return &value; }
 		const_pointer address(const_reference value) const { return &value; }
 
-		// Š„“–‚Ä‚é‚±‚Æ‚ª‚Å‚«‚éÅ‘å‚Ì—v‘f”‚ğ•Ô‚·
+		// å‰²å½“ã¦ã‚‹ã“ã¨ãŒã§ãã‚‹æœ€å¤§ã®è¦ç´ æ•°ã‚’è¿”ã™
 		size_type max_size() const throw() {
 			return Size / sizeof(T);
 		}
@@ -70,9 +70,9 @@ namespace hmr{
 	template<unsigned int Size, unsigned int Num, typename Identifier>
 	struct static_buffer_allocator<void, Size, Num, Identifier>{
 	private:
-		//ƒAƒ‰ƒCƒƒ“ƒg–â‘è‰ñ”ğ—p\‘¢‘Ì
-		//	“ñŸŒ³”z—ñ‚¾‚ÆAN”Ô–Ú‚Ì”z—ñ‚Ìæ“ª‚ª\‘¢‘ÌŠm•Û•s”\‚ÈƒAƒhƒŒƒX‚Æ‚È‚é‰Â”\«‚ª‚ ‚é
-		//	\‘¢‘Ì‚É‚µ‚Ä‚µ‚Ü‚¦‚ÎAæ“ª‚Í•K‚¸\‘¢‘Ì‚ğ’u‚¯‚éƒƒ‚ƒŠƒAƒhƒŒƒX‚Æ‚È‚é‚Í‚¸
+		//ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆå•é¡Œå›é¿ç”¨æ§‹é€ ä½“
+		//	äºŒæ¬¡å…ƒé…åˆ—ã ã¨ã€Nç•ªç›®ã®é…åˆ—ã®å…ˆé ­ãŒæ§‹é€ ä½“ç¢ºä¿ä¸èƒ½ãªã‚¢ãƒ‰ãƒ¬ã‚¹ã¨ãªã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹
+		//	æ§‹é€ ä½“ã«ã—ã¦ã—ã¾ãˆã°ã€å…ˆé ­ã¯å¿…ãšæ§‹é€ ä½“ã‚’ç½®ã‘ã‚‹ãƒ¡ãƒ¢ãƒªã‚¢ãƒ‰ãƒ¬ã‚¹ã¨ãªã‚‹ã¯ãš
 		struct buffer_holder{
 			unsigned char Data[Size];
 		};
@@ -80,30 +80,30 @@ namespace hmr{
 		static buffer_holder Buffer[Num];
 		static std::bitset<Num> IsUse;
 	public:
-		// Œ^’è‹`
+		// å‹å®šç¾©
 		typedef unsigned int size_type;
 		typedef signed int difference_type;
 		typedef void* pointer;
 		typedef const void* const_pointer;
 		typedef static_buffer_allocator<void, Size, Num, Identifier> my_type;
-		// ƒAƒƒP[ƒ^‚ğUŒ^‚ÉƒoƒCƒ“ƒh‚·‚é
+		// ã‚¢ãƒ­ã‚±ãƒ¼ã‚¿ã‚’Uå‹ã«ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹
 		template <class U>
 		struct rebind {
 			typedef static_buffer_allocator<U, Size, Num, Identifier> other;
 		};
 
-		// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		static_buffer_allocator() throw() {}
 		static_buffer_allocator(const my_type&) throw() {}
 		template <class U> static_buffer_allocator(const static_buffer_allocator<U, Size, Num, Identifier>&) throw() {}
-		// ƒfƒXƒgƒ‰ƒNƒ^
+		// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		~static_buffer_allocator() throw() {}
 
-		// ƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚é
+		// ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹
 		pointer allocate(size_type num, const_pointer hint = 0) {
 			unsigned int Pos = 0;				
 
-			//allocate‚ª‹£‡‚·‚é‚Æ‚Ü‚¸‚¢‚Ì‚ÅAinterrupt_lock
+			//allocateãŒç«¶åˆã™ã‚‹ã¨ã¾ãšã„ã®ã§ã€interrupt_lock
 			xc32::interrupt::lock_guard Lock(xc32::interrupt::Mutex);
 
 			for(; Pos < Size; ++Pos){
@@ -114,9 +114,9 @@ namespace hmr{
 			
 			return Buffer[Pos].Data;
 		}
-		// ƒƒ‚ƒŠ‚ğ‰ğ•ú‚·‚é
+		// ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾ã™ã‚‹
 		void deallocate(pointer p, size_type num) {
-			//deallocate‚Í‹£‡‚µ‚¦‚È‚¢‚Ì‚ÅAlock•s—v
+			//deallocateã¯ç«¶åˆã—ãˆãªã„ã®ã§ã€lockä¸è¦
 			unsigned int Pos = 0;
 			for(; Pos<Size; ++Pos){
 				if(Buffer[Pos].Data == p)break;
@@ -125,7 +125,7 @@ namespace hmr{
 			IsUse.reset(Pos);
 		}
 
-		// Š„“–‚Ä‚é‚±‚Æ‚ª‚Å‚«‚éÅ‘å‚Ì—v‘f”‚ğ•Ô‚·
+		// å‰²å½“ã¦ã‚‹ã“ã¨ãŒã§ãã‚‹æœ€å¤§ã®è¦ç´ æ•°ã‚’è¿”ã™
 		size_type max_size() const throw() {
 			return Size;
 		}

@@ -3,53 +3,53 @@
 #
 #include<homuraLib_v2/gate.hpp>
 /*--- code::client ---
-codeŒ`®‚Ì’ÊM‚ğˆË—Š‚·‚é‚½‚ß‚ÌclientƒNƒ‰ƒX‚ğ’è‹`‚µ‚Ä‚¢‚é
+codeå½¢å¼ã®é€šä¿¡ã‚’ä¾é ¼ã™ã‚‹ãŸã‚ã®clientã‚¯ãƒ©ã‚¹ã‚’å®šç¾©ã—ã¦ã„ã‚‹
 
 v1_00/140413 hmIto
-	cpp‰»
+	cppåŒ–
 === code ===
 v1_04/140302 hmIto
-	skip_getŠÖ”‚ğ’Ç‰Á
+	skip_geté–¢æ•°ã‚’è¿½åŠ 
 v1_03/140118 hmIto
-	0byteƒf[ƒ^‚ğ‘—M‚·‚éÛ‚ÉAƒf[ƒ^‚Ì”jŠü‚ğ‚µ‚Ä‚¢‚È‚©‚Á‚½‚½‚ßA‰½“x‚à“¯‚¶ƒf[ƒ^‚ğ‘—‚ë‚¤‚Æ‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚½–â‘è‚ğC³
+	0byteãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡ã™ã‚‹éš›ã«ã€ãƒ‡ãƒ¼ã‚¿ã®ç ´æ£„ã‚’ã—ã¦ã„ãªã‹ã£ãŸãŸã‚ã€ä½•åº¦ã‚‚åŒã˜ãƒ‡ãƒ¼ã‚¿ã‚’é€ã‚ã†ã¨ã—ã¦ã—ã¾ã£ã¦ã„ãŸå•é¡Œã‚’ä¿®æ­£
 v1_02/140110 hmIto
-	vcom_data‚Ìid‚É‚©‚©‚í‚é‹K–ñ•ÏX‚É‘Î‰
+	vcom_dataã®idã«ã‹ã‹ã‚ã‚‹è¦ç´„å¤‰æ›´ã«å¯¾å¿œ
 v1_01/131224 hmIto
-	ƒfƒoƒbƒOƒfƒoƒbƒOƒfƒoƒbƒO
-	‚Ù‚ÚƒeƒXƒg‚µ‚Â‚­‚µ‚½‚Í‚¸
+	ãƒ‡ãƒãƒƒã‚°ãƒ‡ãƒãƒƒã‚°ãƒ‡ãƒãƒƒã‚°
+	ã»ã¼ãƒ†ã‚¹ãƒˆã—ã¤ãã—ãŸã¯ãš
 v1_00/131220 hmIto
-	VMC‚©‚ç•ª—£‚µ‚Äì¬
+	VMCã‹ã‚‰åˆ†é›¢ã—ã¦ä½œæˆ
 */
 namespace hmr {
 	namespace code {
 		class client :public gate {
 		public:
 			//======== gate interface =======
-			//‚·‚Å‚É—˜—p‰Â”\‚É‚È‚Á‚Ä‚¢‚é‚©
+			//ã™ã§ã«åˆ©ç”¨å¯èƒ½ã«ãªã£ã¦ã„ã‚‹ã‹
 			virtual bool is_open()=0;
-			//send‚Å‚«‚é‚©H
+			//sendã§ãã‚‹ã‹ï¼Ÿ
 			virtual bool can_getc()=0;
-			//‘—M•¶š—ñ‚ğ1byteæ“¾‚·‚é
+			//é€ä¿¡æ–‡å­—åˆ—ã‚’1byteå–å¾—ã™ã‚‹
 			virtual unsigned char getc()=0;
-			//‘—M•¶š—ñ‚ªeofˆÊ’u=PacI’[‚©‚Ç‚¤‚©‚ğŒŸ’m‚·‚é
+			//é€ä¿¡æ–‡å­—åˆ—ãŒeofä½ç½®=Pacçµ‚ç«¯ã‹ã©ã†ã‹ã‚’æ¤œçŸ¥ã™ã‚‹
 			virtual bool flowing()=0;
-			//recv‚Å‚«‚é‚©H(’P‚Éreturn 1)
+			//recvã§ãã‚‹ã‹ï¼Ÿ(å˜ã«return 1)
 			virtual bool can_putc()=0;
-			//óM•¶š—ñ‚ğ1byte—^‚¦‚é
+			//å—ä¿¡æ–‡å­—åˆ—ã‚’1byteä¸ãˆã‚‹
 			virtual void putc(unsigned char c)=0;
-			//flush‚·‚é(eof‰»‚·‚é=Pac‚ğ•Â‚¶‚é)
+			//flushã™ã‚‹(eofåŒ–ã™ã‚‹=Pacã‚’é–‰ã˜ã‚‹)
 			virtual void flush()=0;
 		public:
 			//======= vcom functions ========
-			//‘—Mæch‚ğæ“¾‚·‚é
+			//é€ä¿¡å…ˆchã‚’å–å¾—ã™ã‚‹
 			virtual unsigned char get_ch()=0;
-			//‘—M‚ğƒLƒƒƒ“ƒZƒ‹‚·‚é
+			//é€ä¿¡ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹
 			virtual void cancel_get()=0;
-			//‘—M‚ğƒXƒLƒbƒv‚·‚é
+			//é€ä¿¡ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹
 			virtual void skip_get()=0;
-			//óM‚·‚éch‚ğæ“¾‚·‚é
+			//å—ä¿¡ã™ã‚‹chã‚’å–å¾—ã™ã‚‹
 			virtual void put_ch(unsigned char Ch)=0;
-			//óM‚ğƒLƒƒƒ“ƒZƒ‹‚·‚é
+			//å—ä¿¡ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹
 			virtual void cancel_put()=0;
 		};
 	}
