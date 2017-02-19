@@ -193,7 +193,7 @@ namespace hmr {
 						if(Canceler)Canceler();
 
 						//現在get_future中なら、無効化
-						if(Promise.valid())Promise.set_value(error_type(error_category::Canceled, Ref.CommandUart.status()));
+						if(Promise.is_wait_value())Promise.set_value(error_type(error_category::Canceled, Ref.CommandUart.status()));
 					}
 				}Sequence_takePicture;
 			private:
@@ -306,7 +306,7 @@ namespace hmr {
 						if (Canceler)Canceler();
 
 						//現在get_future中なら、無効化
-						if (Promise.valid()){
+						if (Promise.is_wait_value()){
 							Promise.set_value(error_type(error_category::Canceled, Ref.CommandUart.status()));
 						}
 					}
@@ -356,7 +356,7 @@ namespace hmr {
 						if (Canceler)Canceler();
 
 						//現在get_future中なら、無効化
-						if(Promise.valid())Promise.set_value(error_type(error_category::Canceled, Ref.CommandUart.status()));
+						if(Promise.is_wait_value())Promise.set_value(error_type(error_category::Canceled, Ref.CommandUart.status()));
 					}
 				}Sequence_command_reset;
 			public:
@@ -763,13 +763,13 @@ namespace hmr {
 
 				private:
 					void throw_error(error_category_type ErrorCategory_){
-						if(Promise.valid()){
+						if(Promise.is_wait_value()){
 							pPictureReader = 0;
 							Promise.set_value(error_type(ErrorCategory_, Ref.status()));
 						}
 					}
 					void throw_error(error_category_type ErrorCategory_, uart_error_type UartError_){
-						if(Promise.valid()){
+						if(Promise.is_wait_value()){
 							pPictureReader = 0;
 							Promise.set_value(error_type(ErrorCategory_, UartError_));
 						}
@@ -800,7 +800,7 @@ namespace hmr {
 						pPictureReader = 0;
 						PictureSize = 0;
 
-						if(Promise.valid()){
+						if(Promise.is_wait_value()){
 							//最後のデータなのにLastフラグが付いていなかった場合
 							if(!PictureData_.IsLast){
 								Promise.set_value(error_type(error_category::InvalidReadEnd, Ref.status()));
@@ -851,7 +851,7 @@ namespace hmr {
 						Canceler = Ref.SpriteUart.async_command_reset().then(xc::ref(*this));
 						if(!Canceler){
 							WatchdogCnt = 0;
-							if(Promise.valid())Promise.set_value(error_type(error_category::FailRequestUart, Ref.status()));
+							if(Promise.is_wait_value())Promise.set_value(error_type(error_category::FailRequestUart, Ref.status()));
 							//Seq.throw_error(error_category::FailRequestUart);
 						}
 
@@ -863,7 +863,7 @@ namespace hmr {
 						//wdt無効化
 						WatchdogCnt = 0;
 
-						if(Promise.valid()){
+						if(Promise.is_wait_value()){
 						//エラーを返してきた場合
 							if(!UartAns){
 								Promise.set_value(error_type(error_category::CatchUartError, UartAns.alternate()));
@@ -889,7 +889,7 @@ namespace hmr {
 						WatchdogCnt = 0;
 						if(Canceler)Canceler();
 
-						if(Promise.valid()){
+						if(Promise.is_wait_value()){
 							Promise.set_value(error_type(error_category::Canceled, Ref.status()));
 						}
 					}
@@ -952,7 +952,7 @@ namespace hmr {
 							//電源回復、モジュール初期化
 							PowerPin(true);
 						}
-						if(Promise.valid()){
+						if(Promise.is_wait_value()){
 							//Promiseを履行
 							Promise.set_value(error_type(error_category::Canceled,Ref.status()));
 						}
@@ -973,7 +973,7 @@ namespace hmr {
 								Ref.SpriteUartLock.lock();
 
 								//Promiseを履行
-								if(Promise.valid()){
+								if(Promise.is_wait_value()){
 									Promise.set_value(ans_type());
 								}
 							}
