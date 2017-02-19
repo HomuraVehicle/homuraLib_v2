@@ -328,7 +328,7 @@ namespace hmr {
 				typedef cGyroL3G4200D<i2c_register_, shared_i2c_identifier_> my_type;
 			private:
 				typedef cGyroL3G4200D_I2C<i2c_register_, shared_i2c_identifier_> my_i2c;
-				typedef typename my_i2c::observer observer;
+				typedef typename my_i2c::raw_observer observer;
 				typedef xc::lock_guard<my_i2c> lock_guard;
 			private:
 				my_i2c I2C;
@@ -349,7 +349,7 @@ namespace hmr {
 				}
 				bool lock(const observer& Observer_, hmr::delay_interface& Delay_){
 					config(Observer_, Delay_);
-					lock();
+					return lock();
 				}
 				bool lock(){
 					if (is_lock())return false;
@@ -368,6 +368,8 @@ namespace hmr {
 					I2C.buffer_config(gyroL3G4200D::buffer_mode::stream, 31);
 
 					IsLock = true;
+
+					return false;
 				}
 				bool is_lock()const{
 					return IsLock;
@@ -391,7 +393,7 @@ namespace hmr {
 					if (!Lock.owns_lock())return;
 
 					if(Observer){
-						I2C.read_all(Observer);
+						I2C.read_raw_all(Observer);
 					}
 				}
 			};
